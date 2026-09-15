@@ -1,0 +1,11 @@
+{
+  "name": "chinese-aesthetic-skill",
+  "build": { "dockerfile": "Dockerfile", "context": ".." },
+  "remoteUser": "vscode",
+  "postCreateCommand": "make bootstrap",
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint", "ms-python.python", "ms-python.vscode-pylance"]
+    }
+  }
+}

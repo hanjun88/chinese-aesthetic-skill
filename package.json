@@ -7,11 +7,11 @@
   "scripts": {
     "test": "node tests/engines.test.js",
     "test:engines": "node tests/engines.test.js",
-    "test:gates": "node scripts/validate.js",
-    "gate1": "node scripts/validate.js --gate 1",
-    "gate2": "node scripts/validate.js --gate 2",
-    "gate3": "node scripts/validate.js --gate 3",
-    "validate": "node scripts/validate.js --input"
+    "test:gates": "node scripts/validate.cjs",
+    "gate1": "node scripts/validate.cjs --gate 1",
+    "gate2": "node scripts/validate.cjs --gate 2",
+    "gate3": "node scripts/validate.cjs --gate 3",
+    "validate": "node scripts/validate.cjs --input"
   },
   "keywords": ["chinese-aesthetic", "eastern-aesthetic", "design-engine", "decision-engine", "heartmirror", "three.js", "spatial-order", "void-solid"],
   "author": "HEARTMIRROR Team",
