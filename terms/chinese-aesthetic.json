@@ -1742,6 +1742,136 @@
         "Midjourney模板",
         "视角怎么放"
       ]
+    },
+    {
+      "id": "monumental-micro-figure-immortal",
+      "title": "巨构微人仙境",
+      "en": "Monumental Micro-Figure Immortal Realm",
+      "aliases": [
+        "仙境配方",
+        "巨构云海微人",
+        "immortal realm formula",
+        "三位一体仙境"
+      ],
+      "layer": "layout",
+      "plain": "巨大建筑加云海加白衣微人，三者同时出现就自动有东方仙境感，缺一不可。",
+      "say": "用巨构建筑（人占比<5%）+ 云海/雾气（覆盖≥30%）+ 白衣微人（占比<3%）三位一体，制造东方仙境感。",
+      "trap": "只有巨构是建筑效果图没有仙境感；只有云海是风景照没有尺度感；只有微人是人像没有宏大感。三者必须同时存在，少一个就不成立。",
+      "pairs": [
+        "cloud-sea-stratification",
+        "micro-figure-anchor",
+        "monumental-scale"
+      ],
+      "trigger": [
+        "仙境怎么画",
+        "天宫场景",
+        "仙界氛围",
+        "东方仙境感"
+      ]
+    },
+    {
+      "id": "divine-creature-sky-accent",
+      "title": "神性生物天空点缀",
+      "en": "Divine Creature Sky Accent",
+      "aliases": [
+        "龙凤天空",
+        "朱雀点缀",
+        "divine creature",
+        "天空神性符号"
+      ],
+      "layer": "layout",
+      "plain": "在天空中放一条龙、凤或朱雀，占画面10%-25%，不是主体而是天空中的点睛符号。",
+      "say": "在天空中上部放置神性生物（龙/凤/朱雀），占画面10%-25%，有明确飞行姿态，颜色与天空形成≥30%对比度，不占画面中心。",
+      "trap": "神性生物占画面中心就变成主体不是点缀；没有飞行姿态就是静态贴图；颜色与背景融在一起就看不见。生物是天空中的符号，不是场景主角。",
+      "pairs": [
+        "cool-field-warm-point",
+        "monumental-micro-figure-immortal",
+        "cloud-sea-stratification"
+      ],
+      "trigger": [
+        "龙怎么放",
+        "凤凰场景",
+        "朱雀天空",
+        "神性生物"
+      ]
+    },
+    {
+      "id": "lotus-water-immortal-base",
+      "title": "荷花水面仙境基底",
+      "en": "Lotus Water Immortal Base",
+      "aliases": [
+        "仙境莲池",
+        "荷花基底",
+        "lotus base",
+        "一池荷花"
+      ],
+      "layer": "material",
+      "plain": "用荷花荷叶覆盖水面40%以上，荷花就从装饰变成仙境的识别符号，一池荷花自动把水景升级成仙境。",
+      "say": "水面覆盖≥40%的粉色/白色荷花荷叶，大小错落至少3种尺寸，必须有水面倒影，荷花可以超尺度（比正常大3-5倍）。",
+      "trap": "水面无荷花就是普通水景没有仙境感；荷花用红/黄色失去东方传统感；荷叶大小一致缺乏自然层次。荷花是基底不是点缀，覆盖率必须够。",
+      "pairs": [
+        "monumental-micro-figure-immortal",
+        "cool-field-warm-point",
+        "material"
+      ],
+      "trigger": [
+        "仙境水面",
+        "莲池怎么画",
+        "荷花场景",
+        "水景仙境"
+      ]
+    },
+    {
+      "id": "three-step-ai-video-workflow",
+      "title": "三步AI视频工作流",
+      "en": "Three-Step AI Video Workflow",
+      "aliases": [
+        "三步法",
+        "AI视频流程",
+        "Skill分镜生视频",
+        "three-step workflow"
+      ],
+      "layer": "method",
+      "plain": "AI中式仙境视频的标准化生产流程：先用Skill生成提示词，再生成分镜图，最后用Kling/Happy Horse生成视频。",
+      "say": "第一步用东方美学巨构Skill输入关键词自动生成提示词；第二步用AI图像工具生成4张分镜并分析；第三步按动态复杂度选模型（简单动态用Kling 3.0 Turbo，复杂用Happy Horse 1.1）生成视频。",
+      "trap": "跳过提示词直接生图会导致风格不一致；不做分镜直接生视频会缺乏叙事节奏；模型选择不匹配动态复杂度会导致效果差。每一步都有明确输入输出，不能跳步。",
+      "pairs": [
+        "keyword-driven-prompt",
+        "camera-angle-first-prompt",
+        "prompt-six-segment"
+      ],
+      "trigger": [
+        "AI视频怎么做",
+        "中式仙境视频流程",
+        "Kling怎么用",
+        "三步工作流"
+      ]
+    },
+    {
+      "id": "keyword-driven-prompt",
+      "title": "关键词驱动提示词法",
+      "en": "Keyword-Driven Prompt Method",
+      "aliases": [
+        "5关键词配方",
+        "关键词生成提示词",
+        "keyword prompt",
+        "大白话提示词"
+      ],
+      "layer": "method",
+      "plain": "用5个简单关键词驱动复杂场景生成：1个视角+1个主体+2个环境元素+1个神性符号，不需要自己写复杂提示词。",
+      "say": "用5关键词配方：1个视角（如仰）+1个主体（如天宫）+2个环境元素（如荷叶、云海）+1个神性符号（如朱雀），输入给Skill自动生成专业提示词。",
+      "trap": "关键词太多会导致场景混乱；缺少视角会导致构图平庸；缺少神性符号会失去超现实感。5个是最优数量，不是越多越好。",
+      "pairs": [
+        "three-step-ai-video-workflow",
+        "camera-angle-first-prompt",
+        "prompt-conciseness"
+      ],
+      "trigger": [
+        "提示词怎么写",
+        "关键词生成",
+        "大白话提示词",
+        "5关键词配方"
+      ]
     }
   ]
 }
