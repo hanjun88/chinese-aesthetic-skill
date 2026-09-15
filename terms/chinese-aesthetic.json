@@ -1,6 +1,6 @@
 {
   "surface": "both",
-  "description": "中式美学与东方空间美学术语库。用户用大白话描述中式设计效果/故障时反查术语。与 finesse-term 基础库/web/h5/motion/mp 并列加载。",
+  "description": "中式美学与东方空间美学术语库。用户用大白话描述中式设计效果/故障时反查术语。与 finesse-term 基础库/web/h5/motion/mp 并列加载。 | IVAN CHIU 云海天宫系列 +12 terms",
   "terms": [
     {
       "id": "boundary-threshold",
@@ -1429,6 +1429,318 @@
         "怎么写好prompt",
         "要不要加艺术家名字",
         "形容词堆太多"
+      ]
+    },
+    {
+      "id": "cloud-sea-stratification",
+      "title": "云海层叠",
+      "en": "Cloud Sea Stratification",
+      "aliases": [
+        "多层云海",
+        "云瀑层叠",
+        "垂直云海",
+        "cloud stratification"
+      ],
+      "layer": "layout",
+      "plain": "建筑悬浮在多层云海之上，云瀑从层间倾泻，垂直方向形成建筑层与云层的交替节奏。",
+      "say": "建筑悬浮在至少两层云海之上，每层云海色温不同，云瀑从建筑边缘倾泻，最上层建筑浮出云海，最下层沉入雾中。",
+      "trap": "只有一层平坦云海就是地平线建筑的变体，失去垂直层叠节奏；没有云瀑云海就是静止的，缺乏动态。每层云海必须有色温差，否则糊成一片。",
+      "pairs": [
+        "anti-gravity-suspension",
+        "horizon-architecture",
+        "telephoto-monumental-compression"
+      ],
+      "trigger": [
+        "天宫怎么画",
+        "悬浮建筑环境",
+        "云海怎么分层",
+        "仙境场景"
+      ]
+    },
+    {
+      "id": "telephoto-monumental-compression",
+      "title": "长焦压缩巨构",
+      "en": "Telephoto Monumental Compression",
+      "aliases": [
+        "长焦压缩",
+        "telephoto compression",
+        "纪念碑式尺度",
+        "monumental scale"
+      ],
+      "layer": "layout",
+      "plain": "用长焦镜头把多层建筑、云层和人物压缩到同一焦平面，层叠感强化纪念碑式尺度。",
+      "say": "提示词必须包含 telephoto compression，把远处建筑压到近处建筑后面形成无限层叠，配合 epic scale 和 large format 收尾。",
+      "trap": "用广角会让建筑变形失去纪念碑式稳定感；没有压缩各层分离尺度感消失。这是100%使用的核心技法，不是可选装饰。",
+      "pairs": [
+        "micro-figure-anchor",
+        "monumental-scale",
+        "cloud-sea-stratification"
+      ],
+      "trigger": [
+        "宏大场景怎么拍",
+        "建筑尺度感",
+        "纪念碑式构图",
+        "长焦怎么用"
+      ]
+    },
+    {
+      "id": "worms-eye-sublime",
+      "title": "虫眼崇高",
+      "en": "Worm's Eye Sublime",
+      "aliases": [
+        "低角度仰望",
+        "worm's eye view",
+        "low angle 崇高",
+        "压迫感构图"
+      ],
+      "layer": "layout",
+      "plain": "从建筑基座脚下向上仰望，建筑高到群山如卵石，前景石狮台阶作为尺度锚点。",
+      "say": "用 worm's eye view 从基座仰望，建筑高到 dwarfs surrounding mountains to pebbles，前景放石狮和台阶，云瀑从门洞倾泻。",
+      "trap": "平视建筑就变成物体而不是崇高存在；高角度俯瞰建筑变小失去压迫感。视角必须低于基座水平线，建筑顶部必须超出画面上边缘。",
+      "pairs": [
+        "micro-figure-anchor",
+        "monumental-scale",
+        "single-piece-jade-colossus"
+      ],
+      "trigger": [
+        "巨门怎么画",
+        "高塔仰视",
+        "压迫感怎么制造",
+        "崇高场景"
+      ]
+    },
+    {
+      "id": "spiral-twisting-stack",
+      "title": "螺旋扭转层叠",
+      "en": "Spiral Twisting Stack",
+      "aliases": [
+        "螺旋塔",
+        "扭转层叠",
+        "spiral silhouette",
+        "动态上升剪影"
+      ],
+      "layer": "layout",
+      "plain": "多层塔阁每层旋转一定角度形成螺旋剪影，长焦压缩堆叠飞檐形成重复韵律。",
+      "say": "九层塔每层旋转5-15度形成 spiral silhouette，telephoto compression stacking twisted eaves，立面可有光瀑倾泻，顶部三层浮出云海。",
+      "trap": "各层对齐不旋转就是普通塔失去动态上升感；旋转角度超过30度结构混乱失去建筑感。飞檐必须可见且形成螺旋轮廓线。",
+      "pairs": [
+        "cloud-sea-stratification",
+        "telephoto-monumental-compression",
+        "dougong-flying-eaves"
+      ],
+      "trigger": [
+        "塔怎么画有动感",
+        "上升动势",
+        "螺旋建筑",
+        "层叠飞檐"
+      ]
+    },
+    {
+      "id": "caisson-cosmos-ceiling",
+      "title": "藻井宇宙穹顶",
+      "en": "Caisson Cosmos Ceiling",
+      "aliases": [
+        "藻井星空",
+        "无限宇宙室内",
+        "mirror floor infinity",
+        "内部天空"
+      ],
+      "layer": "layout",
+      "plain": "大殿内部大到包含自己的天空，藻井绘金色宇宙星空，镜面白玉地板反射形成无限效果。",
+      "say": "大殿 so vast it contains its own internal sky，藻井 painted caisson ceiling depicting a golden cosmos with swirling clouds and stars，镜面白玉地板反射形成 infinity effect，朱红柱与白玉柱交替延伸至无限。",
+      "trap": "普通室内没有宇宙感；没有镜面反射空间有限失去无限效果。必须有藻井+镜面地板的反射对，列柱至少6对且延伸至灭点。",
+      "pairs": [
+        "framed-portal",
+        "volumetric-god-ray-forest",
+        "gold-jade-material-contrast"
+      ],
+      "trigger": [
+        "大殿内部怎么画",
+        "无限空间",
+        "宇宙藻井",
+        "室内崇高感"
+      ]
+    },
+    {
+      "id": "volumetric-god-ray-forest",
+      "title": "体积神光森林",
+      "en": "Volumetric God Ray Forest",
+      "aliases": [
+        "光束森林",
+        "god ray forest",
+        "柱间体积光",
+        "forest of light"
+      ],
+      "layer": "light",
+      "plain": "金色体积光柱从上方斜射穿过柱间雾气形成光的森林，尘埃粒子在光束中漂浮。",
+      "say": "volumetric god rays slanting through atmospheric mist between columns forming a forest of light，dust particles floating in light beams，光束方向一致从同一光源射出。",
+      "trap": "光束方向混乱失去森林韵律；没有雾气或尘埃介质光束不可见只剩光斑；光束颜色用冷蓝失去神光温暖感。光束至少3条，必须有介质。",
+      "pairs": [
+        "caisson-cosmos-ceiling",
+        "translucent-jade-inner-glow",
+        "cool-field-warm-point"
+      ],
+      "trigger": [
+        "神圣感光线",
+        "柱间光束",
+        "体积光怎么画",
+        "神光效果"
+      ]
+    },
+    {
+      "id": "translucent-jade-inner-glow",
+      "title": "玉质内发光",
+      "en": "Translucent Jade Inner Glow",
+      "aliases": [
+        "半透玉光",
+        "jade glow",
+        "玉质通透",
+        "glows from within"
+      ],
+      "layer": "light",
+      "plain": "半透明白玉建筑内部发光，侧逆光强化玉质通透感，边缘形成温润光晕。",
+      "say": "建筑 translucent white jade that glows from within，用 side backlighting 强化通透感，玉拱桥在逆光下呈现半透明光晕，发光颜色为暖白淡金3500-4500K。",
+      "trap": "白玉不透明失去玉质通透核心特征；没有内部发光只是白色石头不是玉；正面打光玉质扁平失去通透层次。发光强度要适中不是霓虹灯。",
+      "pairs": [
+        "gold-jade-material-contrast",
+        "liquid-gold-roof-sunlit",
+        "single-piece-jade-colossus"
+      ],
+      "trigger": [
+        "玉怎么发光",
+        "半透明材质",
+        "玉质通透感",
+        "温润玉光"
+      ]
+    },
+    {
+      "id": "liquid-gold-roof-sunlit",
+      "title": "金顶受光",
+      "en": "Liquid Gold Roof Sunlit",
+      "aliases": [
+        "鎏金屋顶",
+        "liquid gold",
+        "金顶质感",
+        "sunlit gold roof"
+      ],
+      "layer": "light",
+      "plain": "鎏金屋顶在阳光下呈现液态金属流动感，受光面亮度最高，与冷调云海形成冷暖对比。",
+      "say": "屋顶 liquid gold roof tiles，sunlit upper section 亮度最高，与冷调云海形成对比，flying eaves silhouettes in spiral 呈现金色轮廓线。",
+      "trap": "屋顶为普通黄色失去液态金高级质感；金顶与环境同色温失去冷暖对比；没有飞檐失去中式建筑识别特征。金必须是 liquid gold 不是 #FFD700。",
+      "pairs": [
+        "cool-field-warm-point",
+        "gold-jade-material-contrast",
+        "dougong-flying-eaves"
+      ],
+      "trigger": [
+        "金顶怎么画",
+        "鎏金质感",
+        "屋顶受光",
+        "金色建筑"
+      ]
+    },
+    {
+      "id": "gold-jade-material-contrast",
+      "title": "金白玉质对撞",
+      "en": "Gold-Jade Material Contrast",
+      "aliases": [
+        "金顶玉身",
+        "金白对撞",
+        "gold jade contrast",
+        "鎏金白玉"
+      ],
+      "layer": "material",
+      "plain": "鎏金与白玉的核心材质二元——金在高处屋顶斗拱，玉在低处墙体栏杆，形成金顶玉身格局。",
+      "say": "屋顶斗拱用 liquid gold，建筑主体栏杆台阶用 white jade，形成金顶玉身格局，朱红漆柱作为第三色点缀占比≤10%，金的不透明与玉的半透明形成材质对比。",
+      "trap": "全金建筑俗气暴发户；全玉无金单调缺乏重点；朱红大面积喧宾夺主。金质面积≤30%，玉质≥40%，朱红≤10%。",
+      "pairs": [
+        "translucent-jade-inner-glow",
+        "liquid-gold-roof-sunlit",
+        "cool-field-warm-point"
+      ],
+      "trigger": [
+        "天宫材质",
+        "金白配色",
+        "中式建筑材料",
+        "金顶玉身"
+      ]
+    },
+    {
+      "id": "single-piece-jade-colossus",
+      "title": "整玉雕刻巨构",
+      "en": "Single-Piece Jade Colossus",
+      "aliases": [
+        "整块玉雕",
+        "single piece jade",
+        "玉质巨构",
+        "整玉天门"
+      ],
+      "layer": "material",
+      "plain": "由整块白玉雕刻而成的不可能巨构——天门高到群山如卵石，玉柱穿透三层云海，表面有精细浮雕。",
+      "say": "明确标注 carved from a single piece of pristine white jade，巨构尺度高到 dwarfs mountains to pebbles，表面 spiral relief carvings of cloud and phoenix patterns，玉质半透明内部发光。",
+      "trap": "由多块玉拼接失去整玉工艺极致感；无浮雕光滑白柱缺乏细节；正常尺度失去不可能巨构的超现实感。必须标注 single piece，必须有浮雕，必须是巨构尺度。",
+      "pairs": [
+        "worms-eye-sublime",
+        "translucent-jade-inner-glow",
+        "cloud-pattern-beast-head-ornament"
+      ],
+      "trigger": [
+        "玉门怎么画",
+        "整玉雕刻",
+        "玉柱巨构",
+        "工艺极致感"
+      ]
+    },
+    {
+      "id": "cloud-pattern-beast-head-ornament",
+      "title": "云纹兽首装饰",
+      "en": "Cloud Pattern Beast-Head Ornament",
+      "aliases": [
+        "云纹栏杆",
+        "兽首望柱",
+        "守护石狮",
+        "中式纹样系统"
+      ],
+      "layer": "material",
+      "plain": "建筑表面的中式纹样系统——栏杆雕云纹，望柱用兽首，基座放守护石狮，玉柱表面有云凤浮雕。",
+      "say": "栏杆 carved cloud patterns on railings，望柱 beast-head balustrade posts，基座 guardian lion statue，玉柱表面 spiral relief carvings of cloud and phoenix patterns。",
+      "trap": "光滑无装饰的白玉栏杆是现代极简失去中式识别度；用欧式柱头线脚风格混乱；纹样过于繁复装饰过载。至少2种中式纹样，栏杆必须有云纹或兽首。",
+      "pairs": [
+        "single-piece-jade-colossus",
+        "dougong-flying-eaves",
+        "gold-jade-material-contrast"
+      ],
+      "trigger": [
+        "中式栏杆",
+        "建筑装饰纹样",
+        "石狮基座",
+        "云纹雕刻"
+      ]
+    },
+    {
+      "id": "camera-angle-first-prompt",
+      "title": "视角先行提示词",
+      "en": "Camera-Angle-First Prompt Structure",
+      "aliases": [
+        "提示词结构",
+        "prompt structure",
+        "视角先行",
+        "MJ提示词模板"
+      ],
+      "layer": "method",
+      "plain": "Midjourney提示词的标准结构——以相机视角开头，然后主体描述、环境氛围、尺度锚点、技法收尾、统一参数。",
+      "say": "提示词以 camera angle 开头（Low angle / Telephoto side view / Worm's eye view），然后主体（材质+结构+装饰）→环境（云海/云瀑/光线）→尺度锚点（tiny figure in flowing white silk robes）→技法收尾（telephoto compression, impossible architecture, gravity-defying, monumental scale, cinematic photography, epic scale, atmospheric perspective, large format）→参数（--ar 16:9 --v 8.2 --s 100 --raw）。",
+      "trap": "以主体开头视角后置会导致MJ忽略构图；缺少技法收尾画面缺乏电影感；参数不统一风格漂移。视角必须是第一个词，技法收尾必须包含 telephoto compression 和 monumental scale。",
+      "pairs": [
+        "telephoto-monumental-compression",
+        "prompt-six-segment",
+        "prompt-conciseness"
+      ],
+      "trigger": [
+        "MJ提示词怎么写",
+        "提示词结构",
+        "Midjourney模板",
+        "视角怎么放"
       ]
     }
   ]

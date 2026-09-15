@@ -208,3 +208,70 @@
   5. 画框与内景之间**不加地面/地板**，让门直接悬浮在虚空中。
 - **硬参数**：画框内禁止放人物（人物只能在画框外）；禁止用现代材质（玻璃/金属框）。
 - **与已有规则关系**：细化 `boundary-threshold`（界）——从"分隔空间"升级为"框中异质世界"。
+
+---
+
+## IVAN CHIU 云海天宫系列新增原则（11图实证）
+
+> 来源：抖音博主 IVAN CHIU（@_IVANCHIU）Midjourney Prompt Test 系列 11 张图文，全部附带完整提示词。主题：云海天宫/悬浮玉岛/白衣仙人/不可能建筑。工具：Midjourney v8.2 --s 100 --raw -ar 16:9。
+
+### 新增原则 S7：云海层叠法（Cloud-Sea-Stratification）——垂直方向的建筑-云层交替节奏
+
+- **触发场景**：天宫/仙境/悬浮建筑群/史诗级崇高场景
+- **可执行操作**：
+  1. 建筑悬浮于**多层云海**之上（至少2层，推荐3层），每层云海光线/色温不同；
+  2. 云瀑从建筑边缘或层间倾泻而下（cloud waterfall cascading from island edge / between levels）；
+  3. 垂直方向形成"建筑层—云层—建筑层"的交替节奏，每层建筑被云海部分遮挡；
+  4. 最上层建筑浮出云海（emerging above cloud layer），最下层建筑沉入云海（distant celestial buildings in haze）。
+- **硬参数**：云海层数 ≥ 2；至少1处云瀑；每层云海色温差 ≥ 500K；建筑被云海遮挡比例 30%-70%。
+- **反例**：只有一层平坦云海 = 地平线建筑的变体，失去垂直层叠节奏；无云瀑 = 云海静止，缺乏动态。
+- **与已有规则关系**：扩展 `horizon-architecture`（S2）——从"水平地平线"升级为"垂直多层云海"；与 `anti-gravity-suspension`（S5）配合（悬浮建筑的环境具体化）。
+
+### 新增原则 S8：长焦压缩巨构（Telephoto-Monumental-Compression）——100%使用的核心技法
+
+- **触发场景**：所有需要 monumental scale（纪念碑式尺度）的宏大场景
+- **可执行操作**：
+  1. 提示词必须包含 `telephoto compression`，把多层建筑/云层/人物压缩到同一焦平面；
+  2. 压缩后的层叠感强化尺度——远处建筑看起来"贴"在近处建筑后面，形成无限层叠；
+  3. 配合 `epic scale` / `atmospheric perspective` / `large format` / `cinematic photography` 收尾；
+  4. 长焦压缩 + 微人锚定（S3）= 巨构感的最强组合。
+- **硬参数**：提示词必须含 `telephoto compression`；层叠层数 ≥ 3；配合 `large format` 收尾。
+- **反例**：用广角（wide angle）= 建筑变形，失去纪念碑式稳定感；无压缩 = 各层分离，尺度感消失。
+- **与已有规则关系**：新增——是 `monumental-scale` 的具体镜头技法实现；与 `micro-figure-anchor`（S3）配合形成"压缩+微人"双重尺度强化。
+
+### 新增原则 S9：低角度虫眼崇高（Worms-Eye-Sublime）——从脚下仰望的压迫感
+
+- **触发场景**：巨门/高塔/天柱/需要"压倒性崇高感"的场景
+- **可执行操作**：
+  1. 使用 `worm's eye view` 或 `low angle`，从建筑基座向上仰望；
+  2. 建筑高到"群山如卵石"（so tall it dwarfs surrounding mountains to pebbles）；
+  3. 前景放置尺度锚点：石狮/台阶/栏杆/白衣人（foreground carved stone steps and guardian lion base）；
+  4. 云瀑/体积光从建筑顶部或门洞中倾泻/射出，强化"天工"感。
+- **硬参数**：视角必须低于建筑基座水平线；前景锚点占画面 10%-20%；建筑顶部必须超出画面上边缘或接近顶部。
+- **反例**：平视 = 建筑变成"物体"而非"崇高存在"；高角度俯瞰 = 建筑变小，失去压迫感。
+- **与已有规则关系**：新增——是 `monumental-scale` 的视角实现；与 `micro-figure-anchor`（S3）配合（前景微人仰望巨构）。
+
+### 新增原则 S10：螺旋扭转层叠（Spiral-Twisting-Stack）——每层旋转的动态剪影
+
+- **触发场景**：塔/阁/天柱/需要"上升动势"的高层建筑
+- **可执行操作**：
+  1. 多层塔/阁，每层旋转一定角度（each level rotated），形成螺旋剪影（spiral silhouette）；
+  2. 长焦压缩堆叠飞檐（telephoto compression stacking twisted eaves），飞檐在层叠中形成重复韵律；
+  3. 立面可有光瀑倾泻（cascading light waterfalls on facade），增加动态；
+  4. 顶部三层浮出云海（top three stories emerging above cloud layer），金顶受光。
+- **硬参数**：层数 ≥ 5；每层旋转角度 5°-15°；飞檐必须可见且形成螺旋轮廓线。
+- **反例**：各层对齐不旋转 = 普通塔，失去动态上升感；旋转角度 > 30° = 结构混乱，失去建筑感。
+- **与已有规则关系**：新增——是 `monumental-scale` 的动态形态实现；与 `cloud-sea-stratification`（S7）配合（塔穿多层云海）。
+
+### 新增原则 S11：藻井宇宙穹顶（Caisson-Cosmos-Ceiling）——内部空间的无限宇宙
+
+- **触发场景**：大殿内部/天宫 interiors/需要"空间内含宇宙"的超现实室内
+- **可执行操作**：
+  1. 大殿内部大到"包含自己的天空"（so vast it contains its own internal sky）；
+  2. 藻井绘金色宇宙星空（painted caisson ceiling depicting a golden cosmos with swirling clouds and stars）；
+  3. 镜面白玉地板反射藻井，形成无限效果（mirror-like white jade floor reflecting the cosmos ceiling creating an infinity effect）；
+  4. 朱红漆柱与白玉柱交替延伸至无限（vermilion lacquered columns alternating with white jade columns receding into infinite distance）；
+  5. 体积神光从柱间雾气斜射，形成"光的森林"（volumetric god rays slanting through atmospheric mist between columns forming a forest of light）。
+- **硬参数**：必须有藻井+镜面地板的反射对；列柱 ≥ 6对且延伸至灭点；体积光束 ≥ 3条。
+- **反例**：普通室内 = 没有"宇宙感"；无镜面反射 = 空间有限，失去无限效果。
+- **与已有规则关系**：新增——是 `framed-portal`（S6）的室内极端形态（框中框→无限宇宙）；与体积光原则（light-shadow L1）配合。
