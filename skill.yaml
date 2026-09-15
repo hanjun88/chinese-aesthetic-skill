@@ -1,0 +1,134 @@
+name: chinese-aesthetic-skill
+version: 1.0.0
+author: HEARTMIRROR Team
+description: |
+  中式美学设计 Skill。为 AI 设计工具（Impeccable/Figma/Codex/Floot/img2threejs）提供可执行的中国传统建筑与美学规则，
+  约束 HEARTMIRROR Act 0 的视觉与交互实现。覆盖空间秩序、虚实关系、比例、材料、光影、色彩、动势、时间感、禁忌、交互语义
+  十大核心规则，每条含可测指标、P0/P1 判定条件与实现建议。
+
+  触发场景：设计中式/东方风格界面、3D场景、动效、交互原型时；
+  评审已有设计是否符合中式美学时；为 img2threejs 生成材质参数和深度图规范时。
+
+  不适用：纯功能性UI无美学诉求；明确要求西方/现代/极简风格；功能需求/内容故事/文案撰写。
+
+license: MIT
+repository: https://github.com/HEARTMIRROR/chinese-aesthetic-skill
+
+# 依赖的现有 Skill（管线位置：finesse-brief → 本Skill → finesse-skill → frame-smith → finesse-term）
+dependencies:
+  - name: finesse-brief
+    role: 上游需求规格
+  - name: finesse-skill
+    role: 下游界面设计执行
+  - name: frame-smith
+    role: 下游动效执行
+  - name: finesse-term
+    role: 术语对齐
+
+# 调用接口
+api:
+  input_format: JSON
+  input_schema:
+    scene:
+      type: string
+      description: 场景标识，如 "ACT0_gate"
+    colors:
+      type: array
+      items: string
+      description: 当前主色值列表，如 ["#88C3EB"]
+    materials:
+      type: array
+      items: object
+      description: 当前材质配置
+    events:
+      type: array
+      items: string
+      description: 用户交互事件序列，如 ["mouseMove","click","scroll"]
+    dimensions:
+      type: object
+      description: 场景尺寸参数
+  output_format: JSON
+  output_schema:
+    colors:
+      type: array
+      items: string
+      description: 推荐色彩列表
+    layout:
+      type: object
+      description: 布局调整建议
+    materials:
+      type: array
+      items: object
+      description: 推荐材质参数
+    effects:
+      type: array
+      items: string
+      description: 推荐动效/交互效果
+    violations:
+      type: array
+      items: object
+      description: 违反规则的项，含 rule_id, severity(P0/P1), message
+    score:
+      type: number
+      description: 中式美学评分 0-100
+
+# 规则模块索引
+rules:
+  - id: spatial-order
+    file: guidelines/spatial-order.md
+    priority: P0
+    title: 空间秩序（中轴对称、层级布局）
+  - id: void-solid
+    file: guidelines/void-solid.md
+    priority: P0
+    title: 虚实关系（留白与建筑体量）
+  - id: proportion
+    file: guidelines/proportion.md
+    priority: P0
+    title: 比例（屋宽高、柱距/间距关系）
+  - id: material
+    file: guidelines/material.md
+    priority: P1
+    title: 材料与质感（木、石、砖、金属）
+  - id: light-shadow
+    file: guidelines/light-shadow.md
+    priority: P1
+    title: 光影布局（柔和光线、层次感）
+  - id: color
+    file: guidelines/color.md
+    priority: P0
+    title: 色彩体系（五正色与衍生）
+  - id: motion
+    file: guidelines/motion.md
+    priority: P1
+    title: 运动动势（云流、粒子、摄像机运动）
+  - id: time
+    file: guidelines/time.md
+    priority: P1
+    title: 时间感（风化、昼夜变化）
+  - id: taboo
+    file: guidelines/taboo.md
+    priority: P0
+    title: 禁忌（文化符号与廉价感避免）
+  - id: interaction
+    file: guidelines/interaction.md
+    priority: P0
+    title: 交互语义（动作触发对应意象）
+
+# 验收流程
+gates:
+  - id: Gate1
+    name: 仓库结构与文档完整性
+    type: automated
+  - id: Gate2
+    name: 模块文件与规则完整性
+    type: automated+manual
+  - id: Gate3
+    name: 规则算法与示例
+    type: automated
+  - id: Gate4
+    name: UI/动效集成验证
+    type: integration
+  - id: Gate5
+    name: 用户验收与审美评估
+    type: manual
