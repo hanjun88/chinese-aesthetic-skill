@@ -18,10 +18,13 @@ finesse-brief（需求规格）
 
 ```bash
 # 方式一：Impeccable / CLI
-npx skills add git+https://github.com/HEARTMIRROR/chinese-aesthetic-skill.git
+npx skills add git+https://github.com/hanjun88/chinese-aesthetic-skill.git
 
 # 方式二：克隆到本地 skills 目录
-git clone https://github.com/HEARTMIRROR/chinese-aesthetic-skill.git ~/.skills/chinese-aesthetic-skill
+git clone https://github.com/hanjun88/chinese-aesthetic-skill.git ~/.skills/chinese-aesthetic-skill
+
+# 方式三：npm 包（Node.js 项目中直接 import）
+npm install github:hanjun88/chinese-aesthetic-skill
 ```
 
 ## 使用方法（快速开始）
@@ -57,6 +60,57 @@ git clone https://github.com/HEARTMIRROR/chinese-aesthetic-skill.git ~/.skills/c
 }
 ```
 
+## 核心引擎（8个可执行决策引擎）
+
+本 Skill 的核心不是规则手册，是**可执行的决策引擎**。每个引擎输入设计参数，输出判定结果或生成方案。
+
+```javascript
+import { chineseness, clicheDetector, colorEngine, fullAssessment } from 'chinese-aesthetic-skill';
+
+// 1. 判定"这个设计为什么是中国的"（10维评分 + 结构东方性测试）
+const result = chineseness.assessChineseness({
+  voidRatio: 0.65,
+  colors: ['#E8E4D9', '#2C3E50', '#B8860B'],
+  brightnessRatio: 4,
+  buildingToHumanRatio: 10,
+});
+console.log(result.score, result.level, result.coreAnswer);
+// → 76, "authentic", "这个设计是中国的，主要因为留白≥50%、不完整入画..."
+
+// 2. 反俗套检测（国潮贴图/古装影视/仿古景区/AI国风）
+const cliches = clicheDetector.detectCliches({
+  patternCoverage: 0.25,
+  colors: ['#FF0000', '#FFD700'],
+});
+// → { overallScore: 0.78, clicheTypes: ['guochao','guzhuang','fanggu','aiGuofeng'] }
+
+// 3. 生成配色方案（五方正色 + 君臣佐使70:20:10）
+const scheme = colorEngine.generateColorScheme({ preset: 'act0-cloud-gate' });
+// → { colors: { main: '#E8E4D9', secondary: '#2C3E50', accent: '#B8860B' }, ratio: {...} }
+
+// 4. 一站式综合评估（运行所有8个引擎）
+const full = fullAssessment(design);
+// → { overallScore: 91, level: 'authentic', engines: {...}, recommendations: [...] }
+```
+
+| 引擎 | 核心能力 | 输入 → 输出 |
+|---|---|---|
+| **chineseness** | "为什么是中国的"判定 | 设计参数 → 10维评分(0-100) + 结构东方性测试 + 核心回答 |
+| **clicheDetector** | 四类俗套自动检测 | 设计参数 → 俗套类型 + 评分 + 违规项 + 修复建议 |
+| **spatialEngine** | 空间秩序生成器 | 场景类型/尺寸 → 中轴/开间/层级/尺度/进深/虚实分配 |
+| **colorEngine** | 色彩决策器 | 场景/情绪 → 五方正色选择 + 君臣佐使比例 + HEX色值 |
+| **lightEngine** | 光影决策器 | 时间/场景 → 光源类型/角度/强度 + 阴影 + 体积光 + 暗部色 |
+| **interactionEngine** | 交互语义映射器 | 用户动作 → 东方意象响应 + 动画参数 + FSM状态转换 |
+| **proportionEngine** | 比例校验与生成器 | 尺寸参数 → √2/三段式/出檐/巨构比例合规性 + 推荐值 |
+| **materialEngine** | 材质决策器 | 元素类型 → PBR材质参数(color/roughness/metalness) + 风化包浆 |
+
+### 引擎测试
+
+```bash
+npm test
+# → 74 passed, 0 failed
+```
+
 ## 目录结构
 
 ```
@@ -85,6 +139,17 @@ chinese-aesthetic-skill/
 │   ├── time.md             # 时间变化方案
 │   ├── taboo.md            # 禁忌检测
 │   └── interaction.md      # 交互编排
+├── lib/                    # ★ 核心引擎（可执行代码）
+│   ├── index.js            # 统一入口 + fullAssessment 一站式评估
+│   ├── chineseness.js      # "为什么是中国的"判定引擎（10维评分+结构东方性测试）
+│   ├── cliche-detector.js  # 反俗套检测引擎（四类俗套）
+│   ├── spatial-engine.js   # 空间秩序生成器（中轴/开间/层级/尺度/进深）
+│   ├── color-engine.js     # 色彩决策器（五方正色+君臣佐使）
+│   ├── light-engine.js     # 光影决策器（天光/漏光/侧光/体积光）
+│   ├── interaction-engine.js # 交互语义映射器（动作→意象+FSM）
+│   ├── proportion-engine.js # 比例校验与生成器（√2/三段式/出檐/巨构）
+│   ├── material-engine.js  # 材质决策器（PBR参数+风化包浆）
+│   └── utils/              # 工具函数（色彩转换/数学计算）
 ├── docs/                   # 设计说明文档
 ├── assets/
 │   └── ACT0/               # ACT0 场景规范与素材
@@ -93,6 +158,7 @@ chinese-aesthetic-skill/
 │       ├── interaction-timeline.md
 │       └── fsm.md
 ├── tests/                  # 验证脚本
+│   ├── engines.test.js     # ★ 8个核心引擎集成测试（74项）
 │   ├── gate1-structure.test.js
 │   ├── gate2-rules.test.js
 │   └── gate3-algorithm.test.js

@@ -1,20 +1,26 @@
 {
   "name": "chinese-aesthetic-skill",
   "version": "1.0.0",
-  "description": "中式美学设计 Skill — 为 HEARTMIRROR Act 0 提供可执行的中国传统建筑与美学规则",
-  "main": "scripts/validate.js",
+  "description": "东方空间美学决策引擎 — 8个可执行核心引擎，回答\"这个设计为什么是中国的\"",
+  "main": "lib/index.js",
+  "type": "module",
   "scripts": {
-    "test": "node scripts/validate.js",
+    "test": "node tests/engines.test.js",
+    "test:engines": "node tests/engines.test.js",
+    "test:gates": "node scripts/validate.js",
     "gate1": "node scripts/validate.js --gate 1",
     "gate2": "node scripts/validate.js --gate 2",
     "gate3": "node scripts/validate.js --gate 3",
     "validate": "node scripts/validate.js --input"
   },
-  "keywords": ["chinese-aesthetic", "design", "skill", "heartmirror", "three.js"],
+  "keywords": ["chinese-aesthetic", "eastern-aesthetic", "design-engine", "decision-engine", "heartmirror", "three.js", "spatial-order", "void-solid"],
   "author": "HEARTMIRROR Team",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/hanjun88/chinese-aesthetic-skill.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
