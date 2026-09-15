@@ -1317,6 +1317,119 @@
         "背影人物",
         "人物占比"
       ]
+    },
+    {
+      "id": "prompt-six-segment",
+      "title": "六段式提示词",
+      "en": "Six-Segment Prompt Formula",
+      "aliases": [
+        "提示词六段",
+        "主体场景构图光线质感参数",
+        "prompt公式",
+        "segmented prompt structure"
+      ],
+      "layer": "visual",
+      "plain": "Midjourney等文生图工具的提示词按6段顺序组织——主体（谁或什么）+场景（在哪里）+构图（景别与视角）+光线（方向与色温）+质感（照片/电影/绘画）+参数（--ar/--s/--v放最后），先定景别再描述人物和环境，短而准确比堆形容词稳定。",
+      "say": "写prompt时按6段顺序逐段填写：01主体定性（一只巨型火焰朱雀）→02场景（高速飞越云海）→03构图（超广角极端仰视，S形盘旋俯冲）→04光线（左侧金色逆光穿透云层，体积光）→05质感（电影级幻想概念艺术，真实摄影质感）→06参数（--ar 16:9 --stylize 350 --hd --v 8.2），每段一个核心词不堆形容词。",
+      "trap": "把6段混成一团流水账——比如一上来就写'一个很美的场景有很多东西光线很好看'，没有景别没有光线方向，模型自由发挥结果随机。也别把参数写在prompt中间，参数必须统一放最后。另一个坑是段内堆太多形容词，一段一个核心词就够，多了互相冲突。",
+      "pairs": [
+        "prompt-conciseness",
+        "four-symbols-motif",
+        "plastic-oily-texture"
+      ],
+      "trigger": [
+        "prompt怎么写",
+        "提示词结构",
+        "Midjourney公式",
+        "文生图提示词怎么组织",
+        "6段式",
+        "写不出好prompt"
+      ]
+    },
+    {
+      "id": "anti-plastic-unretouched",
+      "title": "反塑料未磨皮",
+      "en": "Anti-Plastic Unretouched",
+      "aliases": [
+        "beautiful but unretouched",
+        "未经磨皮",
+        "真实皮肤纹理",
+        "natural facial asymmetry",
+        "反塑料感prompt"
+      ],
+      "layer": "visual",
+      "plain": "用具体皮肤/镜头/光线语言替代4K/8K/HD等画质玄学词——4K只是分辨率描述，不能替代真实皮肤纹理（realistic skin texture）、细微毛孔（subtle pores）、自然面部差异（natural facial asymmetry）、浅景深（shallow depth of field）、镜头柔光（natural lens bloom）、胶片颗粒（subtle film grain）这些可量化的质感词。万能短语：beautiful but unretouched。",
+      "say": "人像prompt中加入：realistic skin texture + subtle pores + natural skin translucency + natural facial asymmetry + unretouched editorial portrait，镜头用shallow depth of field + natural lens bloom，质感用candid photography + subtle film grain，不要用masterpiece/8k/ultra-realistic/sharp focus这些画质玄学词，万能反塑料短语beautiful but unretouched直接加在主体描述后。",
+      "trap": "以为加了4K/8K/HD就是高清真实——这些词只告诉模型分辨率，不告诉模型皮肤长什么样、镜头怎么拍、光怎么打，结果还是塑料光滑无毛孔的AI脸。也别只写cinematic lighting一个词，要写清方向（逆光/侧光/伦勃朗光）、软硬（柔和漫射光/硬光）、色温（暖金/冷蓝）。",
+      "pairs": [
+        "plastic-oily-texture",
+        "film-grain-overlay",
+        "prompt-six-segment"
+      ],
+      "trigger": [
+        "皮肤太塑料",
+        "AI脸怎么不像真人",
+        "怎么去掉磨皮感",
+        "4K不够真实",
+        "人像prompt怎么写",
+        "unretouched"
+      ]
+    },
+    {
+      "id": "four-symbols-motif",
+      "title": "四神兽母题",
+      "en": "Four Symbols Motif",
+      "aliases": [
+        "青龙白虎朱雀玄武",
+        "中式神话prompt范式",
+        "神兽构图",
+        "东方巨物神话"
+      ],
+      "layer": "visual",
+      "plain": "青龙/白虎/朱雀/玄武四张完整Midjourney卡提炼的中式神话题材prompt构造规律——主体定性→环境叙事（云海+天宫仙山+悬浮建筑三件套）→构图巨物（超广角+极端仰视+前中远景平行，用建筑尺度反衬神兽体量）→光线情绪（青龙圣洁蓝日光/朱雀辉煌金逆光/白虎神秘橙黄昏/玄武冷肃冷月星河）→风格收束（电影级XX+东方神话+超高细节）→参数（--ar 16:9 --hd --v 8.2，--stylize 200-350）。",
+      "say": "写中式神兽prompt时按六层构造：主体先定性（苍青玉鳞鎏金描边/剑齿外露骨甲尖刺/流光火焰包裹/龟甲厚重如山岩），环境用云海+天宫仙山+悬浮倒悬建筑三件套做神性尺度，构图用超广角极端仰视+前中远景平行+渺小建筑反衬巨物体量，光线按情绪选（圣洁=淡蓝高空日光/辉煌=金色逆光体积光/神秘=橙黄黄昏逆光/冷肃=冷月星河），风格统一用'电影级幻想概念艺术+东方上古神话+超高细节'收束，参数--ar 16:9 --hd --v 8.2 --stylize 350。",
+      "trap": "把四神兽当普通动物写——只写'一只龙在云里'没有巨物尺度感和文化环境锚点，结果变成普通奇幻插画不是东方神话。也别四种神兽用同一种光线情绪——青龙圣洁用蓝日光，朱雀辉煌用金逆光，白虎神秘用橙黄昏，玄武冷肃用冷月星河，光线情绪要匹配神兽性格。另一个坑是--stylize太高（>400）导致风格化过头失去神兽的真实质感。",
+      "pairs": [
+        "monumental-scale",
+        "void-solid",
+        "prompt-six-segment"
+      ],
+      "trigger": [
+        "青龙怎么画",
+        "朱雀prompt",
+        "中式神兽",
+        "四神兽构图",
+        "东方神话prompt怎么写",
+        "巨物神兽"
+      ]
+    },
+    {
+      "id": "prompt-conciseness",
+      "title": "提示词简洁律",
+      "en": "Prompt Conciseness Law",
+      "aliases": [
+        "短而准胜过长堆砌",
+        "风格词不超过2个",
+        "不堆艺术家姓名",
+        "prompt纪律"
+      ],
+      "layer": "visual",
+      "plain": "三条prompt铁律——风格词选1-2个即可（过多互相冲突）；优先描述视觉特征不堆叠艺术家姓名（说浅景深+逆光比说by Annie Leibovitz更可控）；短而准确比堆满形容词更稳定。示例：'宋代女子，坐在廊下，近景三分之四视角，暖金侧光，电影胶片摄影 --ar 3:4 --raw --s 100'——6段齐全每段一个核心词。",
+      "say": "写prompt时执行三条纪律：①风格词只选1-2个（比如只选cinematic film still，不要同时加editorial+documentary+fine-art+film aesthetic）；②描述视觉特征（shallow depth of field/backlighting/film grain）而不是堆艺术家名字（by X by Y by Z）；③每段一个核心词不堆形容词，6段式结构写全即可，短而准比长而杂稳定。",
+      "trap": "以为prompt越长越好——堆10个风格词+5个艺术家名+一堆形容词，结果风格词互相冲突模型不知道听谁的，艺术家名激活的训练集图和你要的视觉特征不匹配。也别只写'beautiful, amazing, best quality'这种空泛形容词，模型不知道你要什么，必须写具体的视觉特征词。",
+      "pairs": [
+        "cliche-ai-guofeng",
+        "plastic-oily-texture",
+        "prompt-six-segment"
+      ],
+      "trigger": [
+        "prompt太长",
+        "风格词冲突",
+        "堆了很多词效果不好",
+        "怎么写好prompt",
+        "要不要加艺术家名字",
+        "形容词堆太多"
+      ]
     }
   ]
 }

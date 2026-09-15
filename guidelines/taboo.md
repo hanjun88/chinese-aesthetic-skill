@@ -149,3 +149,83 @@
 - AI国风感与 04 材料 的真实感原则直接相关
 - AI伪影消除工程与 04 材料 的微观质感、05 光影 的软阴影直接相关
 - 生图参数校验是 07 动势 粒子效果的前置条件（无伪影才谈动效）
+
+## 提示词工程方法论（11卡实证）
+
+**蒸馏来源：** 11张Midjourney 8.2提示词参考卡（四神兽完整prompt卡4张 + 实用关键词手册7页：封面/基础公式/镜头景别/构图视角/光线氛围/真人质感/艺术风格）。聚焦prompt构造纪律，不重复已有视觉原则（构图/色彩/意象已由其他规则覆盖）。
+
+### 6段式提示词构造公式
+
+所有Midjourney prompt按6段顺序组织，段间用逗号分隔，参数统一放最后：
+
+| 段 | 名称 | 回答的问题 | 示例词 |
+|---|---|---|---|
+| 01 | 主体 | 谁或什么 | 宋代女子 / 巨型火焰朱雀 / 白色异形剑齿虎 |
+| 02 | 场景 | 在哪里 | 坐在廊下 / 高速飞越云海 / 中景云海之中 |
+| 03 | 构图 | 景别与视角 | 近景三分之四视角 / 超广角极端仰视 / 广角构图 |
+| 04 | 光线 | 方向与色温 | 暖金侧光 / 左侧金色逆光穿透云层 / 黄昏金橙色逆光 |
+| 05 | 质感 | 照片、电影或绘画 | 电影胶片摄影 / 真实摄影质感 / 电影级幻想概念艺术 |
+| 06 | 参数 | 统一放在最后 | --ar 3:4 --raw --s 100 / --ar 16:9 --stylize 350 --hd --v 8.2 |
+
+**关键纪律：** 先确定景别，再描述人物和环境。短而准确，比堆满形容词更稳定。
+
+### 中式神话题材prompt范式（四神兽实证）
+
+从朱雀/白虎/青龙/玄武四张完整prompt卡提炼的中式神话构造规律：
+
+1. **主体描述层**：先给神兽定性（"巨型火焰朱雀"、"白色异形剑齿虎"、"上古东方神龙"、"北天镇界神兽龟蛇合体"），再展开材质细节（苍青玉鳞鎏金描边 / 剑齿外露骨甲尖刺 / 流光火焰包裹 / 爪甲厚重如山岩）
+2. **环境叙事层**：云海+天宫仙山+悬浮建筑是标准环境三件套——云海做虚实基底，天宫仙山做文化锚点，悬浮/倒悬建筑制造神性尺度
+3. **构图巨物层**：超广角+极端仰视/低空俯冲+前中远景平行，用渺小建筑反衬神兽体量（"用建筑尺度反衬玄武的恐怖体量"）
+4. **光线情绪层**：青龙=淡蓝色高空明亮日光（圣洁），朱雀=清晨金色逆光+体积光（辉煌），白虎=黄昏金橙色逆光（神秘），玄武=冷月+北天星河（冷肃压迫）
+5. **风格收束层**：统一用"电影级XX + 东方/国风XX + 超高细节"收束，如"电影级幻想概念艺术，东方上古神话，华丽圣洁"
+6. **参数规律**：四神兽全部 --ar 16:9 --hd --v 8.2，--stylize 在200-350之间（白虎200偏写实，朱雀/青龙/玄武350偏幻想）
+
+### 反塑料感prompt技巧
+
+**核心原则：4K/8K/HD只是画质描述，不能替代具体的皮肤、镜头与光线语言。**
+
+| 维度 | 塑料感写法（禁用） | 反塑料感写法（推荐） |
+|---|---|---|
+| 皮肤 | 光滑皮肤 / beautiful face | realistic skin texture（真实皮肤纹理）、subtle pores（细微毛孔）、natural skin translucency（自然通透感）、natural facial asymmetry（自然面部差异）、unretouched editorial portrait（未经磨皮的人像） |
+| 镜头 | sharp focus / high resolution | shallow depth of field（浅景深）、natural lens bloom（自然镜头柔光）、35mm/50mm/85mm/100mm macro 具体焦段 |
+| 光线 | cinematic lighting（笼统） | 写清方向、软硬与色温——backlighting（逆光）、rim light（轮廓光）、soft diffused light（柔和漫射光）、Rembrandt lighting（伦勃朗光）、volumetric light（体积光）、golden hour（黄金时刻） |
+| 质感 | best quality / masterpiece | candid photography（抓拍感）、documentary photography（纪实摄影）、cinematic film still（电影剧照）、subtle film grain（轻微胶片颗粒）、analog film aesthetic（胶片美学） |
+
+**万能反塑料短语：** `beautiful but unretouched`（想要美女但不塑料时直接加这句）
+
+### Prompt纪律（三条铁律）
+
+1. **风格词选1-2个即可，过多容易互相冲突。** 不要同时堆"杂志摄影+纪实+电影剧照+艺术摄影+胶片美学"——选一个最贴合情绪的。
+2. **优先描述视觉特征，不必堆叠艺术家姓名。** 说"浅景深+逆光+胶片颗粒"比说"by Annie Leibovitz by Peter Lindbergh"更可控。
+3. **短而准确比堆满形容词更稳定。** 示例："宋代女子，坐在廊下，近景三分之四视角，暖金侧光，电影胶片摄影 --ar 3:4 --raw --s 100"——6段齐全，每段一个核心词，不堆形容词。
+
+### 摄影语言词汇表（可直接用于prompt）
+
+**景别（Shot Size）——先定景别再描述内容：**
+- Extreme close-up（局部特写）/ Close-up（面部特写）/ Medium close-up（胸部以上）/ Medium shot（腰部以上）/ Full-body shot（完整全身）/ Wide shot（人物与环境）/ Extreme wide shot（超远景大场面）
+
+**镜头焦段（Lens Choice）：**
+- 35mm（环境叙事）/ 50mm（自然视角）/ 85mm（经典人像）/ 100mm macro（微距细节）
+
+**视角（Camera Angle）：**
+- Eye-level view（平视）/ High-angle view（俯视）/ Low-angle view（仰视）/ Bird's-eye view（鸟瞰）/ Overhead shot（正上方俯拍）/ Worm's-eye view（贴地仰拍）/ Three-quarter view（四分之三视角）/ Over-the-shoulder（越肩视角）/ Point-of-view shot（主观视角）
+- 想要正脸：near-frontal three-quarter view
+
+**构图秩序（Composition Order）：**
+- Centered composition（中心构图）/ Rule of thirds（三分法）/ Symmetrical composition（对称构图）/ Leading lines（引导线）/ Layered composition（前中后景层次）
+
+**光线（Lighting）——写清方向、软硬与色温：**
+- Natural light（自然光）/ Golden hour（黄金时刻）/ Soft diffused light（柔和漫射光）/ Side lighting（侧光）/ Backlighting（逆光）/ Rim light（轮廓光）/ Soft reflected light（柔和反射光）/ Rembrandt lighting（伦勃朗光）/ Volumetric light（体积光）/ Chiaroscuro（明暗对照）
+
+**氛围控制（Atmosphere）：**
+- Warm color temperature（暖色温）/ Cool color temperature（冷色温）/ Low contrast（低反差柔和感）/ High contrast（高反差戏剧感）/ Atmospheric haze（空气雾感）
+
+**皮肤与面部（Skin & Face）：**
+- realistic skin texture（真实皮肤纹理）/ subtle pores（细微毛孔）/ natural skin translucency（自然通透感）/ natural facial asymmetry（自然面部差异）/ unretouched editorial portrait（未经磨皮的人像）
+
+**摄影质感（Photographic Texture）：**
+- candid photography（抓拍感）/ documentary photography（纪实摄影）/ cinematic film still（电影剧照）/ shallow depth of field（浅景深）/ natural lens bloom（自然镜头柔光）/ subtle film grain（轻微胶片颗粒）
+
+**艺术风格（Art Style）——选1-2个：**
+- 摄影电影：editorial photography（杂志摄影）/ documentary photography（纪实摄影）/ cinematic film still（电影剧照）/ fine-art photography（艺术摄影）/ analog film aesthetic（胶片美学）
+- 绘画视觉：classical realism（古典写实）/ impressionism（印象主义）/ Chinese ink wash（中国水墨）/ watercolor painting（水彩画）/ art nouveau（新艺术）/ surrealism（超现实主义）/ minimalism（极简主义）/ brutalism（粗野主义）/ retrofuturism（复古未来主义）/ cyberpunk（赛博朋克）
