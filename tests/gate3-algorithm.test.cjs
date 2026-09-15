@@ -2,7 +2,7 @@
  * Gate3: 规则算法与示例测试
  * 测试 validate.js 中的核心算法：色彩校验、比例校验、虚实校验、禁忌检测
  */
-const { checkColor, checkPalette, checkProportion, checkVoidSolid, checkSpatialOrder, checkTaboo } = require('../scripts/validate');
+const { checkColor, checkPalette, checkProportion, checkVoidSolid, checkSpatialOrder, checkTaboo } = require('../scripts/validate.cjs');
 
 let passed = 0, failed = 0;
 

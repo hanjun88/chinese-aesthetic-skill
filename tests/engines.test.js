@@ -1,6 +1,6 @@
 /**
  * lib 引擎集成测试
- * 验证所有8个核心引擎能正常导入和运行
+ * 验证所有9个核心引擎能正常导入和运行
  */
 import {
   chineseness,
@@ -11,6 +11,7 @@ import {
   interactionEngine,
   proportionEngine,
   materialEngine,
+  antiAIArtifacts,
   fullAssessment,
   VERSION,
   ENGINES,
@@ -296,6 +297,113 @@ test('9. fullAssessment — 一站式综合评估', () => {
   console.log(`  中国性: ${result.summary.chinesenessScore}/100 | 俗套: ${result.summary.clicheScore.toFixed(2)}`);
   console.log(`  P0违规: ${result.summary.p0Violations} | 薄弱维度: ${result.summary.weakDimensions.join(',') || '无'}`);
   console.log(`  核心回答: ${result.coreAnswer.substring(0, 100)}...`);
+});
+
+// 10. antiAIArtifacts — AI生图伪影检测与消除引擎
+console.log('\n── 10. antiAIArtifacts 引擎测试 ──');
+
+test('10.1 detectArtifacts — 坏参数检测出高风险', () => {
+  const result = antiAIArtifacts.detectArtifacts({
+    cfg: 9,
+    sampler: 'Euler a',
+    steps: 60,
+    vae: 'native',
+    resolution: '2048x2048',
+    positivePrompt: 'masterpiece, 8k resolution, ultra-realistic',
+  });
+  assert(typeof result.overallScore === 'number', 'overallScore 是数字');
+  assert(result.overallScore >= 50, `坏参数风险≥50（实际${result.overallScore}）`);
+  assert(result.level === 'high', `坏参数等级为high（实际${result.level}）`);
+  assert(result.categories.concentric.score > 0, '环状颗粒感评分>0');
+  assert(result.categories.plastic.score > 0, '塑料油润感评分>0');
+  assert(result.categories.digital.score > 0, '数码过拟合味评分>0');
+  assert(result.risks.length > 0, '有风险项');
+  console.log(`  坏参数风险: ${result.overallScore}/100 (${result.level}) | 风险项: ${result.risks.length}`);
+});
+
+test('10.2 detectArtifacts — 好参数检测出低风险', () => {
+  const result = antiAIArtifacts.detectArtifacts({
+    cfg: 4.5,
+    sampler: 'DPM++ 2M Karras',
+    steps: 30,
+    vae: 'vae-ft-mse-840000-ema',
+    resolution: '1024x1024',
+    positivePrompt: 'shot on 35mm lens, f/2.8, natural lighting',
+    filmGrain: true,
+    debanding: true,
+  });
+  assert(result.overallScore < 30, `好参数风险<30（实际${result.overallScore}）`);
+  assert(result.pass === true, '好参数通过检测');
+  console.log(`  好参数风险: ${result.overallScore}/100 (pass=${result.pass})`);
+});
+
+test('10.3 recommendParams — 生成最优生图参数', () => {
+  const result = antiAIArtifacts.recommendParams({ model: 'sdxl' });
+  assert(result.cfg >= 3.0 && result.cfg <= 5.5, `CFG在3.0-5.5（实际${result.cfg}）`);
+  assert(result.steps >= 28 && result.steps <= 35, `步数在28-35（实际${result.steps}）`);
+  assert(result.sampler.includes('DPM') || result.sampler.includes('Euler'), '推荐采样器合理');
+  assert(result.vae.includes('vae-ft-mse'), '推荐VAE为防烧色版本');
+  assert(result.cfgRescale === 0.7, 'CFG Rescale为0.7');
+  console.log(`  推荐: CFG=${result.cfg}, 步数=${result.steps}, 采样器=${result.sampler}, VAE=${result.vae}`);
+});
+
+test('10.4 generateNegativePrompt — 生成负向提示词', () => {
+  const result = antiAIArtifacts.generateNegativePrompt({ includeAsianCliche: true });
+  assert(typeof result.prompt === 'string' && result.prompt.length > 0, '负向提示词非空');
+  assert(result.prompt.includes('smooth plastic skin'), '包含塑料皮肤拦截');
+  assert(result.prompt.includes('circular artifacts'), '包含环状伪影拦截');
+  assert(result.prompt.includes('oversharpened'), '包含过锐化拦截');
+  assert(result.count > 15, `负向提示词条数>15（实际${result.count}）`);
+  console.log(`  负向提示词: ${result.count}条, ${result.prompt.substring(0, 80)}...`);
+});
+
+test('10.5 recommendPositivePrompt — 移除玄学词并推荐真实摄影参数', () => {
+  const result = antiAIArtifacts.recommendPositivePrompt('masterpiece, 8k resolution, ultra-realistic, a beautiful landscape');
+  assert(result.voodooWordsFound.length >= 3, `发现≥3个玄学词（实际${result.voodooWordsFound.length}）`);
+  assert(!result.cleanedPrompt.includes('masterpiece'), '清理后不含masterpiece');
+  assert(result.recommendedAdditions.length > 0, '有推荐添加的真实摄影参数');
+  console.log(`  发现玄学词: ${result.voodooWordsFound.join(', ')}`);
+});
+
+test('10.6 recommendUpscaleStrategy — 二阶段放大策略', () => {
+  const result = antiAIArtifacts.recommendUpscaleStrategy({ scale: 2 });
+  assert(result.phase1.name === 'Base Generation', '第一阶段是基础生成');
+  assert(result.phase2.method.includes('物理超分辨率'), '第二阶段是模型放大');
+  assert(result.phase2.forbidden.includes('latent'), '禁止Latent模式放大');
+  assert(result.phase3.denoisingStrength.optimal >= 0.25 && result.phase3.denoisingStrength.optimal <= 0.38, '低降噪在0.25-0.38');
+  assert(result.phase3.steps.optimal >= 15 && result.phase3.steps.optimal <= 20, '重绘步数在15-20');
+  console.log(`  放大流程: ${result.workflow}`);
+  console.log(`  低降噪: ${result.phase3.denoisingStrength.optimal}, 重绘步数: ${result.phase3.steps.optimal}`);
+});
+
+test('10.7 recommendPostProcessing — 后期处理建议', () => {
+  const result = antiAIArtifacts.recommendPostProcessing({ filmStock: 'kodakPortra400' });
+  assert(result.filmGrain.intensity.recommended >= 0.03 && result.filmGrain.intensity.recommended <= 0.06, '胶片颗粒强度3-6%');
+  assert(['overlay', 'soft-light'].includes(result.filmGrain.blendMode), '混合模式为Overlay或Soft Light');
+  assert(result.debanding.method.includes('抖动') || result.debanding.method.includes('Dithering'), '有De-banding方法');
+  console.log(`  胶片颗粒: ${result.filmGrain.preset}, 强度${result.filmGrain.intensity.recommended}, 模式${result.filmGrain.blendMode}`);
+});
+
+test('10.8 fullAudit — 一站式审计', () => {
+  const result = antiAIArtifacts.fullAudit({
+    cfg: 9,
+    sampler: 'Euler a',
+    steps: 60,
+    vae: 'native',
+    resolution: '2048x2048',
+    positivePrompt: 'masterpiece, 8k resolution, ultra-realistic',
+    model: 'sdxl',
+  });
+  assert(typeof result.riskScore === 'number', 'riskScore是数字');
+  assert(result.riskLevel === 'high', '坏参数审计为high风险');
+  assert(result.actionItems.length > 0, '有修复项');
+  assert(result.recommendedParams.cfg > 0, '有推荐参数');
+  assert(result.negativePrompt.length > 0, '有负向提示词');
+  assert(result.upscaleStrategy.workflow.length > 0, '有放大策略');
+  assert(result.postProcessing.workflow.length > 0, '有后期处理策略');
+  assert(typeof result.summary === 'string', '有摘要');
+  console.log(`  审计: 风险${result.riskScore}/100 (${result.riskLevel}), 修复项${result.actionItems.length}个`);
+  console.log(`  摘要: ${result.summary.substring(0, 100)}...`);
 });
 
 // 总结
