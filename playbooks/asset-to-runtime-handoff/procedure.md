@@ -158,8 +158,10 @@ fi
 1. 查阅 design-compiler 的 scene.json schema 版本：
 
 ```bash
+# REV-4 修正：F7 — 添加实际 A 轨 schema 路径 chinese-aesthetic/scene-contract/types.ts（P0 阻断修复）
 SCHEMA_FILE=""
 for candidate in \
+  "$COMPILER_REPO/chinese-aesthetic/scene-contract/types.ts" \
   "$COMPILER_REPO/src/scene-contract/types.ts" \
   "$COMPILER_REPO/scene-contract/types.ts" \
   "$COMPILER_REPO/types/scene.ts"; do
