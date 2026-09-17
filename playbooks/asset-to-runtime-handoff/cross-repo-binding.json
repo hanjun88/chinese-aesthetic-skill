@@ -1,0 +1,8 @@
+{
+  "contract_id": "scene-compiler-contract",
+  "target_schema_version": "1.0.0",
+  "source_repository": "design-compiler",
+  "source_ref": "18642a8",
+  "source_path": "chinese-aesthetic/scene-contract/types.ts",
+  "enforcement_policy": "STRICT_MATCH_REQUIRED"
+}
