@@ -1,0 +1,6 @@
+{
+  "name": "Chinese Aesthetic Decision Engine",
+  "description": "东方空间美学决策引擎 — 10个可执行核心决策与评估引擎，检验设计结构东方性、反俗套检测、五方正色与空间秩序",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

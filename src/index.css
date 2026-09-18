@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+    background-color: #0f1115;
+    color: #e5e3df;
+  }
+  h1, h2, h3, .font-serif-sc {
+    font-family: 'Noto Serif SC', 'Songti SC', serif;
+  }
+}

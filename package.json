@@ -5,13 +5,17 @@
   "main": "lib/index.js",
   "type": "module",
   "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 3000",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 3000",
+    "lint": "tsc --noEmit",
     "test": "node tests/engines.test.js",
     "test:engines": "node tests/engines.test.js",
-    "test:gates": "node scripts/validate.js",
-    "gate1": "node scripts/validate.js --gate 1",
-    "gate2": "node scripts/validate.js --gate 2",
-    "gate3": "node scripts/validate.js --gate 3",
-    "validate": "node scripts/validate.js --input"
+    "test:gates": "node scripts/validate.cjs",
+    "gate1": "node scripts/validate.cjs --gate 1",
+    "gate2": "node scripts/validate.cjs --gate 2",
+    "gate3": "node scripts/validate.cjs --gate 3",
+    "validate": "node scripts/validate.cjs --input"
   },
   "keywords": ["chinese-aesthetic", "eastern-aesthetic", "design-engine", "decision-engine", "heartmirror", "three.js", "spatial-order", "void-solid"],
   "author": "HEARTMIRROR Team",
@@ -22,5 +26,20 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "lucide-react": "^1.47.0",
+    "motion": "^13.4.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.0"
   }
 }
