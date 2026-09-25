@@ -126,3 +126,74 @@ function checkSpatialOrder(design) {
   return violations;
 }
 ```
+
+---
+
+## 素材库实证（Distillation Evidence）
+
+> 数据来源：`../distillation/` 4批素材，关联索引见 `evidence-index.md`
+
+### 实证参数表（已验证推荐值）
+
+| 参数 | 原推荐值 | 实证修正值 | 实证来源 | 样本量 |
+|---|---|---|---|---|
+| 中轴使用率 | – | 93%（14/15） | ai-linggan | 15视频 |
+| 景深层数 | ≥2 | 均值4.7层（范围4-5） | ai-linggan | 15视频 |
+| 留白比例 | – | 均值26%（范围14%-38%） | ai-linggan | 15视频 |
+| 对称度 | – | 均值0.58（范围0.45-0.72） | ai-linggan | 15视频 |
+| 焦点位置 | 中心 | [0.50, 0.49]，高度居中 | ai-linggan | 15视频 |
+
+### 构图模式实证分布（ai-linggan 15视频）
+
+| 模式 | 数量 | 占比 | 说明 |
+|---|---|---|---|
+| central_axis 中轴 | 6 | 40% | 主体沿垂直中轴线排布，仪式感 |
+| aerial_overview 鸟瞰 | 4 | 27% | 高空俯视，展现宏观格局与几何秩序 |
+| low_angle_grand 低角度仰拍 | 3 | 20% | 强调主体高耸巍峨与崇高感 |
+| symmetrical 对称 | 1 | 7% | 左右近镜像，纪念碑式肃穆 |
+| layered_depth 层次纵深 | 1 | 7% | 前中后景多层叠加，不依赖强中轴 |
+
+### 机位高度分布（ai-linggan 15视频）
+
+| 机位 | 数量 | 适用场景 |
+|---|---|---|
+| eye-level 平视 | 6 | 人物/建筑正面 |
+| aerial 航拍 | 4 | 城市全景/宏观格局 |
+| low 低角度 | 3 | 巨构/崇高感 |
+| high 高角度 | 2 | 俯瞰/纵深 |
+
+> 核心发现：Ai灵感主义偏"满构图"（留白仅26%），与传统中式"留白意境"不同。其空间感主要靠**4.7层景深**和**93%中轴线**营造，而非大面积留白。这是电影感场景与传统国画的关键区别。
+
+### ivanchiu 云海天宫空间特征（11张图文）
+
+- 100%长焦压缩（telephoto compression）
+- 100%悬浮建筑（floating architecture）
+- 100%不可能建筑（impossible architecture）
+- 视角分布：低角度4/11、中景2/11、高角度2/11、长焦侧视1/11、虫眼1/11、纵深走廊1/11
+
+### 可复用空间配置
+
+**配置A：电影感中轴纵深（ai-linggan）**
+```json
+{
+  "central_axis": true,
+  "axis_offset_tolerance": 0.10,
+  "depth_layers": 4.7,
+  "negative_space_ratio": 0.26,
+  "symmetry": 0.58,
+  "focal_point": [0.50, 0.49],
+  "dominant_camera": "drone_forward",
+  "viewpoint_height": "eye-level"
+}
+```
+
+**配置B：悬浮长焦压缩（ivanchiu）**
+```json
+{
+  "telephoto_compression": true,
+  "floating_architecture": true,
+  "impossible_architecture": true,
+  "layered_atmosphere": true,
+  "recommended_lens": "85mm-200mm"
+}
+```

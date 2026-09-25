@@ -122,3 +122,68 @@ function checkColor(design) {
   return violations;
 }
 ```
+
+---
+
+## 素材库实证（Distillation Evidence）
+
+> 数据来源：`../distillation/` 4批素材，关联索引见 `evidence-index.md`
+
+### 实证参数表（已验证推荐值）
+
+| 参数 | 推荐值 | 实证来源 | 样本量 |
+|---|---|---|---|
+| 主色数量 | ≤2主色+1点缀 | ai-linggan, xiaoai | 26视频 |
+| 点缀色面积比 | ≤15% | xiaoai | 11视频 |
+| 饱和度上限 | ≤0.46（均值0.406） | ai-linggan | 15视频 |
+| 对比度范围 | 8.2–12.5（均值9.89） | ai-linggan | 15视频 |
+| 色温倾向 | 冷调主导（冷9/暖6） | ai-linggan | 15视频 |
+
+### 五方正色实证分布（ai-linggan 15视频）
+
+| 正色 | 占比 | 说明 |
+|---|---|---|
+| 青 | 28.0% | 主导色，`#2c4a5e`青灰蓝 |
+| 黑 | 24.8% | 深蓝黑近黑，`#1b2a44` |
+| 白 | 19.9% | 月白云雾，`#e9eef7` |
+| 黄 | 17.4% | 赭金偏黄，`#d89048` |
+| 赤 | 9.9% | **极度压制**，仅小面积点缀 |
+
+> 核心发现：Ai灵感主义风格刻意压制赤色（仅9.9%），用青黑白营造冷调仙境感，赭金作为唯一暖色点缀。这与传统"朱红为尊"的国风俗套形成鲜明对比，是反AI国风感的关键识别特征。
+
+### 白底编辑级美学（xiaoai 11视频）
+
+- 11/11共享 `#FFFFFF` paper-white基底
+- 8/11纯`#FFFFFF`，2/11浅灰`#F2F2F2`/`#E9E9EC`
+- 主文字`#1A1A1A`（7/11），次要`#888888`
+- 10/11为6500K中性日光白
+- 唯一暗色例外：视频04黑洞（`#000000`+金色辉光bloom 1.8）
+- 0个页面级渐变（渐变仅用于粒子尾迹和接触阴影）
+
+### 可复用配色方案（从素材蒸馏）
+
+**方案A：青灰仙境（ai-linggan主导）**
+```json
+{
+  "primary": "#2c4a5e",
+  "secondary": "#e9eef7",
+  "accent": "#d89048",
+  "background": "#1b2a44",
+  "text": "#e9eef7",
+  "saturation": 0.406,
+  "contrast": 9.89
+}
+```
+
+**方案B：编辑画廊（xiaoai主导）**
+```json
+{
+  "primary": "#1A1A1A",
+  "secondary": "#888888",
+  "accent": "<15% area, low-saturation pastel>",
+  "background": "#FFFFFF",
+  "text": "#1A1A1A",
+  "color_temp_k": 6500,
+  "page_gradient": false
+}
+```
