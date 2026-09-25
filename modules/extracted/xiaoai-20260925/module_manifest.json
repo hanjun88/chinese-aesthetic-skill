@@ -1,0 +1,46 @@
+{
+  "module_manifest": [
+    {
+      "file": "motion.constraints.json",
+      "purpose": "动效参数约束（easing/duration/stagger/transform/loop/forbidden）",
+      "source_data": [
+        "motion-tech-stack.json (dominant_patterns, easing_distribution, duration_stats, stagger_stats, transform_property_frequency)",
+        "11x distill.json frontend_motion"
+      ],
+      "applicable_to": [
+        "chinese-aesthetic-skill motion module",
+        "design-compiler timeline generator"
+      ],
+      "sample_size": "77 motion segments across 11 videos"
+    },
+    {
+      "file": "interaction.constraints.json",
+      "purpose": "交互约束（触发层级/反馈参数/惯性/scroll/可访问性）",
+      "source_data": [
+        "interaction-patterns.json (trigger_distribution, feedback_forms, state_transition_patterns, scroll_interaction, drag_interaction, hover_interaction, accessibility_analysis, reusable_interaction_templates)"
+      ],
+      "applicable_to": [
+        "chinese-aesthetic-skill interaction module",
+        "design-compiler event wiring"
+      ],
+      "sample_size": "11 videos; 6 trigger types; 3 reusable templates"
+    },
+    {
+      "file": "color.constraints.json",
+      "purpose": "色彩约束（paper-white基底/点缀规则/背景策略/渐变/bloom/暗色例外）",
+      "source_data": [
+        "color-visual-system.json (master_palette, background_distribution, gradient_usage, dark_vs_light, glassmorphism, neon_glow, color_by_video, recommended_palette_sets)"
+      ],
+      "applicable_to": [
+        "chinese-aesthetic-skill color module",
+        "design-compiler theme tokens"
+      ],
+      "sample_size": "11 videos; 60+ unique hex colors mapped"
+    }
+  ],
+  "global_notes": [
+    "All constraints derived from observed data; values outside observed ranges should be flagged as estimated.",
+    "confidence < 0.5 entries (e.g. Blender baked at 0.25) are excluded from preferred recommendations.",
+    "Video 04 is the sole dark-mode exception and must not be treated as the default."
+  ]
+}

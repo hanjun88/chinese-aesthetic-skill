@@ -1,0 +1,147 @@
+{
+  "trigger_hierarchy": [
+    {
+      "trigger": "autoplay",
+      "video_count": 11,
+      "priority": 1,
+      "use_case": "首屏hero自动编排，时间线驱动；11/11必备基底"
+    },
+    {
+      "trigger": "drag",
+      "video_count": 6,
+      "priority": 2,
+      "use_case": "3D球体/画廊/横向条带惯性拖拽；6/11"
+    },
+    {
+      "trigger": "scroll",
+      "video_count": 5,
+      "priority": 3,
+      "use_case": "pinned section timeline / scroll-scrub camera；5/11"
+    },
+    {
+      "trigger": "hover",
+      "video_count": 5,
+      "priority": 4,
+      "use_case": "卡片tilt/图片放大/lens glow；5/11，桌面端"
+    },
+    {
+      "trigger": "mouse_move",
+      "video_count": 3,
+      "priority": 5,
+      "use_case": "parallax follow；仅3/11，精细装饰"
+    },
+    {
+      "trigger": "click",
+      "video_count": 4,
+      "priority": 6,
+      "use_case": "快门/shuffle/模态；4/11，主动作反馈"
+    }
+  ],
+  "feedback_specs": {
+    "hover_scale": {
+      "idle_to_hover_range": "1.0 -> 1.2 (thumbnail, 07)",
+      "lightbox_expand_range": "1.0 -> 4.0~4.2 (strip image, 08)",
+      "pressdown_scale": "1.0 -> 0.92 (button press, 05)",
+      "photo_zoom": "1.0 -> 1.8 (polaroid focus, 05)"
+    },
+    "tilt_angle": {
+      "card_hover_rotateX_deg": [
+        0,
+        12
+      ],
+      "card_hover_rotateY_deg": [
+        0,
+        20
+      ],
+      "parallax_follow_rotateX_deg": [
+        -1.0,
+        1.0
+      ],
+      "parallax_follow_rotateY_deg": [
+        -1.5,
+        1.5
+      ],
+      "orbit_drag_rotateX_clamp_deg": [
+        -30,
+        30
+      ]
+    },
+    "response_time": {
+      "hover_enter_avg_ms": 430,
+      "hover_exit_avg_ms": 700,
+      "click_feedback_avg_ms": 773,
+      "idle_to_hover_samples_ms": [
+        150,
+        200,
+        400,
+        600,
+        800
+      ],
+      "rule": "enter faster than exit; exit 1.3-1.5x enter duration for graceful settle"
+    },
+    "color_feedback": {
+      "modal_dim_overlay": "opacity 0 -> 0.6, bg #808080, 400ms power2.inOut (07)",
+      "cta_state_color": "default -> #B07A8C during eject (05)",
+      "background_dark_transition": "#FFFFFF -> #1A1A1A over 1300ms (09)"
+    },
+    "cursor": {
+      "default_cursor": "arrow visible throughout (11)",
+      "on_interactive": "pointer/hand on buttons/segments (01, 05)"
+    }
+  },
+  "inertia_defaults": {
+    "drag_damping_per_frame": 0.95,
+    "wheel_inertia_damping": 0.94,
+    "lerp_strip_scroll": 0.1,
+    "velocity_threshold_to_idle": 0.001,
+    "settle_ms_before_idle": 500,
+    "orbit_rotateY_sensitivity_deg_per_px": 0.25,
+    "orbit_rotateX_sensitivity_deg_per_px": 0.12,
+    "note": "damping 0.94-0.95 per rAF frame; settle ~500-800ms; velocity<0.001 triggers idle resume"
+  },
+  "scroll_config": {
+    "modes": [
+      "pinned_timeline_scrub",
+      "continuous_wheel_scrub"
+    ],
+    "pinned_section_transition_ms": [
+      800,
+      1500
+    ],
+    "parallax_factors_example": {
+      "center": 1.0,
+      "top_preview": 0.5,
+      "bottom_secondary": -0.25
+    },
+    "camera_dolly_z_range_example": [
+      -30.0,
+      -2.0
+    ],
+    "helix_rotateY_total_deg": 270,
+    "wheel_deg_per_tick": 4.5,
+    "demo_speed_deg_per_s": 12.0,
+    "recommended_library": "GSAP 3 + ScrollTrigger (scrub:true, pin:true); optional Lenis for smooth inertia",
+    "lenis_present_videos": [
+      "10",
+      "11"
+    ]
+  },
+  "accessibility_requirements": {
+    "current_gap": {
+      "videos_with_any_keyboard_support": 1,
+      "videos_with_reduced_motion_fallback": 1,
+      "videos_with_aria_labels": 1,
+      "most_common_issue": "missing prefers-reduced-motion fallback (10/11)",
+      "second_most_common": "mouse-only / no keyboard navigation (8/11)",
+      "reference_video": "05 (only one with aria-valuenow, keyboard focus, reduced-motion, SR announcements)"
+    },
+    "minimum_requirements_for_new_modules": [
+      "prefers-reduced-motion: reduce -> hold single frame / skip intro / disable auto-rotate",
+      "keyboard: all clickable/draggable elements focusable, Enter/Space triggers, arrow keys drive equivalent of drag/wheel",
+      "focus-visible ring on interactive cards; Esc closes modals with focus trap",
+      "aria-label on non-text interactive visuals; aria-valuenow on exploded slider",
+      "color contrast >= 4.5:1 for UI chrome text (note: 08 uses #8A8A8A on #FFFFFF borderline)",
+      "photosensitive safety: when bloom_strength > 1.0, provide a reduced-bloom mode (<=0.5) for reduced-motion users"
+    ]
+  }
+}

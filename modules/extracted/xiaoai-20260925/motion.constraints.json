@@ -1,0 +1,377 @@
+{
+  "easing_preferences": [
+    {
+      "easing": "power2",
+      "usage_count": 23,
+      "source_videos": [
+        "01",
+        "05",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12"
+      ],
+      "typical_scenario": "通用入场/退场，卡片/文字fade-in-up，dominant workhorse",
+      "rank_hint": "preferred"
+    },
+    {
+      "easing": "linear",
+      "usage_count": 13,
+      "source_videos": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "07",
+        "08",
+        "09",
+        "10"
+      ],
+      "typical_scenario": "连续循环/进度条/自动旋转/scroll-scrub，恒速驱动",
+      "rank_hint": "preferred"
+    },
+    {
+      "easing": "power3",
+      "usage_count": 11,
+      "source_videos": [
+        "01",
+        "02",
+        "05",
+        "08",
+        "11",
+        "12"
+      ],
+      "typical_scenario": "精致绽放/展开入场，花瓣/卡片fan-out，需要更强回弹",
+      "rank_hint": "preferred"
+    },
+    {
+      "easing": "expo",
+      "usage_count": 10,
+      "source_videos": [
+        "07",
+        "08",
+        "09",
+        "11"
+      ],
+      "typical_scenario": "卡片堆叠展开/模态弹出，快入慢停的高级感",
+      "rank_hint": "preferred"
+    },
+    {
+      "easing": "power1",
+      "usage_count": 6,
+      "source_videos": [
+        "01",
+        "09",
+        "10",
+        "11",
+        "12"
+      ],
+      "typical_scenario": "轻量文字淡入/caption fade，柔和过渡",
+      "rank_hint": "acceptable"
+    },
+    {
+      "easing": "sine",
+      "usage_count": 3,
+      "source_videos": [
+        "01",
+        "04"
+      ],
+      "typical_scenario": "色彩morph/呼吸脉冲/星点闪烁，平滑对称",
+      "rank_hint": "acceptable"
+    },
+    {
+      "easing": "ease-in(generic)",
+      "usage_count": 2,
+      "source_videos": [
+        "02",
+        "04"
+      ],
+      "typical_scenario": "入场前吸入/慢速开始",
+      "rank_hint": "rare/specialized"
+    },
+    {
+      "easing": "cubic-bezier",
+      "usage_count": 2,
+      "source_videos": [
+        "03"
+      ],
+      "typical_scenario": "自定义精确曲线，少量高精度场景",
+      "rank_hint": "rare/specialized"
+    },
+    {
+      "easing": "ease-in-out(generic)",
+      "usage_count": 1,
+      "source_videos": [
+        "03"
+      ],
+      "typical_scenario": "段落结束fade-to-black",
+      "rank_hint": "rare/specialized"
+    },
+    {
+      "easing": "smoothstep",
+      "usage_count": 1,
+      "source_videos": [
+        "04"
+      ],
+      "typical_scenario": "相机轨道漂移",
+      "rank_hint": "rare/specialized"
+    },
+    {
+      "easing": "power4",
+      "usage_count": 1,
+      "source_videos": [
+        "05"
+      ],
+      "typical_scenario": "快门闪光/瞬间爆发",
+      "rank_hint": "rare/specialized"
+    }
+  ],
+  "duration_guidelines": {
+    "autoplay": {
+      "recommended_range_ms": [
+        0,
+        21367
+      ],
+      "median_ms": 1200,
+      "mean_ms": 3756.5,
+      "sample_count": 46,
+      "guidance": "自动播放时间线，单段400-4500ms，循环段可长达21s"
+    },
+    "drag": {
+      "recommended_range_ms": [
+        0,
+        1000
+      ],
+      "median_ms": 0,
+      "mean_ms": 316.7,
+      "sample_count": 6,
+      "guidance": "拖拽1:1跟随0ms，释放后惯性衰减"
+    },
+    "click": {
+      "recommended_range_ms": [
+        120,
+        1400
+      ],
+      "median_ms": 600,
+      "mean_ms": 630,
+      "sample_count": 9,
+      "guidance": "点击反馈120-1400ms，短促有响应感"
+    },
+    "hover": {
+      "recommended_range_ms": [
+        0,
+        800
+      ],
+      "median_ms": 400,
+      "mean_ms": 421.4,
+      "sample_count": 7,
+      "guidance": "hover进入0-800ms，退出比进入慢(600-800ms)"
+    },
+    "scroll": {
+      "recommended_range_ms": [
+        0,
+        7000
+      ],
+      "median_ms": 950,
+      "mean_ms": 2250,
+      "sample_count": 8,
+      "guidance": "scroll-scrub 0-7000ms，连续跟随滚动位置"
+    }
+  },
+  "stagger_defaults": {
+    "recommended_default_ms": 60,
+    "typical_range_ms": [
+      20,
+      200
+    ],
+    "mean_ms": 64.1,
+    "videos_using_stagger": 9,
+    "guidance": {
+      "small_batch_3_to_5": "40-60ms",
+      "medium_batch_6_to_10": "60-90ms",
+      "large_batch_10_plus": "20-40ms (避免过长总时长)",
+      "center_outward": "stagger.from='center' 用于花瓣/卡片绽放",
+      "outside_in": "stagger.from='edges' 用于收拢/折叠"
+    }
+  },
+  "transform_lexicon": [
+    {
+      "property": "opacity",
+      "segment_count": 47,
+      "video_count": 11,
+      "typical_range": "0->1 (fade-in) or 1->0 (fade-out); universal"
+    },
+    {
+      "property": "scale",
+      "segment_count": 34,
+      "video_count": 9,
+      "typical_range": "0.05/0.1 -> 1.0 (intro); 1.0 -> 1.2 (hover); 1.0 -> 4.0 (lightbox)"
+    },
+    {
+      "property": "rotate(generic)",
+      "segment_count": 16,
+      "video_count": 5,
+      "typical_range": "0 -> 360deg continuous loop; or 0 -> +/-25deg card tilt"
+    },
+    {
+      "property": "translateZ",
+      "segment_count": 16,
+      "video_count": 8,
+      "typical_range": "0 -> 30px hover lift; 0 -> 200px fanout depth; cameraZ -2 -> -30"
+    },
+    {
+      "property": "translateX",
+      "segment_count": 15,
+      "video_count": 7,
+      "typical_range": "24px -> 0 (text slide-in); 0 -> 4.5 world units (exploded view)"
+    },
+    {
+      "property": "target",
+      "segment_count": 13,
+      "video_count": 1,
+      "typical_range": "see per-video evidence"
+    },
+    {
+      "property": "translateY",
+      "segment_count": 12,
+      "video_count": 6,
+      "typical_range": "8px -> 0 (caption fade-up); -240/+60px parallax"
+    },
+    {
+      "property": "rotateY",
+      "segment_count": 12,
+      "video_count": 7,
+      "typical_range": "0 -> +/-20deg hover tilt; 0 -> 360deg orbit; i*30deg fan-out"
+    },
+    {
+      "property": "color/material",
+      "segment_count": 9,
+      "video_count": 3,
+      "typical_range": "#F4C2D0 -> #9DBBE8 over 1100ms sine.inOut"
+    },
+    {
+      "property": "rotateX",
+      "segment_count": 6,
+      "video_count": 4,
+      "typical_range": "0 -> 12deg hover tilt; clamp [-30,30] for orbit"
+    },
+    {
+      "property": "petal_bend_angle",
+      "segment_count": 4,
+      "video_count": 1,
+      "typical_range": "8deg -> 72deg per bloom stage"
+    },
+    {
+      "property": "rotateZ",
+      "segment_count": 3,
+      "video_count": 2,
+      "typical_range": "0 -> +/-5deg playful rotation; photo eject -2deg"
+    },
+    {
+      "property": "position",
+      "segment_count": 2,
+      "video_count": 2,
+      "typical_range": "see per-video evidence"
+    },
+    {
+      "property": "background",
+      "segment_count": 2,
+      "video_count": 2,
+      "typical_range": "see per-video evidence"
+    },
+    {
+      "property": "y",
+      "segment_count": 2,
+      "video_count": 1,
+      "typical_range": "see per-video evidence"
+    }
+  ],
+  "loop_patterns": [
+    {
+      "name": "autoplay-infinite-loop (GSAP repeat:-1)",
+      "params": {
+        "repeat": -1,
+        "easing": "linear for continuous / power3.out for stage entrances",
+        "stage_avg_ms": 1375
+      },
+      "source_videos": [
+        "01",
+        "04",
+        "08",
+        "12"
+      ]
+    },
+    {
+      "name": "idle-auto-rotate orbit",
+      "params": {
+        "speed_deg_per_s": 8.0,
+        "period_s": 45.0,
+        "easing": "linear",
+        "interruptible_by_drag": true
+      },
+      "source_videos": [
+        "02",
+        "05"
+      ]
+    },
+    {
+      "name": "continuous Keplerian accretion disk",
+      "params": {
+        "keplerian_loop_ms": 21367,
+        "photon_pulse_loop_ms": 3200,
+        "starfield_twinkle_ms": 1800,
+        "easing": "linear/sine"
+      },
+      "source_videos": [
+        "04"
+      ]
+    },
+    {
+      "name": "strip autoplay scroll (UV offset)",
+      "params": {
+        "duration_ms": 9000,
+        "speed_image_heights_per_s": 0.72,
+        "total_uniform_u": 6.5,
+        "easing": "linear"
+      },
+      "source_videos": [
+        "08"
+      ]
+    }
+  ],
+  "forbidden": [
+    {
+      "pattern": "页面级大尺寸线性/径向渐变背景",
+      "reason": "11视频中0个使用渐变背景；渐变仅出现在粒子尾迹(04)和接触阴影(02)",
+      "source": "color-visual-system.gradient_usage"
+    },
+    {
+      "pattern": "强辉光/neon glow on light-background pages",
+      "reason": "bloom strength 1.8 仅用于04黑洞黑底；白底视频bloom仅0.25或禁用",
+      "source": "neon_glow.summary"
+    },
+    {
+      "pattern": "CSS backdrop-filter frosted-glass UI panels",
+      "reason": "0/11视频使用glassmorphism UI；05是物理PBR玻璃材质非CSS",
+      "source": "glassmorphism.physical_glass_note"
+    },
+    {
+      "pattern": "cool color grading (<5500K)",
+      "reason": "0/11视频冷调；10/11为6500K中性白，仅04为4200K暖调",
+      "source": "color_temperature_trend.cool"
+    },
+    {
+      "pattern": "audio/sound feedback",
+      "reason": "0/11视频有音频反馈；所有反馈纯视觉",
+      "source": "feedback_forms.sound"
+    },
+    {
+      "pattern": "scroll-snap full-page sections (as primary nav)",
+      "reason": "仅07疑似0.5置信度；主流动画用ScrollTrigger scrub而非scroll-snap",
+      "source": "tech_stack_distribution.scroll-snap"
+    }
+  ]
+}

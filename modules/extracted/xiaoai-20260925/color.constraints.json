@@ -1,0 +1,161 @@
+{
+  "base_palette": {
+    "paper_white": {
+      "hex": "#FFFFFF",
+      "video_count": 11,
+      "role": "universal background / canvas / subject",
+      "philosophy": "白底paper-white是11/11视频的共同基底；8/11为纯#FFFFFF背景"
+    },
+    "near_white_light_gray": {
+      "hex": "#F2F2F2 / #E9E9EC",
+      "used_in_videos": [
+        "10",
+        "11"
+      ],
+      "role": "浅灰工作室背景，用于作品集/书架场景"
+    },
+    "text_near_black": {
+      "hex": "#1A1A1A",
+      "video_count": 7,
+      "role": "主文字色/深色accent"
+    },
+    "neutral_gray": {
+      "hex": "#D8D8D8 / #8A8A8A / #888888",
+      "role": "次要元素/UI chrome/缩略图边框"
+    }
+  },
+  "accent_rules": {
+    "philosophy": "点缀色面积<15%，集中在主体/CTA/材质高光，不大面积铺陈",
+    "common_accent_sources": [
+      {
+        "color": "#D98E3F / #E8A54B (橙)",
+        "video": "01",
+        "use": "花蕊stamen自发光"
+      },
+      {
+        "color": "#C81D4B / #EDE12A / #1F6E6E / #5B2A86",
+        "video": "11",
+        "use": "书脊彩虹色"
+      },
+      {
+        "color": "#B9D64C / #EF9FB2 / #6E8CC4 / #D8C84A",
+        "video": "08",
+        "use": "画廊图片多彩accent"
+      },
+      {
+        "color": "#D62828 / #6BA368",
+        "video": "10",
+        "use": "红绿双色点缀"
+      },
+      {
+        "color": "#FFE8B0 / #FFF2CC / #D4A855 (金)",
+        "video": "04",
+        "use": "黑洞吸积盘辉光(唯一暗色场景)"
+      }
+    ],
+    "max_accent_area_ratio": 0.15,
+    "accent_position": "主体本身 / CTA按钮 / 材质高光 / 粒子尾迹"
+  },
+  "background_policy": {
+    "pure_white_#FFFFFF": {
+      "video_count": 8,
+      "videos": [
+        "01",
+        "02",
+        "03",
+        "05",
+        "07",
+        "08",
+        "09",
+        "12"
+      ],
+      "use_case": "默认；editorial/portfolio/花瓣/卡片/画廊"
+    },
+    "light_gray_#F2F2F2_or_#E9E9EC": {
+      "video_count": 2,
+      "videos": [
+        "10",
+        "11"
+      ],
+      "use_case": "作品集/书架工作室氛围"
+    },
+    "dark_#000000": {
+      "video_count": 1,
+      "videos": [
+        "04"
+      ],
+      "use_case": "仅黑洞/物理主题；沉浸式暗调hero"
+    },
+    "page_level_gradient": {
+      "video_count": 0,
+      "policy": "禁止；渐变仅用于粒子尾迹/接触阴影"
+    }
+  },
+  "gradient_policy": {
+    "allowed": [
+      {
+        "type": "linear particle trail",
+        "example_stops": [
+          "#3A2410",
+          "#D4A855",
+          "#FFE8B0"
+        ],
+        "video": "04",
+        "purpose": "吸积盘粒子内->外热度过渡"
+      },
+      {
+        "type": "radial contact shadow",
+        "example_stops": [
+          "#000000",
+          "#000000"
+        ],
+        "video": "02",
+        "purpose": "海报球体下方椭圆接触阴影"
+      },
+      {
+        "type": "radial starfield",
+        "example_stops": [
+          "#FFFFFF",
+          "#FFFFFF"
+        ],
+        "video": "04",
+        "purpose": "黑底上近白星点"
+      }
+    ],
+    "forbidden": "页面级linear/radial渐变背景；禁止渐变作为body/section底色"
+  },
+  "bloom_policy": {
+    "default": "disabled (9/11 videos)",
+    "subtle_on_light": {
+      "video": "01",
+      "strength": 0.25,
+      "threshold": 0.85,
+      "tint": "#FFF6F8",
+      "use": "仅花瓣边缘极淡辉光；白底上几乎不可察"
+    },
+    "strong_on_dark": {
+      "video": "04",
+      "strength": 1.8,
+      "tint": "#FFD9A0",
+      "use": "黑洞光子环；仅暗色场景",
+      "strength_cap_for_light_background": 0.3
+    },
+    "rule": "白底bloom_strength <= 0.3；强bloom(>1.0)仅限黑底/发光体主题"
+  },
+  "dark_mode_exception": {
+    "only_video": "04",
+    "title": "公式、引力与黑洞",
+    "background": "#000000",
+    "why": "主题为黑洞/吸积盘/光子环，需要强bloom金色辉光；4200K暖调",
+    "accent_gold_palette": [
+      "#FFE8B0",
+      "#FFF2CC",
+      "#D4A855",
+      "#FFD9A0",
+      "#FFD08A",
+      "#C9A86A",
+      "#E8D0A0"
+    ],
+    "rule": "新模块默认light paper-white；仅当主题为物理/金融/夜空/暗调hero时才切换dark"
+  }
+}
