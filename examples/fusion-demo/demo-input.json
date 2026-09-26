@@ -1,0 +1,7 @@
+{
+  "brief": "设计一个中式书院入口页面：月洞门为界，入门见山居，匾额题「书院」，留白为主，黛青门框，古金点题。",
+  "mood": "song-elegant",
+  "audience": "文人雅集 / 读书人群",
+  "mustHave": ["moon-gate", "plaque"],
+  "forbid": ["bounce", "particle", "纯黑", "高饱和正红"]
+}

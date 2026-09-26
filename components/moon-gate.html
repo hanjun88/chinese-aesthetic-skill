@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  组件 1/6：月洞门 MoonGate  (前缀 mg-)
+  ------------------------------------------------------------
+  美学约束（为什么是东方的）：
+    · 圆形为界 —— 月洞门以一个圆框定内外两个世界，圆即"界"。
+      来源：03-void-solid.md「界的四种形态」——门是硬界向软界的过渡。
+    · 穿过即进入 —— 点击开门不是"显示内容"，是一次进入仪式：
+      门扇先启、门后光渐亮、内容从遮挡中浮现。
+      来源：10-interaction.md「点击即推门」+「进入序列」。
+    · 虚实相生 —— 闭合时只见一轮满月（实），开后方见门后山居（藏→露）。
+      来源：03-void-solid.md「七藏三露」。
+  动势：门开用 --ease-water（有重量感，先缓后沉），
+        内容浮现用 --ease-cloud（极缓无起止）。禁止弹跳。
+  状态：closed / open 两态，可逆，点击切换。
+  内存：click 监听挂在根节点，组件销毁时 removeEventListener。
+  状态：DRAFT v0.1 —— 待完整课程内容后优化门扇轨迹与门后景深。
+  ============================================================
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月洞门 MoonGate — 东方美学组件库</title>
+<style>
+  /* 引入设计令牌（相对路径；复制到项目时按实际位置调整） */
+  @import url('../modules/frontend/tokens.css');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3xl);
+    background:
+      radial-gradient(ellipse at 50% 120%, var(--yuebai-300) 0%, var(--color-bg) 60%);
+    font-family: var(--font-serif);
+    padding: var(--space-4xl) var(--space-lg);
+  }
+
+  .mg-caption {
+    color: var(--color-text-secondary);
+    font-size: var(--font-sm);
+    letter-spacing: 0.15em;
+    text-align: center;
+    line-height: var(--leading-normal);
+  }
+  .mg-caption b { color: var(--color-text); font-weight: var(--weight-medium); }
+
+  /* ============ 月洞门本体 ============ */
+  .mg-gate {
+    position: relative;
+    width: 340px;
+    height: 340px;
+    cursor: pointer;
+    /* 让门扇的 3D 旋转有透视空间 */
+    perspective: 900px;
+    /* 闭合时整轮圆门先极缓浮现（推门入场：从遮挡中浮现，不是弹出） */
+    animation: mg-breathe var(--dur-breath) var(--ease-breath) infinite;
+  }
+
+  /* 门后之景 —— 藏在圆洞深处，门开后渐进显 */
+  .mg-scene {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    /* 门内：深青山居，借一抹月色 */
+    background:
+      radial-gradient(circle at 62% 30%, var(--yuebai-100) 0 18%, transparent 19%),
+      linear-gradient(180deg, var(--qing-blue-700) 0%, var(--qing-900) 70%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 42px;
+    /* 藏：初始几乎不可见，门开后淡入 */
+    opacity: 0;
+    transition: opacity var(--dur-reveal) var(--ease-cloud);
+  }
+  .mg-scene__moon {
+    position: absolute;
+    top: 18%; left: 62%;
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    background: var(--yuebai-100);
+    box-shadow: 0 0 40px hsl(45, 40%, 80%, 0.5);
+  }
+  .mg-scene__hill {
+    position: absolute;
+    bottom: -10%; left: -20%;
+    width: 140%; height: 60%;
+    background: var(--qing-700);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    opacity: 0.85;
+  }
+  .mg-scene__text {
+    position: relative;
+    color: var(--color-text-inverse);
+    font-size: var(--font-md);
+    letter-spacing: 0.4em;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    opacity: 0.9;
+  }
+
+  /* 两扇门 —— 以半圆门扇绕各自合页翻开 */
+  .mg-leaf {
+    position: absolute;
+    top: 0;
+    width: 50.5%;      /* 略重叠避免门缝 */
+    height: 100%;
+    z-index: 3;
+    background:
+      linear-gradient(135deg, var(--color-surface) 0%, var(--yuebai-100) 100%);
+    box-shadow: var(--shadow-inset);
+    transition: transform var(--dur-reveal) var(--ease-water),
+                opacity var(--dur-reveal) var(--ease-water);
+    backface-visibility: hidden;
+  }
+  .mg-leaf--left {
+    left: 0;
+    border-radius: 100% 0 0 100% / 50% 0 0 50%;
+    transform-origin: right center;   /* 合页在右侧（中轴） */
+  }
+  .mg-leaf--right {
+    right: 0;
+    border-radius: 0 100% 100% 0 / 0 50% 50% 0;
+    transform-origin: left center;    /* 合页在左侧（中轴） */
+  }
+
+  /* 圆形门框（界）—— 一圈深青木石边 */
+  .mg-frame {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 10px solid var(--dai-blue-700);
+    box-shadow:
+      var(--shadow-skylight),
+      inset 0 0 0 2px var(--border-gold);
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  /* ====== 开态 ====== */
+  .mg-gate.is-open .mg-leaf--left {
+    transform: perspective(900px) rotateY(-115deg);
+    opacity: 0.0;
+  }
+  .mg-gate.is-open .mg-leaf--right {
+    transform: perspective(900px) rotateY(115deg);
+    opacity: 0.0;
+  }
+  .mg-gate.is-open .mg-scene { opacity: 1; }
+
+  /* 静止中的呼吸：门框极缓的光晕脉动（光原型） */
+  @keyframes mg-breathe {
+    0%, 100% { filter: brightness(1); }
+    50%      { filter: brightness(1.06); }
+  }
+
+  .mg-hint {
+    font-size: var(--font-xs);
+    color: var(--color-border-strong);
+    letter-spacing: 0.2em;
+  }
+</style>
+</head>
+<body>
+
+  <div class="mg-caption">
+    <b>月洞门 MoonGate</b>　点击圆门，推门而入<br>
+    闭合为满月 · 开启见山居
+  </div>
+
+  <!-- 组件本体：门后内容写在 .mg-scene 内 -->
+  <div class="mg-gate" id="myMoonGate" role="button" aria-label="月洞门，点击开关" tabindex="0">
+    <div class="mg-scene">
+      <div class="mg-scene__hill"></div>
+      <div class="mg-scene__moon"></div>
+      <div class="mg-scene__text">山居秋暝</div>
+    </div>
+    <div class="mg-leaf mg-leaf--left"></div>
+    <div class="mg-leaf mg-leaf--right"></div>
+    <div class="mg-frame"></div>
+  </div>
+
+  <div class="mg-hint">— 点击 / 回车 切换开·合 —</div>
+
+<script>
+  (function () {
+    'use strict';
+    var gate = document.getElementById('myMoonGate');
+
+    function toggle() {
+      gate.classList.toggle('is-open');
+    }
+    function onClick() { toggle(); }
+    function onKey(e) {
+      // 回车 / 空格 也可推门，符合可访问性
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    }
+
+    gate.addEventListener('click', onClick);
+    gate.addEventListener('keydown', onKey);
+
+    // 内存泄漏防范：导出清理函数（SPA 卸载时调用）
+    window.__mgCleanup = function () {
+      gate.removeEventListener('click', onClick);
+      gate.removeEventListener('keydown', onKey);
+    };
+  })();
+</script>
+</body>
+</html>

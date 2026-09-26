@@ -1,0 +1,131 @@
+{
+  "planId": "plan-ir-act-shuyuan-entrance",
+  "testCaseId": "TC-SHUYUAN-01",
+  "links": {
+    "rawIRHash": "sha256:8e4ad3a28edf21cf68805cda",
+    "validatedIRHash": "sha256:8e4ad3a28edf21cf68805cda",
+    "executionPlanHash": "sha256:e26e15df330645b2a4ef1edb"
+  },
+  "renderer": "WebGL2Renderer",
+  "downgrades": [],
+  "components": [
+    {
+      "kind": "moon-gate",
+      "prefix": "mg",
+      "order": 1,
+      "cssVars": {
+        "--color-border-strong": "#2C3E50"
+      },
+      "drivenBy": [
+        "void-solid",
+        "interaction"
+      ],
+      "state": {
+        "open": false
+      },
+      "motion": {
+        "prototype": "light",
+        "durationMs": 8000,
+        "easingToken": "--ease-breath",
+        "amplitude": 0.04
+      }
+    },
+    {
+      "kind": "scroll-panel",
+      "prefix": "sp",
+      "order": 2,
+      "cssVars": {},
+      "drivenBy": [
+        "motion",
+        "temporal"
+      ],
+      "motion": {
+        "prototype": "water",
+        "durationMs": 3500,
+        "easingToken": "--ease-water",
+        "amplitude": 10
+      },
+      "state": {
+        "orientation": "horizontal",
+        "expanded": false
+      }
+    },
+    {
+      "kind": "folding-screen",
+      "prefix": "fs",
+      "order": 3,
+      "cssVars": {
+        "--color-surface": "#EDEAE4",
+        "--screen-opacity": "0.72"
+      },
+      "drivenBy": [
+        "material",
+        "void-solid"
+      ],
+      "state": {
+        "folded": false
+      }
+    },
+    {
+      "kind": "lattice-window",
+      "prefix": "lw",
+      "order": 4,
+      "cssVars": {
+        "--color-shadow-leak": "#B8860B"
+      },
+      "drivenBy": [
+        "light",
+        "spatial-order"
+      ],
+      "state": {
+        "parallaxLayers": [
+          0.2,
+          0.5,
+          1
+        ],
+        "lattice": "step"
+      }
+    },
+    {
+      "kind": "plaque",
+      "prefix": "pl",
+      "order": 5,
+      "cssVars": {
+        "--color-accent": "#B8860B"
+      },
+      "drivenBy": [
+        "interaction",
+        "color"
+      ],
+      "state": {
+        "landed": false,
+        "sealed": false,
+        "observerThreshold": 0.4
+      }
+    },
+    {
+      "kind": "curio-shelf",
+      "prefix": "cs",
+      "order": 6,
+      "cssVars": {
+        "--space-cell": "var(--space-3xl)"
+      },
+      "drivenBy": [
+        "void-solid",
+        "material"
+      ],
+      "state": {
+        "hoverLift": "-4px"
+      }
+    }
+  ],
+  "rootCssVars": {
+    "--color-bg": "#EDEAE4",
+    "--color-text": "#2C3E50",
+    "--color-accent": "#B8860B",
+    "--space-leak-mult": "0.58",
+    "--space-proportion": "var(--space-4xl)",
+    "--shadow-token": "--shadow-skylight",
+    "--material-opacity": "0.72"
+  }
+}

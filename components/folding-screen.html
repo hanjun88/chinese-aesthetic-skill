@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  组件 3/6：屏风 FoldingScreen  (前缀 fs-)
+  ------------------------------------------------------------
+  美学约束（为什么是东方的）：
+    · 隔而不断 —— 屏风划分空间，却不砌死：视线、光、声仍可透过。
+      它是「软界」的典型。来源：03-void-solid.md「界的四种形态」。
+    · 透中有界 —— 悬停某一扇时屏面半透明（opacity 降低），
+      让后面的景透出来一点，正是"透"：不是全打开，是有选择地让光/景通过。
+      来源：03-void-solid.md「透（Permeability）」。
+    · 移步换景 —— 折屏展开成锯齿（Z 形），每折一个角度，
+      绕到侧面看到的画面都不同。用 perspective + rotateY 折叠。
+  动势：展开用 --ease-water（有重量，徐徐折开），无弹跳。
+  技术：CSS transform rotateY + perspective；
+        每扇以左缘为合页（transform-origin: left center），
+        nth-child 交替 ±角，形成锯齿。
+  内存：按钮监听可移除。
+  状态：DRAFT v0.1 —— 待优化：合页处阴影、多扇数/角度参数化。
+  ============================================================
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>屏风 FoldingScreen — 东方美学组件库</title>
+<style>
+  @import url('../modules/frontend/tokens.css');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3xl);
+    background:
+      radial-gradient(ellipse at 50% -10%, var(--yuebai-100), var(--color-bg) 70%);
+    font-family: var(--font-serif);
+    padding: var(--space-4xl) var(--space-lg);
+  }
+
+  .fs-caption {
+    color: var(--color-text-secondary);
+    font-size: var(--font-sm);
+    letter-spacing: 0.15em;
+    text-align: center;
+    line-height: var(--leading-normal);
+  }
+  .fs-caption b { color: var(--color-text); font-weight: var(--weight-medium); }
+
+  /* ============ 屏风本体 ============ */
+  .fs-stage {
+    perspective: 1200px;
+    padding: var(--space-3xl) var(--space-xl);
+  }
+
+  .fs-screen {
+    display: flex;
+    transform-style: preserve-3d;
+    /* 折屏整体微微后仰，便于看到锯齿进深 */
+    transform: rotateX(4deg);
+  }
+
+  /* 每一扇屏 */
+  .fs-panel {
+    position: relative;
+    width: 120px;
+    height: 260px;
+    margin-left: -6px;                 /* 合页叠压 */
+    transform-origin: left center;     /* 以左缘为轴折叠 */
+    transition: transform var(--dur-reveal) var(--ease-water),
+                opacity var(--dur-instant) var(--ease-cloud);
+    border: 6px solid var(--dai-blue-700);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-skylight);
+    cursor: pointer;
+    /* 屏面画：青绿山水渐变（每扇略有不同，接成连续长卷） */
+  }
+  .fs-panel:nth-child(1) { background: linear-gradient(160deg, var(--qing-100), var(--yuebai-100)); margin-left: 0; }
+  .fs-panel:nth-child(2) { background: linear-gradient(160deg, var(--qing-300), var(--qing-100)); }
+  .fs-panel:nth-child(3) { background: linear-gradient(160deg, var(--qing-500), var(--qing-300)); }
+  .fs-panel:nth-child(4) { background: linear-gradient(160deg, var(--qing-blue-500), var(--qing-500)); }
+
+  /* 屏面上的题字 */
+  .fs-panel__art {
+    position: absolute;
+    inset: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    color: var(--color-text);
+    font-size: var(--font-md);
+    letter-spacing: 0.4em;
+    opacity: 0.7;
+  }
+
+  /* 屏后之景（悬停揭示时透出） */
+  .fs-behind {
+    position: absolute;
+    inset: -40px 60px;
+    z-index: -1;
+    background:
+      radial-gradient(circle at 50% 30%, var(--zhehuang-300), transparent 60%);
+    filter: blur(2px);
+  }
+
+  /* ====== 收起态（默认）：四扇铺平成一面长卷 ====== */
+  .fs-screen.is-folded .fs-panel { transform: rotateY(0deg); }
+
+  /* ====== 展开态：交替折成锯齿（移步换景） ====== */
+  .fs-screen.is-open .fs-panel:nth-child(1) { transform: rotateY(38deg); }
+  .fs-screen.is-open .fs-panel:nth-child(2) { transform: rotateY(-38deg); }
+  .fs-screen.is-open .fs-panel:nth-child(3) { transform: rotateY(38deg); }
+  .fs-screen.is-open .fs-panel:nth-child(4) { transform: rotateY(-38deg); }
+
+  /* 悬停：该扇半透明，屏后景透出（透中有界） */
+  .fs-panel:hover { opacity: 0.35; }
+
+  .fs-toggle {
+    font-family: var(--font-serif);
+    font-size: var(--font-sm);
+    letter-spacing: 0.3em;
+    color: var(--color-text-inverse);
+    background: var(--qing-700);
+    border: none;
+    padding: var(--space-md) var(--space-2xl);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background var(--dur-instant) var(--ease-cloud);
+  }
+  .fs-toggle:hover { background: var(--qing-900); }
+</style>
+</head>
+<body>
+
+  <div class="fs-caption">
+    <b>屏风 FoldingScreen</b>　隔而不断 · 移步换景<br>
+    悬停屏面可透见后方 · 点按钮折开 / 铺平
+  </div>
+
+  <div class="fs-stage">
+    <div class="fs-screen is-folded" id="myScreen">
+      <div class="fs-behind"></div>
+      <div class="fs-panel"><span class="fs-panel__art">云起</span></div>
+      <div class="fs-panel"><span class="fs-panel__art">山出</span></div>
+      <div class="fs-panel"><span class="fs-panel__art">水流</span></div>
+      <div class="fs-panel"><span class="fs-panel__art">月明</span></div>
+    </div>
+  </div>
+
+  <button class="fs-toggle" id="fsBtn">折　屏</button>
+
+<script>
+  (function () {
+    'use strict';
+    var screen = document.getElementById('myScreen');
+    var btn = document.getElementById('fsBtn');
+    var open = false;
+
+    function render() {
+      screen.classList.toggle('is-open', open);
+      screen.classList.toggle('is-folded', !open);
+      btn.textContent = open ? '铺　平' : '折　屏';
+    }
+    function onClick() { open = !open; render(); }
+
+    btn.addEventListener('click', onClick);
+    // 点击任意一扇屏也可折叠（屏是可介入的物，不是装饰）
+    screen.addEventListener('click', onClick);
+
+    window.__fsCleanup = function () {
+      btn.removeEventListener('click', onClick);
+      screen.removeEventListener('click', onClick);
+    };
+  })();
+</script>
+</body>
+</html>

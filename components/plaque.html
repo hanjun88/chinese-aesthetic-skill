@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  组件 5/6：匾额 Plaque  (前缀 pl-)
+  ------------------------------------------------------------
+  美学约束（为什么是东方的）：
+    · 点睛之笔 —— 匾额是整座空间的"题眼"，字少而重，一锤定音。
+      它不是标题栏，是悬于梁下的一块木榜。
+    · 居中为尊 —— 匾额必居中悬挂、正对入口，是进入仪式的终点：
+      穿过月洞门、转过屏风，抬头即见匾。
+      来源：09-architecture.md「三段式 · 居中」+ 10-interaction.md「进入序列 · 豁然」。
+    · 落下即安 —— 匾不是滑入，是自上方缓缓落下、稳稳停住
+      （有重量，--ease-water），随后朱砂印再钤下。
+      来源：08-motion.md「水：有重量」。
+  技术：@keyframes 落下 + cubic-bezier(--ease-water)；
+        IntersectionObserver 进入视口才播（滚动即进深，到了才看见匾）；
+        印章 animation-delay 延迟钤印。
+  内存：IO disconnect。
+  状态：DRAFT v0.1 —— 待优化：匾下悬梁绳、木纹质感。
+  ============================================================
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>匾额 Plaque — 东方美学组件库</title>
+<style>
+  @import url('../modules/frontend/tokens.css');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--color-bg);
+    font-family: var(--font-serif);
+    color: var(--color-text);
+  }
+
+  /* 上方一段留白（模拟"外院"），制造需要滚动的进深 */
+  .pl-approach {
+    height: 120vh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: var(--space-5xl);
+    color: var(--color-text-secondary);
+    letter-spacing: 0.3em;
+    font-size: var(--font-sm);
+  }
+
+  /* 匾所在的"殿" */
+  .pl-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3xl);
+    background: linear-gradient(180deg, var(--color-bg) 0%, var(--yuebai-100) 100%);
+  }
+
+  /* 匾额本体 */
+  .pl-plaque {
+    position: relative;
+    padding: var(--space-xl) var(--space-3xl);
+    background: linear-gradient(180deg, var(--dai-blue-700), var(--dai-700));
+    border: var(--border-gold);
+    border-radius: var(--radius-md);
+    box-shadow:
+      var(--shadow-raking),
+      inset 0 0 0 3px var(--color-surface);
+    /* 初始：悬于梁上之外，看不见 */
+    transform: translateY(-140%);
+    opacity: 0;
+  }
+  .pl-plaque__text {
+    font-family: var(--font-kai);
+    font-size: var(--font-2xl);
+    letter-spacing: 0.5em;
+    color: var(--zhehuang-300);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    white-space: nowrap;
+  }
+  /* 朱砂印章 */
+  .pl-seal {
+    position: absolute;
+    right: -18px;
+    bottom: -18px;
+    width: 52px; height: 52px;
+    background: var(--color-danger);
+    color: var(--color-text-inverse);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-kai);
+    font-size: var(--font-xs);
+    line-height: 1.2;
+    text-align: center;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    transform: scale(0);           /* 印章初始未钤下 */
+  }
+
+  /* ====== 进入视口后触发落下 ====== */
+  .pl-section.is-seen .pl-plaque {
+    animation: pl-drop 1600ms var(--ease-water) forwards;
+  }
+  .pl-section.is-seen .pl-seal {
+    animation: pl-seal 600ms var(--ease-water) 900ms forwards;
+  }
+
+  /* 落下：自上而降，有重量，到位不回弹 */
+  @keyframes pl-drop {
+    0%   { transform: translateY(-140%); opacity: 0; }
+    60%  { transform: translateY(6%);     opacity: 1; }
+    100% { transform: translateY(0);     opacity: 1; }
+  }
+  /* 钤印：从上方轻轻盖下 */
+  @keyframes pl-seal {
+    0%   { transform: scale(0) translateY(-20px); opacity: 0; }
+    100% { transform: scale(1) translateY(0);     opacity: 1; }
+  }
+
+  .pl-hint {
+    color: var(--color-text-secondary);
+    font-size: var(--font-sm);
+    letter-spacing: 0.2em;
+  }
+  .pl-replay {
+    font-family: var(--font-serif);
+    letter-spacing: 0.3em;
+    color: var(--color-text-inverse);
+    background: var(--dai-blue-700);
+    border: none;
+    padding: var(--space-md) var(--space-2xl);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+  <!-- 外院：需要向下滚动（进深）才见匾 -->
+  <div class="pl-approach">— 向下而行 · 渐入 —</div>
+
+  <section class="pl-section" id="plSection">
+    <div class="pl-hint">（ scroll 至此处，匾自梁间落下 ）</div>
+    <div class="pl-plaque">
+      <span class="pl-plaque__text">漱石山居</span>
+      <span class="pl-seal">山房<br>之印</span>
+    </div>
+    <button class="pl-replay" id="plBtn">重　悬</button>
+  </section>
+
+<script>
+  (function () {
+    'use strict';
+    var section = document.getElementById('plSection');
+    var btn = document.getElementById('plBtn');
+    var io = null;
+
+    function setupObserver() {
+      io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            section.classList.add('is-seen');
+          }
+        });
+      }, { threshold: 0.4 });
+      io.observe(section);
+    }
+    setupObserver();
+
+    // 重悬：重播落下动画
+    function replay() {
+      section.classList.remove('is-seen');
+      // 强制回流后再加回，使 animation 重新播放
+      void section.offsetWidth;
+      section.classList.add('is-seen');
+    }
+    btn.addEventListener('click', replay);
+
+    window.__plCleanup = function () {
+      if (io) io.disconnect();
+      btn.removeEventListener('click', replay);
+    };
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>三产品融合 P0 原型 · 书院入口</title>
+<link rel="stylesheet" href="../../modules/frontend/tokens.css" />
+<style>
+  /* 全局 :root 覆盖由 binder 从 dom-plan.rootCssVars 写入 */
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-serif);
+    min-height: 100vh;
+    transition: background 1.5s var(--ease-cloud);
+  }
+  .stage {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    min-height: 100vh;
+  }
+  /* —— 左：渲染场 —— */
+  .scene {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-5xl);
+  }
+  /* 月洞门（mg-）—— 圆形为界，黛青门框 */
+  .mg-gate {
+    position: relative;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    border: 14px solid var(--color-border-strong, var(--color-text));
+    box-shadow: var(--shadow-skylight);
+    background: radial-gradient(circle at 50% 40%, #f5f2ea 0%, #d8d4c6 100%);
+    cursor: pointer;
+    transition: transform 1.2s var(--ease-breath), box-shadow 2s var(--ease-cloud);
+    animation: breathe 8s var(--ease-breath) infinite;
+    overflow: hidden;
+  }
+  .mg-gate:hover { transform: scale(1.02); }
+  .mg-scene {
+    position: absolute; inset: 0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--color-text);
+    font-size: var(--font-md);
+    opacity: 0; transition: opacity 2.5s var(--ease-cloud);
+  }
+  .mg-gate.is-open .mg-scene { opacity: 1; }
+  @keyframes breathe { 0%,100% { box-shadow: var(--shadow-skylight); } 50% { box-shadow: 0 0 60px rgba(184,134,11,0.18), var(--shadow-skylight); } }
+
+  /* 匾额（pl-）—— 居中题眼，古金线 */
+  .pl-plaque {
+    position: absolute;
+    top: 8%; left: 50%; transform: translateX(-50%) translateY(-120%);
+    padding: var(--space-sm) var(--space-2xl);
+    background: #2c2c2c;
+    color: var(--color-text-inverse);
+    border: 1px solid var(--color-accent);
+    letter-spacing: var(--space-md);
+    font-family: var(--font-kai);
+    font-size: var(--font-lg);
+    opacity: 0;
+    transition: transform 1.5s var(--ease-water), opacity 1.5s var(--ease-cloud);
+  }
+  .pl-plaque.is-landed { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .pl-plaque .seal {
+    display: inline-block; margin-left: var(--space-sm);
+    color: #8B2500; border: 1px solid #8B2500; padding: 0 4px; font-size: var(--font-xs);
+  }
+
+  /* —— 右：流水线 trace —— */
+  .trace {
+    background: rgba(255,255,255,0.55);
+    border-left: 1px solid var(--color-border);
+    padding: var(--space-2xl);
+    font-family: var(--font-sans); font-size: var(--font-xs);
+    line-height: var(--leading-normal);
+    overflow: auto;
+  }
+  .trace h2 { font-family: var(--font-serif); font-size: var(--font-md); margin-bottom: var(--space-md); }
+  .trace h3 { font-size: var(--font-sm); margin: var(--space-lg) 0 var(--space-sm); color: var(--color-accent); }
+  .trace code { background: rgba(0,0,0,0.05); padding: 1px 4px; border-radius: var(--radius-sm); }
+  .trace .row { display: flex; justify-content: space-between; gap: var(--space-sm); }
+  .ok { color: #2E4A3C; }
+  button {
+    margin-top: var(--space-md); padding: var(--space-sm) var(--space-lg);
+    background: transparent; border: 1px solid var(--color-border-strong);
+    color: var(--color-text); font-family: var(--font-serif); cursor: pointer;
+    transition: all 0.8s var(--ease-water);
+  }
+  button:hover { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="scene">
+    <div class="pl-plaque" id="plaque">书院<span class="seal">印</span></div>
+    <div class="mg-gate" id="gate" title="点击推门">
+      <div class="mg-scene">山居深处 · 推门即入</div>
+    </div>
+  </div>
+  <aside class="trace">
+    <h2>融合 P0 流水线 trace</h2>
+    <div id="trace-body"></div>
+    <button id="toggle">推门 · 落地匾额</button>
+  </aside>
+</div>
+
+<!-- 由 render.js 产出的 DomComponentPlan（内嵌，file:// 下无需 fetch） -->
+<script type="application/json" id="dom-plan">
+{
+  "planId": "plan-ir-act-shuyuan-entrance",
+  "testCaseId": "TC-SHUYUAN-01",
+  "renderer": "WebGL2Renderer",
+  "links": { "rawIRHash": "sha256:8e4ad3a28edf21cf68805cda", "validatedIRHash": "sha256:8e4ad3a28edf21cf68805cda", "executionPlanHash": "sha256:e26e15df330645b2a4ef1edb" },
+  "rootCssVars": { "--color-bg": "#EDEAE4", "--color-text": "#2C3E50", "--color-accent": "#B8860B" },
+  "components": [
+    { "kind": "moon-gate", "order": 1, "cssVars": { "--color-border-strong": "#2C3E50" }, "state": { "open": false }, "motion": { "prototype": "light", "durationMs": 8000, "easingToken": "--ease-breath" } },
+    { "kind": "plaque", "order": 5, "cssVars": { "--color-accent": "#B8860B" }, "state": { "landed": false, "sealed": false, "observerThreshold": 0.4 } }
+  ]
+}
+</script>
+
+<script>
+  // —— runtime-binder（DOM 版，<120 行）：把 DomComponentPlan 写进页面 ——
+  const plan = JSON.parse(document.getElementById("dom-plan").textContent);
+  const root = document.documentElement.style;
+
+  // 1) 写全局 :root 覆盖（tokens.css 为基线）
+  for (const [k, v] of Object.entries(plan.rootCssVars)) root.setProperty(k, v);
+
+  // 2) 按组件 cssVars 写作用域变量
+  const byKind = Object.fromEntries(plan.components.map(c => [c.kind, c]));
+  const gate = byKind["moon-gate"], plaque = byKind["plaque"];
+  if (gate) for (const [k, v] of Object.entries(gate.cssVars)) root.setProperty(k, v);
+
+  // 3) 交互：推门 + 匾额落地（state 驱动）
+  let opened = false;
+  document.getElementById("toggle").addEventListener("click", () => {
+    opened = !opened;
+    document.getElementById("gate").classList.toggle("is-open", opened);
+    document.getElementById("plaque").classList.toggle("is-landed", opened);
+  });
+  // 入场 1.5s 后匾额自动落地（plaque motion water / observerThreshold 0.4 的简化演示）
+  setTimeout(() => document.getElementById("plaque").classList.add("is-landed"), 1500);
+
+  // 4) 渲染流水线 trace
+  const rows = [
+    ["testCaseId", plan.testCaseId],
+    ["renderer", plan.renderer],
+    ["rawIRHash", plan.links.rawIRHash],
+    ["validatedIRHash", plan.links.validatedIRHash],
+    ["executionPlanHash", plan.links.executionPlanHash],
+  ];
+  document.getElementById("trace-body").innerHTML =
+    "<h3>因果链</h3>" + rows.map(([k,v]) => `<div class='row'><span>${k}</span><code>${v}</code></div>`).join("") +
+    "<h3>root CSS 变量</h3>" + Object.entries(plan.rootCssVars).map(([k,v]) => `<div class='row'><span>${k}</span><code>${v}</code></div>`).join("") +
+    "<h3>已驱动组件</h3>" + plan.components.map(c => `<div class='row'><span>${c.kind}</span><code class='ok'>order=${c.order} ✓</code></div>`).join("");
+</script>
+</body>
+</html>
