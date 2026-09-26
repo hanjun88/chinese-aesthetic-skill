@@ -1,0 +1,404 @@
+{
+  "irId": "ir-act-shuyuan-entrance",
+  "concept": {
+    "name": "song-elegant",
+    "ontologyPath": "/eastern-aesthetic/song-elegant"
+  },
+  "intent": {
+    "statement": "设计一个中式书院入口页面：月洞门为界，入门见山居，匾额题「书院」，留白为主，黛青门框，古金点题。",
+    "heuristicIds": [
+      "void-solid",
+      "spatial-order",
+      "color",
+      "light",
+      "motion",
+      "anti-cliche"
+    ],
+    "priority": 1
+  },
+  "parameters": [
+    {
+      "path": "/color/dominant/value",
+      "value": "#EDEAE4",
+      "unit": "hex",
+      "confidence": 0.9,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:color"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "color"
+      ],
+      "range": {
+        "preferred": [
+          0.6,
+          0.7
+        ]
+      }
+    },
+    {
+      "path": "/color/secondary/value",
+      "value": "#2C3E50",
+      "unit": "hex",
+      "confidence": 0.9,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:color"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "color"
+      ]
+    },
+    {
+      "path": "/color/accent/value",
+      "value": "#B8860B",
+      "unit": "hex",
+      "confidence": 0.9,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:color"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "color"
+      ],
+      "range": {
+        "preferred": [
+          0.02,
+          0.08
+        ]
+      }
+    },
+    {
+      "path": "/composition/negativeSpaceRatio/value",
+      "value": 0.5833,
+      "unit": "ratio",
+      "confidence": 0.88,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:void-solid"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "void-solid"
+      ],
+      "range": {
+        "preferred": [
+          0.42,
+          0.55
+        ],
+        "hard": [
+          0.35,
+          0.42
+        ],
+        "fatalBelow": 0.3
+      }
+    },
+    {
+      "path": "/composition/symmetry/value",
+      "value": 1,
+      "unit": "ratio",
+      "confidence": 0.85,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:spatial-order"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "spatial-order"
+      ]
+    },
+    {
+      "path": "/composition/depthLayerCount/value",
+      "value": 3,
+      "unit": "scalar",
+      "confidence": 0.8,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:architecture"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "architecture"
+      ]
+    },
+    {
+      "path": "/composition/focalPoint/value",
+      "value": [
+        0.5,
+        0.5
+      ],
+      "unit": "vector2",
+      "confidence": 0.85,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:interaction"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "interaction"
+      ]
+    },
+    {
+      "path": "/lighting/keyLight/azimuth/value",
+      "value": 0,
+      "unit": "degrees",
+      "confidence": 0.85,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:light"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "light"
+      ]
+    },
+    {
+      "path": "/lighting/keyLight/elevation/value",
+      "value": 78,
+      "unit": "degrees",
+      "confidence": 0.85,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:light"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "light"
+      ],
+      "range": {
+        "hard": [
+          20,
+          70
+        ]
+      }
+    },
+    {
+      "path": "/lighting/keyLight/colorTemp/value",
+      "value": 5600,
+      "unit": "kelvin",
+      "confidence": 0.82,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:light"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "light"
+      ]
+    },
+    {
+      "path": "/lighting/ambientRatio/value",
+      "value": 0.7,
+      "unit": "ratio",
+      "confidence": 0.8,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:light"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "light"
+      ]
+    },
+    {
+      "path": "/materials/0/baseType/value",
+      "value": "aged-paper-wood",
+      "unit": "scalar",
+      "confidence": 0.85,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:material"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "material"
+      ]
+    },
+    {
+      "path": "/materials/0/roughness/value",
+      "value": 0.72,
+      "unit": "scalar",
+      "confidence": 0.8,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:material"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "material"
+      ]
+    },
+    {
+      "path": "/materials/0/metalness/value",
+      "value": 0.04,
+      "unit": "scalar",
+      "confidence": 0.8,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:material"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "material"
+      ]
+    },
+    {
+      "path": "/materials/0/wear/value",
+      "value": 0.32,
+      "unit": "scalar",
+      "confidence": 0.8,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:material"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "material"
+      ]
+    },
+    {
+      "path": "/camera/fov/value",
+      "value": 35,
+      "unit": "degrees",
+      "confidence": 0.85,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:spatial-order"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "spatial-order"
+      ]
+    },
+    {
+      "path": "/camera/shotSize/value",
+      "value": "medium",
+      "unit": "scalar",
+      "confidence": 0.8,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:spatial-order"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "spatial-order"
+      ]
+    },
+    {
+      "path": "/camera/angle/value",
+      "value": 0,
+      "unit": "degrees",
+      "confidence": 0.8,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:spatial-order"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "spatial-order"
+      ]
+    },
+    {
+      "path": "/camera/height/value",
+      "value": 1.6,
+      "unit": "scalar",
+      "confidence": 0.8,
+      "status": "estimated",
+      "source": {
+        "type": "expert-judgment",
+        "ref": "chinese-aesthetic-skill:spatial-order"
+      },
+      "calibration": {
+        "method": "skill-10d-engine",
+        "status": "PRODUCTION"
+      },
+      "evidence": [
+        "spatial-order"
+      ]
+    }
+  ],
+  "constraints": [],
+  "provenance": {
+    "sheetId": "act-shuyuan-entrance",
+    "capturedAt": "2026-09-26T00:00:00Z",
+    "attributionStatement": "书院入口以月洞门为界，取宋韵克制：月白为底、黛青为骨、古金点题，七三留白，天光斜漏。",
+    "aestheticScore": 88
+  },
+  "distillerVersion": "chinese-aesthetic-skill@1.0.0",
+  "grammarVersion": "grammar-rules@1.0.0"
+}

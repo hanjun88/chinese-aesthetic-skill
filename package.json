@@ -11,6 +11,8 @@
     "lint": "tsc --noEmit",
     "test": "node tests/engines.test.js",
     "test:engines": "node tests/engines.test.js",
+    "test:runtime": "node --test modules/frontend/runtime/__tests__/dimension-registry.test.ts modules/frontend/runtime/__tests__/severity-map.test.ts modules/frontend/runtime/__tests__/sheet-to-cangjie.test.ts modules/frontend/runtime/__tests__/plan-to-dom.test.ts",
+    "demo:fusion": "bash examples/fusion-demo/run-demo.sh",
     "test:gates": "node scripts/validate.cjs",
     "gate1": "node scripts/validate.cjs --gate 1",
     "gate2": "node scripts/validate.cjs --gate 2",

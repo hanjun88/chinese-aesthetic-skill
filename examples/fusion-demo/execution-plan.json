@@ -1,0 +1,77 @@
+{
+  "planId": "plan-ir-act-shuyuan-entrance",
+  "runtimePlan": {
+    "sceneBindings": {
+      "cameraRig": {
+        "type": "orbit",
+        "params": {
+          "fov": 35,
+          "height": 1.6,
+          "motion": {
+            "proto": "light",
+            "durationMs": [
+              1500,
+              8000
+            ],
+            "amplitude": 0.05
+          }
+        }
+      },
+      "lights": [
+        {
+          "type": "area",
+          "parameters": {
+            "azimuth": 0,
+            "elevation": 78,
+            "colorTemp": 5600,
+            "ambientRatio": 0.7
+          }
+        }
+      ],
+      "materials": [
+        {
+          "bindingId": "mat-0",
+          "shaderType": "PBR",
+          "uniforms": {
+            "baseType": "aged-paper-wood",
+            "roughness": 0.72,
+            "metalness": 0.04,
+            "wear": 0.32,
+            "extensions": {
+              "normalPerturbation": {
+                "type": "MICRO_SCRATCHES",
+                "intensity": 0.08,
+                "scale": 12.5
+              }
+            },
+            "layout": {
+              "padding": {
+                "t": 64,
+                "r": 48,
+                "b": 64,
+                "l": 48
+              }
+            }
+          }
+        }
+      ]
+    },
+    "pipeline": {
+      "rendererType": "WebGL2Renderer",
+      "toneMapping": "clamp-gamut:REC709_D50",
+      "postprocessing": [
+        "grain",
+        "vignette"
+      ]
+    }
+  },
+  "negotiation": {
+    "selectedTier": "A",
+    "downgrades": []
+  },
+  "hashes": {
+    "rawIRHash": "sha256:8e4ad3a28edf21cf68805cda",
+    "validatedIRHash": "sha256:8e4ad3a28edf21cf68805cda",
+    "executionPlanHash": "sha256:e26e15df330645b2a4ef1edb"
+  }
+}
