@@ -1,0 +1,109 @@
+/* ===============================================================================
+ main.js.template — 主 JS 模板（初始化 + 事件绑定 + 视差循环 + 状态管理）
+ 状态: DRAFT v0.1
+ -------------------------------------------------------------------------------
+ 占位符变量（来源: CodeGenerationPlan.animation_timeline + components[]）:
+   {{PARALLAX_LAYERS}}    视差层配置数组 [{selector, speed}, ...] 速度 0.2/0.5/1.0
+   {{REVEAL_SELECTORS}}   需 IntersectionObserver 浮现的元素选择器数组
+   {{GATE_SELECTOR}}      推门组件选择器（点击开门）
+   {{BREATH_SELECTORS}}   呼吸循环元素选择器数组
+   {{ENTRY_STEPS}}        进入仪式步骤配置（远观→趋近→过门→豁然）
+   {{THEME_BRANCH}}       晨/昏/夜主题分支（branch-switch），可选
+ 纪律:
+   - scroll 监听必须 {passive: true}
+   - addEventListener 必须有对应 removeEventListener（pagehide 销毁）
+   - delta 钳制 Math.min(dt, 0.1)
+   - 禁 bounce/spin/linear；入场=浮现(emerge) 非弹出
+=============================================================================== */
+
+(function () {
+  'use strict';
+
+  /* ----- 1. 工具：rAF 循环（delta 钳制，可销毁） ----- */
+  function createRafLoop(update) {
+    let rafId = null, running = false, last = 0;
+    function frame(now) {
+      if (!running) return;
+      if (last === 0) last = now;
+      const dt = Math.min((now - last) / 1000, 0.1);   // 钳制 ≤0.1s
+      last = now;
+      update(dt);
+      rafId = requestAnimationFrame(frame);
+    }
+    return {
+      start() { if (running) return; running = true; last = 0; rafId = requestAnimationFrame(frame); },
+      destroy() { running = false; if (rafId !== null) cancelAnimationFrame(rafId); rafId = null; }
+    };
+  }
+
+  /* ----- 2. 视差滚动（进深 = 滚动）----- */
+  /* {{PARALLAX_LAYERS}} 例:
+     [ {el: '.layer--far', speed: 0.2},
+       {el: '.layer--mid', speed: 0.5},
+       {el: '.layer--near', speed: 1.0} ]
+  */
+  const parallaxLayers = {{PARALLAX_LAYERS}}.map(cfg => ({
+    el: document.querySelector(cfg.el),
+    speed: cfg.speed
+  })).filter(l => l.el);
+
+  function onScroll() {
+    const y = window.scrollY;
+    parallaxLayers.forEach(l => {
+      l.el.style.transform = `translateY(${y * l.speed * -1}px)`;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ----- 3. 藏露：IntersectionObserver 触发浮现 ----- */
+  /* {{REVEAL_SELECTORS}} 例: ['.layer--far', '.layer--mid', '.gate'] */
+  const revealTargets = document.querySelectorAll('{{REVEAL_SELECTORS}}');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-revealed');
+        io.unobserve(entry.target);            // 只触发一次
+      }
+    });
+  }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
+  revealTargets.forEach(t => io.observe(t));
+
+  /* ----- 4. 推门：点击 = 移开遮挡（≥0.6s） ----- */
+  const gate = document.querySelector('{{GATE_SELECTOR}}');
+  if (gate) {
+    gate.addEventListener('click', function onClick(e) {
+      e.currentTarget.classList.toggle('is-open');
+    });
+  }
+
+  /* ----- 5. 呼吸循环（极缓 5-15s） ----- */
+  /* {{BREATH_SELECTORS}} 例: ['.cloud-drift', '.scene-light'] */
+  // 呼吸动画已在 CSS 中用 animation 声明，此处仅确保 reduced-motion 下降级
+  const mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (mqReduce.matches) {
+    document.querySelectorAll('{{BREATH_SELECTORS}}').forEach(el => {
+      el.style.animation = 'none';
+      el.style.opacity = '1';                  // 直接终态
+    });
+  }
+
+  /* ----- 6. 进入仪式编排（远观→趋近→过门→豁然，可选） ----- */
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  async function entryRitual() {
+    /* {{ENTRY_STEPS}} 由 CodeGenerationPlan 派生，例:
+       await sleep(800);
+       document.querySelector('.layer--far').classList.add('is-revealed');
+       await sleep(1200);
+       document.querySelector('.layer--mid').classList.add('is-revealed');
+    */
+  }
+  window.addEventListener('load', entryRitual);
+
+  /* ----- 7. 销毁闭环（pagehide 防内存泄漏） ----- */
+  window.addEventListener('pagehide', () => {
+    window.removeEventListener('scroll', onScroll);
+    io.disconnect();
+    if (gate) gate.removeEventListener('click', onClick);
+  });
+
+})();

@@ -1,0 +1,147 @@
+/* ===============================================================================
+ styles.css.template — 主 CSS 模板（:root 派生 + 布局类 + 组件类占位）
+ 状态: DRAFT v0.1
+ -------------------------------------------------------------------------------
+ 占位符变量（来源: CodeGenerationPlan.css_variables + mapping rules）:
+   {{COLOR_PRIMARY}}      主色 HEX/HSL，来自 color_system.palette[role=primary]
+   {{COLOR_SECONDARY}}    辅色，来自 palette[role=secondary]
+   {{COLOR_ACCENT}}       点缀色（古金/赭黄），来自 palette[role=accent]
+   {{COLOR_SHADOW}}       阴影色（黛影，非纯黑），来自 palette[role=shadow]
+   {{COLOR_BTN}}          按钮主色（UI朱砂降饱和 hsl(16,45%,35%)）
+   {{MOON_BG_GRADIENT}}   天光渐变三段式，来自 lighting 维度
+   {{EASE_CLOUD}}         云缓动 cubic-bezier
+   {{EASE_BREATH}}        呼吸缓动
+   {{DURATION_CLOUD}}     云时长 ms（4000-8000）
+   {{DURATION_REVEAL}}     推门/浮现时长 ms（≥1500）
+   {{SPACING_BAY_GAP}}     开间列间距 = calc(N * var(--m))
+   {{MAX_WIDTH_HALL}}      殿堂最大宽度 = calc(N * var(--m))
+   {{VOID_PADDING}}        留白 padding = calc(N * var(--m))
+   {{ASPECT_RATIO}}        方五斜七 = 7 / 5
+ 铁律: 所有色值必须与 tokens.css 一致；所有间距是 var(--m)=8px 的倍数；
+       阴影用 --c-shadow 带环境色，禁纯黑 #000。
+=============================================================================== */
+
+/* ===== 0. 引入令牌（tokens.css 提供 --m / 五色 / 缓动 / 阴影全套） ===== */
+/* tokens.css 已在 index.html 中 <link>，此处仅做本项目语义派生 */
+
+/* ===== 1. 本项目语义变量派生（由 color_system 直译，不改令牌值） ===== */
+:root {
+  --c-primary:   {{COLOR_PRIMARY}};
+  --c-secondary: {{COLOR_SECONDARY}};
+  --c-accent:    {{COLOR_ACCENT}};
+  --c-shadow:    {{COLOR_SHADOW}};
+  --c-btn:       {{COLOR_BTN}};
+  --ease-cloud:  {{EASE_CLOUD}};
+  --ease-breath: {{EASE_BREATH}};
+}
+
+/* ===== 2. 基础重置（克制原则） ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+body {
+  background: var(--c-primary);
+  color: var(--c-secondary);
+  font-family: var(--font-serif);            /* tokens.css: Songti SC 栈 */
+  line-height: var(--leading-normal);         /* 1.8 字距偏松 */
+  font-weight: var(--weight-light);          /* 300，不用 bold */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== 3. 空间秩序（维度02）：中轴 + 三开间 Grid ===== */
+.inner-hall {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;       /* 次间 / 明间 / 次间 */
+  column-gap: {{SPACING_BAY_GAP}};            /* 例: calc(3 * var(--m)) = 24px */
+  max-width: {{MAX_WIDTH_HALL}};              /* 例: calc(60 * var(--m)) = 480px */
+  margin-inline: auto;                        /* 中轴：整体居中 */
+  min-height: 100vh;
+}
+.hall-core { grid-column: 2; }                /* 核心落明间 */
+
+/* ===== 4. 虚实（维度03）：留白 / 藏 / 透 ===== */
+.hall-core {
+  padding: {{VOID_PADDING}};                  /* 例: calc(8*var(--m)) calc(6*var(--m)) */
+  background: var(--c-primary);
+}
+/* 藏：远景默认被遮挡，IntersectionObserver 触发 .is-revealed */
+.layer--far, .layer--mid {
+  opacity: 0;
+  transform: translateY(calc(2 * var(--m)));
+  transition:
+    opacity {{DURATION_REVEAL}}ms var(--ease-breath),
+    transform {{DURATION_REVEAL}}ms var(--ease-breath);
+}
+.layer--far.is-revealed, .layer--mid.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+/* 透：屏风软界半透 */
+.screen-soft {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--c-primary) 65%, transparent),
+    color-mix(in srgb, var(--c-primary) 25%, transparent));
+  backdrop-filter: blur(2px);
+}
+
+/* ===== 5. 比例（维度04）：方五斜七 ===== */
+.scene-ratio { aspect-ratio: {{ASPECT_RATIO}}; }   /* 7 / 5 */
+
+/* ===== 6. 光影（维度06）：天光渐变 + 漏光投影 ===== */
+.scene-light {
+  background: linear-gradient(180deg,
+    hsl(45, 30%, 96%) 0%,
+    hsl(211, 13%, 60%) 45%,
+    hsl(222, 30%, 15%) 100%);
+}
+/* 漏光：窗格投影（repeating-linear-gradient + multiply） */
+.leak-shadow::after {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg,
+    hsl(222, 30%, 15%, 0.18) 0 2px, transparent 2px 24px);
+  mix-blend-mode: multiply;
+}
+/* 阴影带环境色（黛影），非纯黑 */
+.elevation { box-shadow: 0 calc(3*var(--m)) calc(6*var(--m)) var(--c-shadow); }
+
+/* ===== 7. 动势（维度08）：云/呼吸 关键帧 ===== */
+@keyframes drift-cloud {
+  from { transform: translate3d(calc(-1 * var(--amplitude-cloud)), 0, 0); }
+  to   { transform: translate3d(var(--amplitude-cloud), 0, 0); }
+}
+.cloud-drift {
+  animation: drift-cloud {{DURATION_CLOUD}}ms var(--ease-cloud) infinite alternate;
+}
+@keyframes breathe-light {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+.breathing {
+  animation: breathe-light var(--dur-breath) var(--ease-breath) infinite;
+}
+/* 禁: bounce / back / spin / linear —— 以下缓动一律不得出现 */
+
+/* ===== 8. 组件类占位（由 component.template 填充） ===== */
+/* {{COMPONENT_CSS_BLOCK}} */
+
+/* ===== 9. 焦点唯一（维度03 focal_points_max=1） ===== */
+.hall-title {
+  font-size: var(--font-2xl);
+  font-weight: var(--weight-light);
+  letter-spacing: 0.2em;
+  text-align: center;
+}
+.hall-subtitle {
+  font-size: var(--font-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-top: var(--space-md);
+  letter-spacing: 0.3em;
+}
+
+/* ===== 10. 无障碍：减少动效 ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

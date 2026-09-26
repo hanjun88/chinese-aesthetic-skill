@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  组件 6/6：博古架 CurioShelf  (前缀 cs-)
+  ------------------------------------------------------------
+  美学约束（为什么是东方的）：
+    · 错落有致 —— 博古架（多宝阁）的格子绝不是整齐矩阵：
+      大小格相间、高低格相错，是为了让器物各得其所。
+      用 grid-template-areas 做出不规则格。
+    · 虚实相间 —— 有格放满藏品（实），有格空着（虚/呼吸），
+      不空不满才透气。来源：03-void-solid.md「空的呼吸功能」。
+    · 藏品的空间秩序 —— 不是货架罗列，是把文玩按气韵陈列：
+      瓶、卷、石、印各占一格。悬停时一格微亮、藏品微动，
+      如人走近架前细赏。
+  技术：CSS Grid 不规则网格（grid-template-areas）；
+        悬停高亮 + 藏品 translateY 微动（--ease-cloud，极缓无弹跳）。
+  内存：本组件无必须清理的全局监听（纯 CSS hover）。
+  状态：DRAFT v0.1 —— 待优化：真实器物 SVG、层板阴影。
+  ============================================================
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>博古架 CurioShelf — 东方美学组件库</title>
+<style>
+  @import url('../modules/frontend/tokens.css');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3xl);
+    background:
+      radial-gradient(ellipse at 50% 0%, var(--qing-100), var(--color-bg) 70%);
+    font-family: var(--font-serif);
+    padding: var(--space-4xl) var(--space-lg);
+  }
+
+  .cs-caption {
+    color: var(--color-text-secondary);
+    font-size: var(--font-sm);
+    letter-spacing: 0.15em;
+    text-align: center;
+    line-height: var(--leading-normal);
+  }
+  .cs-caption b { color: var(--color-text); font-weight: var(--weight-medium); }
+
+  /* ============ 博古架本体 ============ */
+  .cs-shelf {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(5, 78px);
+    gap: 6px;
+    padding: 14px;
+    width: 520px;
+    max-width: 92vw;
+    background: linear-gradient(180deg, var(--dai-blue-700), var(--dai-700));
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-raking);
+  }
+
+  /* 每个格 */
+  .cs-cell {
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+    /* 层板的柔和阴影 */
+    box-shadow: inset 0 -6px 8px hsl(38, 20%, 60%, 0.15);
+    transition: box-shadow var(--dur-instant) var(--ease-cloud),
+                background var(--dur-instant) var(--ease-cloud);
+  }
+  /* 悬停：这一格被"点亮"，藏品格微微浮起 */
+  .cs-cell:hover {
+    background: var(--yuebai-50);
+    box-shadow:
+      inset 0 -6px 8px hsl(38, 20%, 60%, 0.15),
+      0 0 0 2px var(--color-accent-soft);
+  }
+  .cs-cell:hover .cs-obj {
+    transform: translateY(-4px);
+  }
+
+  /* 格间器物（用色块/形状示意：瓶、卷、石、印、空） */
+  .cs-obj {
+    transition: transform var(--dur-instant) var(--ease-cloud);
+  }
+  .cs-obj--vase {            /* 瓶 */
+    width: 26px; height: 44px;
+    background: var(--qing-500);
+    border-radius: 40% 40% 45% 45% / 30% 30% 60% 60%;
+  }
+  .cs-obj--vase::before {
+    content:""; display:block; width:12px; height:8px;
+    background: var(--qing-700); margin: -4px auto 0; border-radius: 2px;
+  }
+  .cs-obj--scroll {           /* 卷 */
+    width: 40px; height: 12px;
+    background: var(--zhehuang-300);
+    border-radius: var(--radius-pill);
+  }
+  .cs-obj--stone {            /* 石（太湖石瘦透漏皱） */
+    width: 30px; height: 40px;
+    background: var(--dai-500);
+    border-radius: 40% 60% 50% 50% / 60% 40% 60% 40%;
+  }
+  .cs-obj--seal {             /* 印 */
+    width: 22px; height: 22px;
+    background: var(--color-danger);
+    border-radius: var(--radius-sm);
+  }
+  .cs-obj--pot {              /* 小罐 */
+    width: 30px; height: 30px;
+    background: var(--yanzi-300);
+    border-radius: 50% 50% 45% 45%;
+  }
+  /* 空格：虚，留呼吸 */
+  .cs-cell--empty { background: transparent; box-shadow: none; }
+  .cs-cell--empty:hover { box-shadow: none; }
+
+  /* 不规则格位 */
+  .cs-a { grid-area: a; } .cs-b { grid-area: b; } .cs-c { grid-area: c; }
+  .cs-d { grid-area: d; } .cs-e { grid-area: e; } .cs-f { grid-area: f; }
+  .cs-g { grid-area: g; } .cs-h { grid-area: h; }
+</style>
+</head>
+<body>
+
+  <div class="cs-caption">
+    <b>博古架 CurioShelf</b>　错落有致 · 虚实相间<br>
+    悬停任意一格，藏品微微浮起
+  </div>
+
+  <!--
+    不规则格位示意（grid-template-areas，每个命名区域必须是矩形，否则整条声明失效）：
+    a a b b c c
+    a a b b c c
+    d d e e c c
+    d d e e f f
+    g g g h h .
+  -->
+  <div class="cs-shelf" style="grid-template-areas:
+    'a a b b c c'
+    'a a b b c c'
+    'd d e e c c'
+    'd d e e f f'
+    'g g g h h .';">
+    <div class="cs-cell cs-a"><div class="cs-obj cs-obj--vase"></div></div>
+    <div class="cs-cell cs-b cs-cell--empty"></div>
+    <div class="cs-cell cs-c"><div class="cs-obj cs-obj--stone"></div></div>
+    <div class="cs-cell cs-d"><div class="cs-obj cs-obj--scroll"></div></div>
+    <div class="cs-cell cs-e"><div class="cs-obj cs-obj--pot"></div></div>
+    <div class="cs-cell cs-f"><div class="cs-obj cs-obj--seal"></div></div>
+    <div class="cs-cell cs-g"><div class="cs-obj cs-obj--scroll"></div></div>
+    <div class="cs-cell cs-h cs-cell--empty"></div>
+  </div>
+
+</body>
+</html>

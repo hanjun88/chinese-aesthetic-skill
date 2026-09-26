@@ -1,233 +1,224 @@
-# Chinese Aesthetic Design Skill
+# 东方美学决策引擎（Chinese Aesthetic Skill）
 
-> 为 HEARTMIRROR Act 0 提供中式传统建筑与美学的可执行约束。不是"贴中国元素"，是从结构层面回答"这个设计为什么是中国的"。
+> 把"这个设计为什么是中国的"从一句主观判断，编译为可测量、可约束、可回灌的工程参数。
 
-## 定位
+`chinese-aesthetic-skill`（内部代号 CAS，Chinese Aesthetic decision engine）是一个**确定性的东方空间美学决策引擎**。它不直接生成画面，而是把儒释道、宋韵、营造法式、君臣佐使等美学语汇，翻译成一组**可被编译器消费的约束单（AestheticConstraintSheet）**，再经融合运行时层投影为前端组件计划、Figma 变量、Three.js 材质，并在渲染后做 fidelity 回评，形成闭环。
 
-本 Skill 嵌入设计管线：
+- **包名**：`chinese-aesthetic-skill`
+- **当前版本**：v0.3.0（P2）
+- **License**：MIT
+- **Node 要求**：>= 18.0.0
+
+---
+
+## 它解决什么问题
+
+AIGC 生成的中式设计常犯三类病：高饱和正红/亮金的"国潮贴图感"、bounce/弹簧动效的塑料感、绝对居中对称的模板感。本引擎把这些"俗套"固化为**硬否决规则**，并把留白、中轴、天光、包浆等正向语汇固化为**参数区间**，让下游编译器（Design Compiler）在 G1/G2/G3 门禁里自动阻断或修补。
+
+---
+
+## 核心能力
+
+### 1. 十一个原美学模块（哲学 → 反俗套）
+
+`modules/01..11-*.md` 编号制 11 维，每一维都有可测指标与规则：
+
+| # | 维度 | 中文名 | 落点 |
+|---|------|--------|------|
+| 01 | philosophy | 道论 | sidecar 语义裁决 |
+| 02 | spatial-order | 空间秩序 | composition |
+| 03 | void-solid | 虚实相生 | composition |
+| 04 | proportion | 比例尺度 | composition |
+| 05 | material | 材质质感 | materials |
+| 06 | light | 光影明暗 | lighting |
+| 07 | color | 色彩设色 | color |
+| 08 | motion | 动势韵律 | runtime |
+| 09 | architecture | 营造形制 | composition |
+| 10 | interaction | 交互体验 | composition |
+| 11 | anti-cliche | 反套路 | composition |
+
+`lib/` 下保留原 10 维可执行引擎（color-engine / spatial-engine / proportion-engine / material-engine / light-engine / video-motion-engine / interaction-engine / cliche-detector / anti-ai-artifacts），**P0/P1 全程零改动**。
+
+### 2. 前端实现层（frontend playbook v2.0）
+
+`modules/frontend/` 把美学决策落到真实前端：
+- `html-css.md` / `javascript-interaction.md` / `framework-components.md`：语义化 HTML、tokens.css、组件骨架；
+- `mapping/E..J-*.md`：空间虚实、比例色彩、材质光影、动势 JS、架构哲学、反俗套 code review 的映射手册。
+
+### 3. 融合运行时层（双轨 SSOT + 契约 A/B/C）
+
+`modules/frontend/runtime/` 是纯函数运行时，通过三条契约与 Design Compiler（DC）对接：
+
+| 契约 | 函数 | 方向 |
+|------|------|------|
+| A | `sheetToCangjie` | 美学约束单 → Cangjie IR |
+| B | `planToDom` | DC 执行计划 → DOM 组件计划 |
+| C | `generateFidelityReport` | 渲染产物 → 美学 fidelity sidecar |
+
+维度命名、severity 命名全部经 `dimension-registry` / `severity-map` 双轨统一，**不改 lib/、不改 modules/01..11**。
+
+### 4. 评估闭环（fidelity 评分 + 反俗套审查）
+
+`code-reviewer.ts` 对生成的 HTML/CSS/JS 做静态反序列化：grep 违禁 hex、违禁缓动、饱和度 S≤0.5 铁律、留白比区间、呼吸循环计数。`rendered-feedback.ts` 把信号对比回原始约束单，产出 `AestheticEvaluationReport`（sidecar，独立版本，不污染 DC FROZEN 的 5 元 hashChain）。
+
+### 5. 生态扩展
+
+`modules/frontend/runtime/ecosystem/` 三个平级投影器：
+- `plan-to-figma`：ValidatedIR + 执行计划 → Figma Variables / Paint Styles / Effect Styles；
+- `plan-to-threejs`：materials uniforms → Three.js `MeshStandardMaterial`；
+- `plan-to-react`：DomComponentPlan → 受控 React 组件模板。
+
+---
+
+## 架构概览
 
 ```
-finesse-brief（需求规格）
-  → chinese-aesthetic-skill（中式美学约束）← 本 Skill
-    → finesse-skill（界面设计执行）
-      → frame-smith（动效执行）
-        → finesse-term（术语对齐）
+                 ┌──────────────────────────────────────────────┐
+                 │            CAS 美学决策引擎 (本仓库)           │
+                 │                                              │
+  lib/*-engine   │  modules/01..11  ──►  AestheticConstraintSheet│
+  (原10维,零改动) │   (11维编号制)        (美学约束单 / 唯一输入物) │
+                 └──────────────────────┬───────────────────────┘
+                                        │ 契约 A: sheetToCangjie
+                                        ▼
+                 ┌──────────────────────────────────────────────┐
+                 │   Design Compiler (DC, 独立仓库)              │
+                 │   G1 DataGate → G2 PatchEngine → G3 CapNeg   │
+                 │   → RuntimeExecutionPlan + 5元 hashChain     │
+                 └──────────────────────┬───────────────────────┘
+                                        │ 契约 B: planToDom
+                                        ▼
+                 ┌──────────────────────────────────────────────┐
+                 │   DomComponentPlan (6组件: 门/卷/屏/窗/匾/架) │
+                 │   → tokens.css / Figma vars / Three.js / React│
+                 └──────────────────────┬───────────────────────┘
+                                        │ 渲染产物 (html/css/js)
+                                        ▼
+                 ┌──────────────────────────────────────────────┐
+                 │ 契约 C: code-reviewer → rendered-feedback    │
+                 │   → AestheticEvaluationReport (sidecar 回评) │
+                 │   → 回灌 Step3 反俗套复检 (闭环)              │
+                 └──────────────────────────────────────────────┘
 ```
 
-## 安装
+双轨 SSOT：维度与 severity 各有 legacy / v2 / DC 三套命名，全部经 `dimension-registry.ts`、`severity-map.ts` 查表归一，物理上不改老代码。
+
+---
+
+## 快速开始
+
+### 安装
 
 ```bash
-# 方式一：Impeccable / CLI
-npx skills add git+https://github.com/hanjun88/chinese-aesthetic-skill.git
-
-# 方式二：克隆到本地 skills 目录
-git clone https://github.com/hanjun88/chinese-aesthetic-skill.git ~/.skills/chinese-aesthetic-skill
-
-# 方式三：npm 包（Node.js 项目中直接 import）
-npm install github:hanjun88/chinese-aesthetic-skill
+# 仓库即 skill 本体；Node >= 18
+npm install           # 安装前端工具链（vite/react/tailwind）
+npm run lint          # tsc --noEmit 类型检查
+npm run test          # 原 10 维引擎测试
+npm run test:runtime  # 融合运行时层测试
 ```
 
-## 使用方法（快速开始）
+### 最小示例：约束单 → Cangjie IR
 
-### 对话调用
+```ts
+import {
+  sheetToCangjie,
+  type AestheticConstraintSheet,
+} from "./modules/frontend/runtime/index.ts";
 
-```
-@ChineseAestheticSkill 请根据当前 ACT0 云海+单门场景，应用中式配色、比例和交互规则
-```
+const sheet: AestheticConstraintSheet = {
+  sheetId: "act-shuyuan-entrance",
+  designBrief: "书院入口：月洞门为界，黛青门框，古金点题，七三留白",
+  mood: "song-elegant",
+  attributionStatement: "月白为底、黛青为骨、古金点题，天光斜漏",
+  structuralDimensions: [
+    { id: "void-solid", weight: "primary", hard: "留白:建筑≈7:5" },
+    { id: "color", weight: "secondary", hard: "饱和度≤50%" },
+  ],
+  colorSystem: {
+    palette: [
+      { role: "dominant", name: "月白", hex: "#EDEAE4", hsl: "hsl(42,25%,92%)", areaPct: 0.65, usage: "底色" },
+      { role: "secondary", name: "黛青", hex: "#2C3E50", hsl: "hsl(210,25%,25%)", areaPct: 0.25, usage: "门框/文字" },
+      { role: "accent", name: "古金", hex: "#B8893A", hsl: "hsl(36,50%,48%)", areaPct: 0.05, usage: "点题" },
+    ],
+    saturationMax: 0.5,
+    hardFailHex: ["#FF0000", "#FFD700", "#000000", "#00FFFF"],
+  },
+  proportion: { baseModulePx: 8, spacingScale: [1, 2, 4, 6, 8], voidSolidRatio: "7:5", focalPointsMax: 1 },
+  spatial: { axis: "strict", bays: 3, hierarchyLevelsMin: 3 },
+  lighting: { primarySource: "skylight", timeSetting: "dusk", lightDarkRatio: "3:7" },
+  motion: { prototypes: ["cloud", "water"], durationMs: [800, 3500], entryMode: "emerge", hardFail: ["bounce", "particle"] },
+  antiCliche: { scanned: true, hardFailHits: [], forbidden: ["正红", "亮金", "死黑"] },
+  violations: [],
+  score: 88,
+};
 
-### API 调用
-
-```json
-// 输入
-{
-  "scene": "ACT0_gate",
-  "colors": ["#88C3EB"],
-  "materials": [{"type": "wood", "color": "#8B4513"}],
-  "events": ["mouseMove", "click", "scroll"],
-  "dimensions": {"width": 1920, "height": 1080}
-}
-```
-
-```json
-// 输出
-{
-  "colors": ["#DA291C", "#F5DEB3", "#4A5568"],
-  "layout": {"centerAxis": true, "voidRatio": 0.65},
-  "materials": [{"type": "wood", "color": "#8B4513", "roughness": 0.7}],
-  "effects": ["cloudDisturb", "mossGrow", "swirlDive"],
-  "violations": [{"rule_id": "color", "severity": "P0", "message": "主色#88C3EB偏离五方正色范围"}],
-  "score": 72
-}
-```
-
-## 核心引擎（8个可执行决策引擎）
-
-本 Skill 的核心不是规则手册，是**可执行的决策引擎**。每个引擎输入设计参数，输出判定结果或生成方案。
-
-```javascript
-import { chineseness, clicheDetector, colorEngine, fullAssessment } from 'chinese-aesthetic-skill';
-
-// 1. 判定"这个设计为什么是中国的"（10维评分 + 结构东方性测试）
-const result = chineseness.assessChineseness({
-  voidRatio: 0.65,
-  colors: ['#E8E4D9', '#2C3E50', '#B8860B'],
-  brightnessRatio: 4,
-  buildingToHumanRatio: 10,
+const { cangjieIR, advisorRulePack, aestheticScore } = sheetToCangjie(sheet, {
+  advisorVersion: "chinese-aesthetic-skill@1.0.0",
+  capturedAt: "2026-09-27T00:00:00Z", // 时间戳由调用方传入，保证哈希恒等
 });
-console.log(result.score, result.level, result.coreAnswer);
-// → 76, "authentic", "这个设计是中国的，主要因为留白≥50%、不完整入画..."
 
-// 2. 反俗套检测（国潮贴图/古装影视/仿古景区/AI国风）
-const cliches = clicheDetector.detectCliches({
-  patternCoverage: 0.25,
-  colors: ['#FF0000', '#FFD700'],
-});
-// → { overallScore: 0.78, clicheTypes: ['guochao','guzhuang','fanggu','aiGuofeng'] }
-
-// 3. 生成配色方案（五方正色 + 君臣佐使70:20:10）
-const scheme = colorEngine.generateColorScheme({ preset: 'act0-cloud-gate' });
-// → { colors: { main: '#E8E4D9', secondary: '#2C3E50', accent: '#B8860B' }, ratio: {...} }
-
-// 4. 一站式综合评估（运行所有8个引擎）
-const full = fullAssessment(design);
-// → { overallScore: 91, level: 'authentic', engines: {...}, recommendations: [...] }
+console.log(cangjieIR.parameters.length); // 展开为 17+ 条扁平参数
+console.log(aestheticScore);              // 88（仅 metadata，不进 confidence）
 ```
 
-| 引擎 | 核心能力 | 输入 → 输出 |
-|---|---|---|
-| **chineseness** | "为什么是中国的"判定 | 设计参数 → 10维评分(0-100) + 结构东方性测试 + 核心回答 |
-| **clicheDetector** | 四类俗套自动检测 | 设计参数 → 俗套类型 + 评分 + 违规项 + 修复建议 |
-| **spatialEngine** | 空间秩序生成器 | 场景类型/尺寸 → 中轴/开间/层级/尺度/进深/虚实分配 |
-| **colorEngine** | 色彩决策器 | 场景/情绪 → 五方正色选择 + 君臣佐使比例 + HEX色值 |
-| **lightEngine** | 光影决策器 | 时间/场景 → 光源类型/角度/强度 + 阴影 + 体积光 + 暗部色 |
-| **interactionEngine** | 交互语义映射器 | 用户动作 → 东方意象响应 + 动画参数 + FSM状态转换 |
-| **proportionEngine** | 比例校验与生成器 | 尺寸参数 → √2/三段式/出檐/巨构比例合规性 + 推荐值 |
-| **materialEngine** | 材质决策器 | 元素类型 → PBR材质参数(color/roughness/metalness) + 风化包浆 |
+完整可运行示例见 `examples/fusion-demo/` 与 [`docs/quick-start.md`](docs/quick-start.md)。
 
-### 引擎测试
-
-```bash
-npm test
-# → 74 passed, 0 failed
-```
+---
 
 ## 目录结构
 
 ```
-chinese-aesthetic-skill/
-├── skill.yaml              # Skill 元数据与接口规范
-├── README.md               # 本文件
-├── guidelines/             # 10条核心美学规则（P0/P1 判定）
-│   ├── spatial-order.md    # 空间秩序
-│   ├── void-solid.md       # 虚实关系
-│   ├── proportion.md       # 比例
-│   ├── material.md         # 材料与质感
-│   ├── light-shadow.md     # 光影布局
-│   ├── color.md            # 色彩体系
-│   ├── motion.md           # 运动动势
-│   ├── time.md             # 时间感
-│   ├── taboo.md            # 禁忌
-│   └── interaction.md      # 交互语义
-├── modules/                # 可执行实现模块
-│   ├── spatial.md          # 轴线计算与布局
-│   ├── void_solid.md       # 虚实比例检测
-│   ├── proportion.md       # 比例校验
-│   ├── material.md         # 材质参数推荐
-│   ├── light_shadow.md     # 光照方案
-│   ├── color.md            # 色彩校验与推荐
-│   ├── motion.md           # 动效方案
-│   ├── time.md             # 时间变化方案
-│   ├── taboo.md            # 禁忌检测
-│   └── interaction.md      # 交互编排
-├── lib/                    # ★ 核心引擎（可执行代码）
-│   ├── index.js            # 统一入口 + fullAssessment 一站式评估
-│   ├── chineseness.js      # "为什么是中国的"判定引擎（10维评分+结构东方性测试）
-│   ├── cliche-detector.js  # 反俗套检测引擎（四类俗套）
-│   ├── spatial-engine.js   # 空间秩序生成器（中轴/开间/层级/尺度/进深）
-│   ├── color-engine.js     # 色彩决策器（五方正色+君臣佐使）
-│   ├── light-engine.js     # 光影决策器（天光/漏光/侧光/体积光）
-│   ├── interaction-engine.js # 交互语义映射器（动作→意象+FSM）
-│   ├── proportion-engine.js # 比例校验与生成器（√2/三段式/出檐/巨构）
-│   ├── material-engine.js  # 材质决策器（PBR参数+风化包浆）
-│   └── utils/              # 工具函数（色彩转换/数学计算）
-├── docs/                   # 设计说明文档
-├── assets/
-│   └── ACT0/               # ACT0 场景规范与素材
-│       ├── master-plate.md
-│       ├── material-params.md
-│       ├── interaction-timeline.md
-│       └── fsm.md
-├── tests/                  # 验证脚本
-│   ├── engines.test.js     # ★ 8个核心引擎集成测试（74项）
-│   ├── gate1-structure.test.js
-│   ├── gate2-rules.test.js
-│   └── gate3-algorithm.test.js
-└── scripts/
-    └── validate.js         # 规则校验 CLI
+eastern-aesthetic-decision-engine/
+├── modules/                    # 美学知识层
+│   ├── 01-philosophy.md … 11-anti-cliche.md   # v2 编号制 11 维
+│   ├── extracted/              # 作品蒸馏证据（json）
+│   └── frontend/               # 前端 playbook v2.0
+│       ├── runtime/            # ★ 融合运行时（纯函数契约 A/B/C）
+│       │   ├── dimension-registry.ts   # 双轨 SSOT 维度表
+│       │   ├── severity-map.ts         # 四级 severity 翻译
+│       │   ├── sheet-to-cangjie.ts     # 契约 A
+│       │   ├── plan-to-dom.ts          # 契约 B
+│       │   ├── rendered-feedback.ts    # 契约 C
+│       │   ├── code-reviewer.ts        # 反俗套 lint
+│       │   ├── grammar-rules/          # 33 条 CA-RULE-06..38 TS 镜像
+│       │   └── ecosystem/              # Figma / Three.js / React 投影
+│       └── mapping/            # E..J 映射手册
+├── lib/                        # 原 10 维可执行引擎（零改动）
+├── guidelines/                 # 旧 10 维规则文本
+├── distillation/               # 作品蒸馏报告
+├── playbooks/                  # 跨仓库交接 playbook
+├── examples/fusion-demo/       # 融合端到端 demo（sheet → cangjie → dom）
+├── tests/                      # 引擎测试 + runtime 单测
+├── docs/                       # ★ 本文档库（api / guides / architecture / release）
+└── CHANGELOG.md
 ```
 
-## 十大核心规则
+---
 
-| # | 规则 | 优先级 | 一句话 |
-|---|---|---|---|
-| 1 | 空间秩序 | P0 | 中轴为骨，层级递进，偏移>10%判FAIL |
-| 2 | 虚实关系 | P0 | 留白≥30%，虚大于实 |
-| 3 | 比例 | P0 | 方五斜七(√2)，偏差>10%判FAIL |
-| 4 | 材料 | P1 | 木石土金纸的真实感，禁塑料感 |
-| 5 | 光影 | P1 | 柔光分层，禁硬光斑和聚光灯 |
-| 6 | 色彩 | P0 | 五方正色体系，禁霓虹色 |
-| 7 | 动势 | P1 | 云流旋生长，禁弹跳粒子特效 |
-| 8 | 时间感 | P1 | 风化昼夜变化，禁全程静止 |
-| 9 | 禁忌 | P0 | 禁皇家符号滥用、禁廉价感 |
-| 10 | 交互语义 | P0 | 鼠标扰动云海、点击生长、滚动下潜 |
+## 与 Design Compiler 的集成
 
-## ACT0 示例：云海+单门
+本仓库输出的 `AestheticConstraintSheet` 是唯一输入物，DC 侧有独立移植的 `aesthetic-integration` 模块（`AestheticSheetAdapter` + `AestheticPipelineRunner`）把它喂进真实的 G1→G2→G3 流水线。
 
-详见 [`assets/ACT0/master-plate.md`](assets/ACT0/master-plate.md)。
+集成要点：
+- 路径差异：CAS 出参带 `/value` 后缀（`/color/dominant/value`），DC pointer-map 不带后缀，由 DC adapter 剥离；
+- 美学分 `aestheticScore` 只进 provenance/metadata，**绝不写进参数 confidence**；
+- 时间戳由调用方传入（`capturedAt`），禁 `new Date()`，保证 1000× 哈希恒等；
+- sidecar 报告自算 `reportHash`，但**不并入** DC FROZEN 的 5 元 hashChain。
 
-核心参数：
-- 门材质：乌木 #8B4513，半光，无金属感
-- 地面：青石板 #A9A9A9，roughness=0.9
-- 云雾：半透明白粒子，opacity=0.5
-- 色彩：蔚蓝(天)、乳白(云)、檀木红(门)、墨灰(基座)
-- 交互：鼠标移动→扰动云海；点击→裂隙发光苔藓生长；滚动→下潜旋流
+详见 [`docs/guides/dc-pipeline-integration.md`](docs/guides/dc-pipeline-integration.md) 与 [`docs/architecture/contracts.md`](docs/architecture/contracts.md)。
 
-## 验收流程（Gate1-Gate5）
+---
 
-| Gate | 类型 | 检查内容 |
-|---|---|---|
-| Gate1 | 自动 | 仓库结构与文档完整性 |
-| Gate2 | 自动+人工 | 模块文件与规则完整性（≥10规则） |
-| Gate3 | 自动 | 规则算法与示例可执行 |
-| Gate4 | 集成 | UI/动效集成验证（ACT0场景） |
-| Gate5 | 人工 | 用户验收与审美评估（≥80%满意） |
+## 贡献指南（简要）
 
-运行验证：
-```bash
-node scripts/validate.js --scene ACT0_gate
-npm test
-```
+1. 本仓库对 `lib/` 与 `modules/01..11-*` 采取**冻结策略**：不改老引擎，新增能力一律走 `modules/frontend/runtime/` 纯增量。
+2. 新增维度或规则，必须先在 `dimension-registry.ts` / `grammar-rules/index.ts` 登记，保持 SSOT 唯一。
+3. 所有运行时函数必须是**纯函数**：禁 `new Date()`、禁 DOM 副作用、同输入同输出。
+4. 提交前跑：`npm run lint && npm run test:runtime`。
+5. 文档全中文，代码示例必须可运行。
 
-## 贡献
-
-1. Fork 仓库
-2. 创建特性分支
-3. 确保 `npm test` 通过
-4. 提交 PR
-
-更新规则前请先运行验证脚本，确保不破坏现有规则判定。
-
-## 参考来源
-
-- CGTN「大唐营造」交互展
-- 佛光寺东大殿考证资料（林徽因、梁思成）
-- 王南《营造天书》古建比例研究
-- 《华夏意匠：中国古典建筑设计原理分析》
-- 《营造法式》（宋·李诫）
-- Three.js 官方文档
-- img2threejs 文档
-- mouse-lin/finesse-brief, finesse-skill, frame-smith, finesse-term
+---
 
 ## License
 
-MIT
+[MIT](./LICENSE) © HEARTMIRROR Team

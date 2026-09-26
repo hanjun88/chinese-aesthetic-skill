@@ -1,0 +1,139 @@
+<!--
+===============================================================================
+ component.template.html — 通用单文件东方组件模板（HTML + CSS + JS 一体）
+ 状态: DRAFT v0.1
+ -------------------------------------------------------------------------------
+ 用途: 生成 Gate / Screen / LatticeWindow / ScrollPanel / Plaque 等组件时，
+       复制本模板并替换 {{...}} 占位符。替换后保存为独立 .html 即可运行。
+ 占位符变量（来源: CodeGenerationPlan.components[]）:
+   {{COMPONENT_NAME}}      组件名（PascalCase），如 Gate / FoldingScreen
+   {{COMPONENT_CLASS}}     CSS 类名（kebab-case），如 gate / folding-screen
+   {{DIM_TAGS}}            消费的美学维度注释，如 "01哲学/09建筑/03虚实/08动势"
+   {{ROWS_THREE_PART}}     三段式比例 grid-template-rows，如 45fr 35fr 20fr
+   {{BODY_BG}}             屋身背景色变量，var(--c-secondary)
+   {{FRAME_BORDER}}        边框色变量，var(--c-accent) 古金描边
+   {{DURATION}}            动画时长 ms（≥1500 推门入场）
+   {{EASING}}              缓动变量，var(--ease-breath)
+   {{SLOT_CONTENT}}        插槽/默认内容
+   {{BEHAVIOR_JS}}         组件交互 JS（推门/悬停揭示/视差）
+ 铁律: 色值用 tokens.css 变量；圆角 ≤8px；禁毛笔字标题；阴影带环境色。
+===============================================================================
+-->
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{COMPONENT_NAME}} · 东方美学组件</title>
+<style>
+/* 引入令牌（实际项目中 tokens.css 已在入口 link；单文件组件此处内联关键变量） */
+:root {
+  --m: 8px;
+  --c-primary:   #E8E4D9;   /* 月白 */
+  --c-secondary: #2C3E50;   /* 黛青 */
+  --c-accent:    #B8860B;   /* 古金(哑光) */
+  --c-shadow:    #1A2332;   /* 黛影(非纯黑) */
+  --c-btn:       hsl(16, 45%, 35%);  /* UI朱砂(降饱和) */
+  --ease-breath: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  --ease-cloud:  cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+* { box-sizing: border-box; margin: 0; }
+body {
+  min-height: 100vh;
+  display: grid; place-items: center;
+  background: var(--c-primary);
+  font-family: "Songti SC", "Noto Serif SC", serif;
+  color: var(--c-secondary);
+}
+
+/* ===== {{COMPONENT_NAME}} 组件（{{DIM_TAGS}}） ===== */
+.{{COMPONENT_CLASS}} {
+  display: grid;
+  grid-template-rows: {{ROWS_THREE_PART}};      /* 三段式：屋顶/屋身/台基 */
+  width: calc(20 * var(--m));
+  position: relative;
+  opacity: 0;                                   /* 藏：默认遮挡 */
+  transform: translateY(calc(2 * var(--m)));
+  transition:
+    opacity {{DURATION}}ms var(--ease-breath),
+    transform {{DURATION}}ms var(--ease-breath);
+}
+.{{COMPONENT_CLASS}}.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* 屋顶：举折曲线（09建筑） */
+.{{COMPONENT_CLASS}}__roof {
+  background: {{BODY_BG}};
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+/* 屋身：古金描边（07色彩 哑光金） */
+.{{COMPONENT_CLASS}}__body {
+  background: {{BODY_BG}};
+  border-inline: calc(1 * var(--m)) solid {{FRAME_BORDER}};
+  display: grid; place-items: center;
+  color: var(--c-primary);
+  padding: calc(2 * var(--m));
+}
+/* 台基：青石 */
+.{{COMPONENT_CLASS}}__base {
+  background: hsl(44, 25%, 80%);
+}
+
+/* 按钮：古金描边 + UI朱砂底（禁正红） */
+.{{COMPONENT_CLASS}}__btn {
+  background: var(--c-btn);
+  color: var(--c-primary);
+  border: 1px solid var(--c-accent);
+  padding: calc(1 * var(--m)) calc(3 * var(--m));
+  font-family: inherit;
+  font-size: calc(2 * var(--m));
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  border-radius: 2px;                          /* 圆角 ≤8px */
+  transition: opacity 600ms var(--ease-breath);
+}
+.{{COMPONENT_CLASS}}__btn:hover { opacity: 0.85; }   /* 门微启/光微漏，非变色弹跳 */
+</style>
+</head>
+<body>
+
+<div class="{{COMPONENT_CLASS}}" id="{{COMPONENT_CLASS}}" role="region" aria-label="{{COMPONENT_NAME}}">
+  <div class="{{COMPONENT_CLASS}}__roof"></div>
+  <div class="{{COMPONENT_CLASS}}__body">
+    <p>{{SLOT_CONTENT}}</p>
+    <button class="{{COMPONENT_CLASS}}__btn" type="button">入 内</button>
+  </div>
+  <div class="{{COMPONENT_CLASS}}__base"></div>
+</div>
+
+<script>
+(function () {
+  var el = document.getElementById('{{COMPONENT_CLASS}}');
+
+  /* 入场：加载后浮现（emerge，非弹出） */
+  function onLoad() {
+    requestAnimationFrame(function () {
+      el.classList.add('is-revealed');
+    });
+  }
+  window.addEventListener('load', onLoad);
+
+  /* {{BEHAVIOR_JS}} 例:
+     推门：点击按钮 → 屋身微启
+     var btn = el.querySelector('.{{COMPONENT_CLASS}}__btn');
+     btn.addEventListener('click', function() {
+       el.classList.toggle('is-open');
+     });
+  */
+
+  /* 销毁闭环：pagehide 时移除 load 监听，避免悬挂 */
+  window.addEventListener('pagehide', function () {
+    window.removeEventListener('load', onLoad);
+  });
+})();
+</script>
+
+</body>
+</html>
