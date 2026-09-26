@@ -118,9 +118,11 @@ export interface AestheticConstraintSheet {
 }
 
 /**
- * 从 sheet 的 proportion.voidSolidRatio / spatial.axis / spatial.bays
+ * 从 sheet 的 proportion.voidSolidRatio / spatial.axis / focalPointsMax
  * 计算 canonical composition 字段。CAS 生产者在构造 sheet 时应调用此函数
  * 填充 composition，使 DC adapter 无需自行推导。
+ *
+ * 实现委托给 ../utils/compute-composition.js（SSOT），TS 层仅加类型注解。
  *
  * @param sheet 含 proportion 和 spatial 的部分 sheet
  * @returns canonical composition 值
@@ -129,22 +131,9 @@ export function computeComposition(sheet: {
   proportion: { voidSolidRatio: string; focalPointsMax: number };
   spatial: { axis: "strict" | "offset" | "hidden"; bays: number };
 }): { negativeSpaceRatio: number; symmetry: number; focalPoint: [number, number] } {
-  const [voidPart, solidPart] = parseRatioPair(sheet.proportion.voidSolidRatio);
-  const negativeSpaceRatio = Number((voidPart / (voidPart + solidPart)).toFixed(4));
-
-  const symmetry =
-    sheet.spatial.axis === "strict" ? 1 : sheet.spatial.axis === "offset" ? 0.5 : 0.15;
-
-  // 焦点推导：strict 轴单焦点时偏置到黄金分割点 (~0.62,0.38)，避免死中心；
-  // 多焦点或 offset 轴时取开间中点偏左。不再硬编码 [0.5, 0.5]。
-  const focalPoint: [number, number] =
-    sheet.spatial.axis === "strict" && sheet.proportion.focalPointsMax <= 1
-      ? [0.62, 0.38]
-      : sheet.spatial.axis === "offset"
-        ? [0.38, 0.5]
-        : [0.5, 0.5];
-
-  return { negativeSpaceRatio, symmetry, focalPoint };
+  // @ts-expect-error — JS utility has no type declarations; runtime shape verified by tests
+  const { computeComposition: impl } = require("../utils/compute-composition.js");
+  return impl(sheet.proportion.voidSolidRatio, sheet.spatial.axis, sheet.proportion.focalPointsMax);
 }
 
 function parseRatioPair(ratio: string): [number, number] {
