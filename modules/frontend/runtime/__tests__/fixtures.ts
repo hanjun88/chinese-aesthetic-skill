@@ -29,6 +29,8 @@ export function makeValidSheet(overrides: Partial<AestheticConstraintSheet> = {}
     },
     proportion: { baseModulePx: 8, spacingScale: [1, 2, 3, 4, 6, 8], voidSolidRatio: "7:5", focalPointsMax: 1 },
     spatial: { axis: "strict", bays: 3, hierarchyLevelsMin: 3 },
+    composition: { negativeSpaceRatio: 0.5833, symmetry: 1, focalPoint: [0.62, 0.38] },
+    typography: { families: ["Noto Serif SC", "Noto Sans SC"] },
     lighting: { primarySource: "skylight", timeSetting: "cloudy", lightDarkRatio: "3:7" },
     motion: { prototypes: ["light", "cloud"], durationMs: [1500, 8000], entryMode: "emerge", hardFail: ["bounce", "particle"] },
     antiCliche: { scanned: true, hardFailHits: [], forbidden: ["国潮贴图感"] },
