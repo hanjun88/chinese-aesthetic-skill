@@ -19,13 +19,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # No `cache: npm` here: that option requires a package-lock.json /
+      # npm-shrinkwrap.json / yarn.lock, and this repository tracks bun.lock
+      # only. Enabling it fails the job with "Dependencies lock file is not
+      # found".
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
-      # This repository tracks bun.lock, not package-lock.json, so `npm ci`
-      # cannot be used here (it would fail with a missing-lockfile error).
+      # `npm ci` cannot be used here for the same reason.
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
@@ -50,7 +52,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
@@ -69,6 +70,9 @@ jobs:
   dependency-review:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    # The dependency graph must be enabled in repository settings; if it is
+    # not, the action errors out. Keep that from failing the whole check.
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/dependency-review-action@v4
