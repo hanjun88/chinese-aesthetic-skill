@@ -10,6 +10,10 @@
  *   - aestheticScore 只进结果 metadata，绝不写进参数 confidence；
  *   - 时间戳由调用方传入，禁 new Date()，保证 1000× 哈希恒等。
  *
+ * 路径约定（对齐 DC compiler-intent/pointer-map.ts POINTER_MAP）：
+ *   - 所有产出 path 均为**节点级 JSON Pointer**（如 "/color/dominant"），
+ *     指向参数节点本身，**不带 /value 后缀**（旧 CAS 写法 "/color/dominant/value" 已废弃）。
+ *
  * @module modules/frontend/runtime/sheet-to-cangjie
  */
 
@@ -18,6 +22,7 @@ import type {
   CangjieConstraint,
   CangjieEstimatedParameter,
   CangjieRawDesignIR,
+  RuntimeExecutionPlan,
 } from "./types/dc-types.ts";
 import type { AestheticConstraintSheet, SheetColorEntry } from "./types/aesthetic-sheet.ts";
 import type { SheetToCangjieOptions, SheetToCangjieResult } from "./types/cangjie.ts";
@@ -47,13 +52,40 @@ export const REQUIRED_CONFIDENCE_FLOOR = 0.85;
 export const G1_CONFIDENCE_FLOOR = 0.6;
 
 /* ------------------------------------------------------------------ *
+ * plan.hashes 安全访问（DC HASH FLOW CONTRACT 降级）
+ * ------------------------------------------------------------------ */
+
+/**
+ * plan.hashes 缺省时的空降级对象（冻结，防误写）。
+ * @see resolvePlanHashes
+ */
+export const EMPTY_PLAN_HASHES: Readonly<Record<string, string>> = Object.freeze({});
+
+/**
+ * 安全读取 G3 RuntimeExecutionPlan 的因果链哈希。
+ *
+ * DC HASH FLOW CONTRACT（compiler-core/contracts.ts §1-4 + pipeline-runner.ts）规定：
+ * RuntimeExecutionPlan **内部严禁携带任何自身 hash 字段**；hashChain 是 PipelineOutput
+ * 上与 executionPlan **平级**的独立对象。因此经融合层注入的真实 DC plan 缺省 hashes
+ * （undefined）。本函数统一降级为空对象，避免 `{...plan.hashes}` / 解构时崩溃。
+ *
+ * @param plan 任意 RuntimeExecutionPlan（可能缺省 hashes）
+ * @returns 存在则原样返回；否则返回冻结的空对象
+ */
+export function resolvePlanHashes(
+  plan: Pick<RuntimeExecutionPlan, "hashes">,
+): Record<string, string> {
+  return plan.hashes ?? (EMPTY_PLAN_HASHES as Record<string, string>);
+}
+
+/* ------------------------------------------------------------------ *
  * 13 条参数 path 映射表（fusion-arch §2.1 确定性映射表）
  * ------------------------------------------------------------------ */
 
 export interface PathMapping {
   /** sheet 来源描述（人读） */
   source: string;
-  /** 目标 Cangjie path 后缀（parameters[].path） */
+  /** 目标 Cangjie 节点路径（parameters[].path，节点级，无 /value 后缀） */
   targetPath: string;
   unit: string;
   confidence: number;
@@ -66,21 +98,22 @@ export interface PathMapping {
 /**
  * 13 条映射（materials 与 camera 各为一条映射规则、展开为多 path，
  * 与架构文档 §2.1 表格行一一对应）。
+ * 路径均为节点级（对齐 DC POINTER_MAP），无 /value 后缀。
  */
 export const PARAMETER_PATH_MAPPINGS: PathMapping[] = [
-  { source: "colorSystem.palette[dominant]", targetPath: "/color/dominant/value", unit: "hex", confidence: 0.9, required: true, dimension: "color" },
-  { source: "colorSystem.palette[secondary]", targetPath: "/color/secondary/value", unit: "hex", confidence: 0.9, required: false, dimension: "color" },
-  { source: "colorSystem.palette[accent]", targetPath: "/color/accent/value", unit: "hex", confidence: 0.9, required: false, dimension: "color" },
-  { source: "proportion.voidSolidRatio→ratio", targetPath: "/composition/negativeSpaceRatio/value", unit: "ratio", confidence: 0.88, required: true, dimension: "void-solid" },
-  { source: "spatial.axis=strict", targetPath: "/composition/symmetry/value", unit: "ratio", confidence: 0.85, required: false, dimension: "spatial-order" },
-  { source: "spatial.hierarchyLevelsMin", targetPath: "/composition/depthLayerCount/value", unit: "scalar", confidence: 0.8, required: false, dimension: "architecture" },
-  { source: "lighting.primarySource→azimuth", targetPath: "/lighting/keyLight/azimuth/value", unit: "degrees", confidence: 0.85, required: true, dimension: "light" },
-  { source: "lighting.primarySource→elevation", targetPath: "/lighting/keyLight/elevation/value", unit: "degrees", confidence: 0.85, required: true, dimension: "light" },
-  { source: "lighting.timeSetting→colorTemp", targetPath: "/lighting/keyLight/colorTemp/value", unit: "kelvin", confidence: 0.82, required: false, dimension: "light" },
-  { source: "lighting.lightDarkRatio", targetPath: "/lighting/ambientRatio/value", unit: "ratio", confidence: 0.8, required: false, dimension: "light" },
-  { source: "material.role=dominant→{baseType,roughness,metalness,wear}", targetPath: "/materials/0/{baseType,roughness,metalness,wear}/value", unit: "scalar", confidence: 0.85, required: true, dimension: "material" },
-  { source: "proportion.focalPointsMax=1", targetPath: "/composition/focalPoint/value", unit: "vector2", confidence: 0.85, required: true, dimension: "interaction" },
-  { source: "camera 默认→{fov,shotSize,angle,height}", targetPath: "/camera/{fov,shotSize,angle,height}/value", unit: "degrees/scalar", confidence: 0.85, required: true, dimension: "spatial-order" },
+  { source: "colorSystem.palette[dominant]", targetPath: "/color/dominant", unit: "hex", confidence: 0.9, required: true, dimension: "color" },
+  { source: "colorSystem.palette[secondary]", targetPath: "/color/secondary", unit: "hex", confidence: 0.9, required: false, dimension: "color" },
+  { source: "colorSystem.palette[accent]", targetPath: "/color/accent", unit: "hex", confidence: 0.9, required: false, dimension: "color" },
+  { source: "proportion.voidSolidRatio→ratio", targetPath: "/composition/negativeSpaceRatio", unit: "ratio", confidence: 0.88, required: true, dimension: "void-solid" },
+  { source: "spatial.axis=strict", targetPath: "/composition/symmetry", unit: "ratio", confidence: 0.85, required: false, dimension: "spatial-order" },
+  { source: "spatial.hierarchyLevelsMin", targetPath: "/composition/depthLayerCount", unit: "scalar", confidence: 0.8, required: false, dimension: "architecture" },
+  { source: "lighting.primarySource→azimuth", targetPath: "/lighting/keyLight/azimuth", unit: "degrees", confidence: 0.85, required: true, dimension: "light" },
+  { source: "lighting.primarySource→elevation", targetPath: "/lighting/keyLight/elevation", unit: "degrees", confidence: 0.85, required: true, dimension: "light" },
+  { source: "lighting.timeSetting→colorTemp", targetPath: "/lighting/keyLight/colorTemp", unit: "kelvin", confidence: 0.82, required: false, dimension: "light" },
+  { source: "lighting.lightDarkRatio", targetPath: "/lighting/ambientRatio", unit: "ratio", confidence: 0.8, required: false, dimension: "light" },
+  { source: "material.role=dominant→{baseType,roughness,metalness,wear}", targetPath: "/materials/0/{baseType,roughness,metalness,wear}", unit: "scalar", confidence: 0.85, required: true, dimension: "material" },
+  { source: "proportion.focalPointsMax=1", targetPath: "/composition/focalPoint", unit: "vector2", confidence: 0.85, required: true, dimension: "interaction" },
+  { source: "camera 默认→{fov,shotSize,angle,height}", targetPath: "/camera/{fov,shotSize,angle,height}", unit: "degrees/scalar", confidence: 0.85, required: true, dimension: "spatial-order" },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -114,17 +147,17 @@ const MOOD_MATERIAL: Record<string, { baseType: string; roughness: number; metal
   "misty-blue": { baseType: "mist-silk-stone", roughness: 0.8, metalness: 0.03, wear: 0.38 },
 };
 
-/** violation.ruleId → 对应的 Cangjie path（未登记的落到负空间比） */
+/** violation.ruleId → 对应的 Cangjie 节点路径（节点级，无 /value 后缀；未登记的落到负空间比） */
 const VIOLATION_RULE_PATH: Record<string, string> = {
-  saturation: "/color/dominant/value",
-  "pure-red": "/color/dominant/value",
-  "bright-gold": "/color/accent/value",
-  "pure-black": "/color/secondary/value",
-  "accent-area": "/color/accent/value",
-  "main-area": "/color/dominant/value",
-  "void-solid": "/composition/negativeSpaceRatio/value",
-  symmetry: "/composition/symmetry/value",
-  "light-ratio": "/lighting/ambientRatio/value",
+  saturation: "/color/dominant",
+  "pure-red": "/color/dominant",
+  "bright-gold": "/color/accent",
+  "pure-black": "/color/secondary",
+  "accent-area": "/color/accent",
+  "main-area": "/color/dominant",
+  "void-solid": "/composition/negativeSpaceRatio",
+  symmetry: "/composition/symmetry",
+  "light-ratio": "/lighting/ambientRatio",
 };
 
 /* ------------------------------------------------------------------ *
@@ -179,7 +212,8 @@ function buildViolationArtifacts(
   const rangePatches = new Map<string, { fatalBelow?: number; hard?: [number, number] }>();
 
   for (const v of sheet.violations) {
-    const targetPath = VIOLATION_RULE_PATH[v.ruleId] ?? "/composition/negativeSpaceRatio/value";
+    // 节点级路径（无 /value 后缀），既用于 rangePatches 索引，也作为 constraint.targetPath
+    const targetPath = VIOLATION_RULE_PATH[v.ruleId] ?? "/composition/negativeSpaceRatio";
     if (v.severity === "P0") {
       // P0 → fatalBelow + threshold 约束（BLOCK）
       const existing = rangePatches.get(targetPath) ?? {};
@@ -215,7 +249,7 @@ function buildAdvisorRulePack(sheet: AestheticConstraintSheet): AdvisorGrammarRu
       ruleId: `CA-TABOO-${String(i + 1).padStart(2, "0")}-${token.toUpperCase().replace(/[^A-Z0-9]/g, "_")}`,
       principle: "反俗套",
       category: "color",
-      targetPath: "/color/dominant/value",
+      targetPath: "/color/dominant",
       condition: { operator: "in", value: sheet.colorSystem.hardFailHex },
       mutation: { op: "test", value: "#SHOULD_NOT_APPEAR" },
       severity: "P0_CRITICAL",
@@ -228,7 +262,7 @@ function buildAdvisorRulePack(sheet: AestheticConstraintSheet): AdvisorGrammarRu
     ruleId: "CA-ADVISOR-06-JIEJING",
     principle: "借景",
     category: "composition",
-    targetPath: "/composition/negativeSpaceRatio/value",
+    targetPath: "/composition/negativeSpaceRatio",
     condition: { operator: "<", value: 0.35 },
     mutation: { op: "replace", value: 0.45 },
     severity: "P1_WARNING",
@@ -240,7 +274,7 @@ function buildAdvisorRulePack(sheet: AestheticConstraintSheet): AdvisorGrammarRu
     ruleId: "CA-ADVISOR-07-LOUGUANG",
     principle: "漏光",
     category: "lighting",
-    targetPath: "/lighting/keyLight/elevation/value",
+    targetPath: "/lighting/keyLight/elevation",
     condition: { operator: ">", value: 70 },
     mutation: { op: "replace", value: 60 },
     severity: "P1_WARNING",
@@ -285,34 +319,34 @@ export function sheetToCangjie(
   const params: CangjieEstimatedParameter[] = [];
   const push = (p: CangjieEstimatedParameter) => params.push(p);
 
-  // —— 3 条色彩 ——
-  push(makeParam("/color/dominant/value", dominant.hex, "hex", 0.9, "color", opts, { range: { preferred: [0.6, 0.7] } }));
-  push(makeParam("/color/secondary/value", secondary.hex, "hex", 0.9, "color", opts));
-  push(makeParam("/color/accent/value", accent.hex, "hex", 0.9, "color", opts, { range: { preferred: [0.02, 0.08] } }));
+  // —— 3 条色彩（节点级路径）——
+  push(makeParam("/color/dominant", dominant.hex, "hex", 0.9, "color", opts, { range: { preferred: [0.6, 0.7] } }));
+  push(makeParam("/color/secondary", secondary.hex, "hex", 0.9, "color", opts));
+  push(makeParam("/color/accent", accent.hex, "hex", 0.9, "color", opts, { range: { preferred: [0.02, 0.08] } }));
 
-  // —— 3 条构图 ——
-  push(makeParam("/composition/negativeSpaceRatio/value", negativeSpaceRatio, "ratio", 0.88, "void-solid", opts, { range: { preferred: [0.42, 0.55], hard: [0.35, 0.42], fatalBelow: 0.3 } }));
-  push(makeParam("/composition/symmetry/value", symmetry, "ratio", 0.85, "spatial-order", opts));
-  push(makeParam("/composition/depthLayerCount/value", sheet.spatial.hierarchyLevelsMin, "scalar", 0.8, "architecture", opts));
-  push(makeParam("/composition/focalPoint/value", [0.5, 0.5], "vector2", 0.85, "interaction", opts));
+  // —— 3 条构图（节点级路径）——
+  push(makeParam("/composition/negativeSpaceRatio", negativeSpaceRatio, "ratio", 0.88, "void-solid", opts, { range: { preferred: [0.42, 0.55], hard: [0.35, 0.42], fatalBelow: 0.3 } }));
+  push(makeParam("/composition/symmetry", symmetry, "ratio", 0.85, "spatial-order", opts));
+  push(makeParam("/composition/depthLayerCount", sheet.spatial.hierarchyLevelsMin, "scalar", 0.8, "architecture", opts));
+  push(makeParam("/composition/focalPoint", [0.5, 0.5], "vector2", 0.85, "interaction", opts));
 
-  // —— 4 条光影 ——
-  push(makeParam("/lighting/keyLight/azimuth/value", angles.azimuth, "degrees", 0.85, "light", opts));
-  push(makeParam("/lighting/keyLight/elevation/value", angles.elevation, "degrees", 0.85, "light", opts, { range: { hard: [20, 70] } }));
-  push(makeParam("/lighting/keyLight/colorTemp/value", colorTemp, "kelvin", 0.82, "light", opts));
-  push(makeParam("/lighting/ambientRatio/value", ambientRatio, "ratio", 0.8, "light", opts));
+  // —— 4 条光影（节点级路径）——
+  push(makeParam("/lighting/keyLight/azimuth", angles.azimuth, "degrees", 0.85, "light", opts));
+  push(makeParam("/lighting/keyLight/elevation", angles.elevation, "degrees", 0.85, "light", opts, { range: { hard: [20, 70] } }));
+  push(makeParam("/lighting/keyLight/colorTemp", colorTemp, "kelvin", 0.82, "light", opts));
+  push(makeParam("/lighting/ambientRatio", ambientRatio, "ratio", 0.8, "light", opts));
 
-  // —— 4 条材质（/materials/0/*）——
-  push(makeParam("/materials/0/baseType/value", mat.baseType, "scalar", 0.85, "material", opts));
-  push(makeParam("/materials/0/roughness/value", mat.roughness, "scalar", 0.8, "material", opts));
-  push(makeParam("/materials/0/metalness/value", mat.metalness, "scalar", 0.8, "material", opts));
-  push(makeParam("/materials/0/wear/value", mat.wear, "scalar", 0.8, "material", opts));
+  // —— 4 条材质（/materials/0/* 节点级路径）——
+  push(makeParam("/materials/0/baseType", mat.baseType, "scalar", 0.85, "material", opts));
+  push(makeParam("/materials/0/roughness", mat.roughness, "scalar", 0.8, "material", opts));
+  push(makeParam("/materials/0/metalness", mat.metalness, "scalar", 0.8, "material", opts));
+  push(makeParam("/materials/0/wear", mat.wear, "scalar", 0.8, "material", opts));
 
-  // —— 4 条相机 ——
-  push(makeParam("/camera/fov/value", 35, "degrees", 0.85, "spatial-order", opts));
-  push(makeParam("/camera/shotSize/value", "medium", "scalar", 0.8, "spatial-order", opts));
-  push(makeParam("/camera/angle/value", 0, "degrees", 0.8, "spatial-order", opts));
-  push(makeParam("/camera/height/value", 1.6, "scalar", 0.8, "spatial-order", opts));
+  // —— 4 条相机（节点级路径）——
+  push(makeParam("/camera/fov", 35, "degrees", 0.85, "spatial-order", opts));
+  push(makeParam("/camera/shotSize", "medium", "scalar", 0.8, "spatial-order", opts));
+  push(makeParam("/camera/angle", 0, "degrees", 0.8, "spatial-order", opts));
+  push(makeParam("/camera/height", 1.6, "scalar", 0.8, "spatial-order", opts));
 
   // —— violations → constraints + range 补丁 ——
   const { constraints, rangePatches } = buildViolationArtifacts(sheet);
@@ -357,7 +391,7 @@ export function sheetToCangjie(
     intent: {
       statement: sheet.designBrief,
       heuristicIds: sheet.structuralDimensions.map((d) => d.id),
-      priority: 1,
+      priority: "P1",
     },
     parameters: params,
     constraints,

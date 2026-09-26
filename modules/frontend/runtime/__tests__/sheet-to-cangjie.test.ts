@@ -1,9 +1,18 @@
 /**
  * sheet-to-cangjie.test.ts — 契约 A：13 条映射 + 7 条 requiredPaths + severity/range 落地
+ *
+ * 路径约定：所有产出 path 均为节点级（对齐 DC POINTER_MAP），无 /value 后缀。
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { sheetToCangjie, REQUIRED_PATHS, PARAMETER_PATH_MAPPINGS } from "../sheet-to-cangjie.ts";
+import {
+  sheetToCangjie,
+  REQUIRED_PATHS,
+  PARAMETER_PATH_MAPPINGS,
+  resolvePlanHashes,
+  EMPTY_PLAN_HASHES,
+} from "../sheet-to-cangjie.ts";
+import type { RuntimeExecutionPlan } from "../types/dc-types.ts";
 import { makeValidSheet } from "./fixtures.ts";
 
 const OPTS = { advisorVersion: "chinese-aesthetic-skill@1.0.0", capturedAt: "2026-09-26T00:00:00Z" };
@@ -26,46 +35,66 @@ test("7 条 requiredPaths 全部输出且 confidence≥0.85 && calibration=PRODU
   }
 });
 
-test("13 条映射值正确（色彩/构图/光影/材质/相机）", () => {
+test("13 条映射值正确（色彩/构图/光影/材质/相机，节点级路径无 /value）", () => {
   const r = sheetToCangjie(makeValidSheet(), OPTS);
-  assert.equal(param(r, "/color/dominant/value")?.value, "#EDEAE4");
-  assert.equal(param(r, "/color/secondary/value")?.value, "#2C3E50");
-  assert.equal(param(r, "/color/accent/value")?.value, "#B8860B");
+  assert.equal(param(r, "/color/dominant")?.value, "#EDEAE4");
+  assert.equal(param(r, "/color/secondary")?.value, "#2C3E50");
+  assert.equal(param(r, "/color/accent")?.value, "#B8860B");
   // 7:5 → 7/12 ≈ 0.5833
-  assert.equal(param(r, "/composition/negativeSpaceRatio/value")?.value, 0.5833);
+  assert.equal(param(r, "/composition/negativeSpaceRatio")?.value, 0.5833);
   // strict axis → symmetry 1
-  assert.equal(param(r, "/composition/symmetry/value")?.value, 1);
-  assert.equal(param(r, "/composition/depthLayerCount/value")?.value, 3);
+  assert.equal(param(r, "/composition/symmetry")?.value, 1);
+  assert.equal(param(r, "/composition/depthLayerCount")?.value, 3);
   // skylight 天光
-  assert.equal(param(r, "/lighting/keyLight/azimuth/value")?.value, 0);
-  assert.equal(param(r, "/lighting/keyLight/elevation/value")?.value, 78);
-  assert.equal(param(r, "/lighting/keyLight/colorTemp/value")?.value, 5600); // cloudy
+  assert.equal(param(r, "/lighting/keyLight/azimuth")?.value, 0);
+  assert.equal(param(r, "/lighting/keyLight/elevation")?.value, 78);
+  assert.equal(param(r, "/lighting/keyLight/colorTemp")?.value, 5600); // cloudy
   // 3:7 → ambient 7/10=0.7
-  assert.equal(param(r, "/lighting/ambientRatio/value")?.value, 0.7);
+  assert.equal(param(r, "/lighting/ambientRatio")?.value, 0.7);
   // 材质
-  assert.equal(param(r, "/materials/0/baseType/value")?.value, "aged-paper-wood");
-  assert.equal(typeof param(r, "/materials/0/roughness/value")?.value, "number");
+  assert.equal(param(r, "/materials/0/baseType")?.value, "aged-paper-wood");
+  assert.equal(typeof param(r, "/materials/0/roughness")?.value, "number");
   // 相机
-  assert.equal(param(r, "/camera/fov/value")?.value, 35);
-  assert.deepEqual(param(r, "/composition/focalPoint/value")?.value, [0.5, 0.5]);
+  assert.equal(param(r, "/camera/fov")?.value, 35);
+  assert.deepEqual(param(r, "/composition/focalPoint")?.value, [0.5, 0.5]);
 });
 
-test("P0 violation → range.fatalBelow + CangjieConstraint{type:threshold}", () => {
+test("所有产出 path（参数/约束/规则）均为节点级，无 /value 后缀", () => {
+  const r = sheetToCangjie(makeValidSheet({
+    violations: [
+      { ruleId: "pure-red", severity: "P0", message: "用了正红" },
+      { ruleId: "accent-area", severity: "P1", message: "点缀过大" },
+    ],
+  }), OPTS);
+  for (const p of r.cangjieIR.parameters) {
+    assert.ok(!p.path.endsWith("/value"), `参数 path 仍带 /value: ${p.path}`);
+  }
+  for (const c of r.cangjieIR.constraints ?? []) {
+    assert.ok(!c.targetPath.endsWith("/value"), `约束 targetPath 仍带 /value: ${c.targetPath}`);
+  }
+  for (const rule of r.advisorRulePack) {
+    assert.ok(!rule.targetPath.endsWith("/value"), `规则 targetPath 仍带 /value: ${rule.targetPath}`);
+  }
+});
+
+test("P0 violation → range.fatalBelow + CangjieConstraint{type:threshold}（节点级 targetPath）", () => {
   const sheet = makeValidSheet({
     violations: [{ ruleId: "pure-red", severity: "P0", message: "用了正红" }],
   });
   const r = sheetToCangjie(sheet, OPTS);
-  const dominant = param(r, "/color/dominant/value");
+  const dominant = param(r, "/color/dominant");
   assert.ok(dominant?.range?.fatalBelow != null, "P0 应写入 fatalBelow");
-  assert.ok(r.cangjieIR.constraints.some((c) => c.type === "threshold"), "应有 threshold 约束");
+  const threshold = r.cangjieIR.constraints?.find((c) => c.type === "threshold");
+  assert.ok(threshold, "应有 threshold 约束");
+  assert.equal(threshold?.targetPath, "/color/dominant", "P0 约束 targetPath 应为节点级");
 });
 
-test("P1 violation → range.hard:[min,max]", () => {
+test("P1 violation → range.hard:[min,max]（节点级 path 命中 rangePatches）", () => {
   const sheet = makeValidSheet({
     violations: [{ ruleId: "accent-area", severity: "P1", message: "点缀过大" }],
   });
   const r = sheetToCangjie(sheet, OPTS);
-  const accent = param(r, "/color/accent/value");
+  const accent = param(r, "/color/accent");
   assert.ok(Array.isArray(accent?.range?.hard), "P1 应写入 hard:[min,max]");
 });
 
@@ -78,7 +107,7 @@ test("aestheticScore 只进 provenance/metadata，绝不写进参数 confidence"
   }
 });
 
-test("advisorRulePack 含 CA-TABOO / CA-ADVISOR，ruleId ASCII 排序，category 四值", () => {
+test("advisorRulePack 含 CA-TABOO / CA-ADVISOR，ruleId ASCII 排序，category 四值，targetPath 节点级", () => {
   const r = sheetToCangjie(makeValidSheet(), OPTS);
   assert.ok(r.advisorRulePack.length >= 2);
   const ids = r.advisorRulePack.map((x) => x.ruleId);
@@ -86,6 +115,7 @@ test("advisorRulePack 含 CA-TABOO / CA-ADVISOR，ruleId ASCII 排序，category
   for (const rule of r.advisorRulePack) {
     assert.ok(/^(CA-ADVISOR|CA-TABOO)-/.test(rule.ruleId), "ruleId 前缀合规");
     assert.ok(["composition", "lighting", "color", "materials"].includes(rule.category));
+    assert.ok(!rule.targetPath.endsWith("/value"), `规则 targetPath 带 /value: ${rule.targetPath}`);
   }
   assert.ok(r.advisorRulePack.some((x) => x.mutation.op === "test"), "应含 op:test 否决规则");
 });
@@ -105,8 +135,31 @@ test("确定性：同 sheet 同 capturedAt → 同一份参数序列化（哈希
 });
 
 test("缺失 requiredPath 数据时抛 BLOCKED_DATA", () => {
-  // palette 缺 accent 不会触发（我们要求 dominant/secondary/accent 都在）；
-  // 直接构造一个会导致 focalPoint 路径缺失不现实——改为校验置信度地板：
-  // 这里验证正常 sheet 不抛，且错误分支 code=BLOCKED_DATA
+  // 正常 sheet 不抛，且错误分支 code=BLOCKED_DATA
   assert.doesNotThrow(() => sheetToCangjie(makeValidSheet(), OPTS));
+});
+
+/* ------------------------------------------------------------------ *
+ * plan.hashes 为 undefined 的安全降级（DC HASH FLOW CONTRACT）
+ * ------------------------------------------------------------------ */
+
+test("resolvePlanHashes：plan 带 hashes 时原样返回", () => {
+  const plan = { hashes: { rawIRHash: "r", validatedIRHash: "v", executionPlanHash: "e" } };
+  const h = resolvePlanHashes(plan);
+  assert.equal(h.rawIRHash, "r");
+  assert.equal(h.validatedIRHash, "v");
+  assert.equal(h.executionPlanHash, "e");
+});
+
+test("resolvePlanHashes：plan 缺省 hashes（undefined）时降级为空对象且不抛错", () => {
+  // 模拟真实 DC plan（contracts.ts 规定 plan 内部不内嵌 hashes）
+  const plan = {} as Pick<RuntimeExecutionPlan, "hashes">;
+  let out: Record<string, string> | undefined;
+  assert.doesNotThrow(() => {
+    out = resolvePlanHashes(plan);
+  });
+  assert.deepEqual(out, {});
+  assert.strictEqual(out, EMPTY_PLAN_HASHES);
+  // 与运行时展开行为一致：{...undefined} / {...空对象} 均安全
+  assert.deepEqual({ ...(plan.hashes ?? {}) }, {});
 });
