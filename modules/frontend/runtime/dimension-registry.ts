@@ -168,3 +168,222 @@ export function getAllDimensions(): Array<{
     target: DIMENSION_TO_TARGET[id],
   }));
 }
+
+/* ============================================================================
+ * 任务 2：11 维编号制（v2 modules/01..11）完整元数据目录
+ * ----------------------------------------------------------------------------
+ * 在不改 lib/、不改 modules/01..11、不破坏上方既有 SSOT 的前提下，
+ * 追加「维度编号 ↔ kebab 名称 ↔ 中文名 ↔ category」四向查表与权重/评分元数据。
+ * temporal 为 legacy 时间感展开项（runtime），不属于 v2 编号 1..11。
+ * ========================================================================== */
+
+/** v2 编号制 11 维（modules/01..11-*.md），是 CanonicalDimensionId 的子集 */
+export type NumberedDimensionId =
+  | "philosophy"
+  | "spatial-order"
+  | "void-solid"
+  | "proportion"
+  | "material"
+  | "light"
+  | "color"
+  | "motion"
+  | "architecture"
+  | "interaction"
+  | "anti-cliche";
+
+/** DC 四 category + runtime/sidecar 落点（与 DIMENSION_TO_TARGET.category 同构） */
+export type DimensionLanding =
+  | "composition"
+  | "lighting"
+  | "color"
+  | "materials"
+  | "runtime"
+  | "sidecar";
+
+/** 单个编号维度的完整元数据 */
+export interface DimensionCatalogEntry {
+  /** v2 编号 1..11 */
+  id: number;
+  /** kebab 名称（canonical id） */
+  kebabName: NumberedDimensionId;
+  /** 中文名 */
+  chineseName: string;
+  /** 落点 category（DC 四值 / runtime / sidecar） */
+  category: DimensionLanding;
+  /** 一句话定义 */
+  description: string;
+  /** 关联的 G2 规则 ruleId 列表（≥3 条） */
+  relatedRules: string[];
+  /** 相对权重（11 维权重和 = 1.0；与 ScoringEngine 四分类权重正交） */
+  weight: number;
+  /** 默认评分区间（0..100，仅作 metadata，不写回参数 confidence） */
+  scoreRange: [number, number];
+  /** 评估方法描述 */
+  evaluationMethod: string;
+}
+
+/**
+ * 11 维完整目录（唯一权威，与 grammar-rules/index.ts 的 RULE_DIMENSION 对称）。
+ * 顺序即 modules/01..11 物理顺序。
+ */
+export const DIMENSION_CATALOG: readonly DimensionCatalogEntry[] = [
+  {
+    id: 1,
+    kebabName: "philosophy",
+    chineseName: "道论",
+    category: "sidecar",
+    description: "以儒释道精神统领整体气韵，不直接投影工程参数",
+    relatedRules: ["CA-RULE-06-XIASHENG", "CA-RULE-07-XUANLAN", "CA-RULE-08-JIANSU"],
+    weight: 0.1,
+    scoreRange: [0, 100],
+    evaluationMethod: "sidecar 语义裁决：attributionStatement 与 mood 一致性",
+  },
+  {
+    id: 2,
+    kebabName: "spatial-order",
+    chineseName: "空间秩序",
+    category: "composition",
+    description: "中轴、层级、景深构成的章法骨架",
+    relatedRules: ["CA-RULE-09-ZHONGZHOU", "CA-RULE-10-CIDENG", "CA-RULE-11-YINLU"],
+    weight: 0.12,
+    scoreRange: [0, 100],
+    evaluationMethod: "构图度量：symmetry / depthLayerCount / fov",
+  },
+  {
+    id: 3,
+    kebabName: "void-solid",
+    chineseName: "虚实相生",
+    category: "composition",
+    description: "留白（虚）与实处（黑）之间的呼吸关系",
+    relatedRules: ["CA-RULE-12-JIBAI", "CA-RULE-13-XUSHI", "CA-RULE-14-SHUKE"],
+    weight: 0.12,
+    scoreRange: [0, 100],
+    evaluationMethod: "negativeSpaceRatio 区间合规（理想 0.40..0.60）",
+  },
+  {
+    id: 4,
+    kebabName: "proportion",
+    chineseName: "比例尺度",
+    category: "composition",
+    description: "开间、比例、视点带来的尺度感",
+    relatedRules: ["CA-RULE-15-GUCHUAN", "CA-RULE-16-HUANGJIN", "CA-RULE-17-PINGZHENG"],
+    weight: 0.09,
+    scoreRange: [0, 100],
+    evaluationMethod: "对称度 / FOV / 俯仰角比例度量",
+  },
+  {
+    id: 5,
+    kebabName: "material",
+    chineseName: "材质质感",
+    category: "materials",
+    description: "粗糙度、金属度、包浆磨损构成的 PBR 质感",
+    relatedRules: ["CA-RULE-18-CANGRUN", "CA-RULE-19-CHUHUA", "CA-RULE-20-BAOJIANG"],
+    weight: 0.1,
+    scoreRange: [0, 100],
+    evaluationMethod: "material 维度评测（PBR 参数物理合理性）",
+  },
+  {
+    id: 6,
+    kebabName: "light",
+    chineseName: "光影明暗",
+    category: "lighting",
+    description: "天光、漫射、半影的光色逻辑",
+    relatedRules: ["CA-RULE-21-TIANGUANG", "CA-RULE-22-FUSHE", "CA-RULE-23-BANYING"],
+    weight: 0.1,
+    scoreRange: [0, 100],
+    evaluationMethod: "lighting 一致性：colorTemp / intensity / softness / ambient",
+  },
+  {
+    id: 7,
+    kebabName: "color",
+    chineseName: "色彩设色",
+    category: "color",
+    description: "君臣佐使配色与降饱和（S≤0.5 铁律）",
+    relatedRules: ["CA-RULE-24-SHESE", "CA-RULE-25-HUIMING", "CA-RULE-26-QINGDAN"],
+    weight: 0.08,
+    scoreRange: [0, 100],
+    evaluationMethod: "color 评测：palette / contrast / temperature / dominantArea",
+  },
+  {
+    id: 8,
+    kebabName: "motion",
+    chineseName: "动势韵律",
+    category: "runtime",
+    description: "云、水、烟、风、光五原型动势",
+    relatedRules: ["CA-RULE-27-JINGYUANDONG", "CA-RULE-28-WANQU", "CA-RULE-29-YUNXING"],
+    weight: 0.07,
+    scoreRange: [0, 100],
+    evaluationMethod: "运行时动效合规：hardFail（bounce/spin/linear）扫描",
+  },
+  {
+    id: 9,
+    kebabName: "architecture",
+    chineseName: "营造形制",
+    category: "composition",
+    description: "出檐、借景、台基等建筑语汇的空间转译",
+    relatedRules: ["CA-RULE-30-CHUYAN", "CA-RULE-31-JIEGUANG", "CA-RULE-32-YANXIA"],
+    weight: 0.07,
+    scoreRange: [0, 100],
+    evaluationMethod: "构图 + 光影联合语义裁决",
+  },
+  {
+    id: 10,
+    kebabName: "interaction",
+    chineseName: "交互体验",
+    category: "composition",
+    description: "可预期、可达、可触的交互留白与路径",
+    relatedRules: ["CA-RULE-33-KEQI", "CA-RULE-34-DAJI", "CA-RULE-35-SHOUGAN"],
+    weight: 0.07,
+    scoreRange: [0, 100],
+    evaluationMethod: "布局可达性度量：边距 / 层级数",
+  },
+  {
+    id: 11,
+    kebabName: "anti-cliche",
+    chineseName: "反套路",
+    category: "composition",
+    description: "去塑料感、破模板、去溢光的反 AI 走样",
+    relatedRules: ["CA-RULE-36-QUSULIAO", "CA-RULE-37-POJU", "CA-RULE-38-GUOBAO"],
+    weight: 0.08,
+    scoreRange: [0, 100],
+    evaluationMethod: "antiCliche.hardFail 命中扫描 + 材质/高光物理校验",
+  },
+];
+
+/* ---- 四向查表索引（构建一次，O(1) 反查） ---- */
+
+const NUMBER_TO_ENTRY: ReadonlyMap<number, DimensionCatalogEntry> =
+  new Map(DIMENSION_CATALOG.map((d) => [d.id, d]));
+
+const KEBAB_TO_ENTRY: ReadonlyMap<NumberedDimensionId, DimensionCatalogEntry> =
+  new Map(DIMENSION_CATALOG.map((d) => [d.kebabName, d]));
+
+const CHINESE_TO_ENTRY: ReadonlyMap<string, DimensionCatalogEntry> =
+  new Map(DIMENSION_CATALOG.map((d) => [d.chineseName, d]));
+
+/**
+ * 按 v2 编号（1..11）取维度目录条目。
+ * @throws 编号越界时抛错（严格模式）
+ */
+export function getDimensionByNumber(id: number): DimensionCatalogEntry {
+  const hit = NUMBER_TO_ENTRY.get(id);
+  if (!hit) throw new Error(`[dimension-registry] 未知维度编号: ${id}（合法 1..11）`);
+  return hit;
+}
+
+/** 按 kebab 名称取维度目录条目 */
+export function getDimensionByKebab(kebab: NumberedDimensionId): DimensionCatalogEntry {
+  const hit = KEBAB_TO_ENTRY.get(kebab);
+  if (!hit) throw new Error(`[dimension-registry] 未知 kebab 维度: ${kebab}`);
+  return hit;
+}
+
+/** 按中文名取维度目录条目 */
+export function getDimensionByChinese(chineseName: string): DimensionCatalogEntry | undefined {
+  return CHINESE_TO_ENTRY.get(chineseName);
+}
+
+/** 列出全部 11 个编号维度（按 id 升序） */
+export function getDimensionCatalog(): readonly DimensionCatalogEntry[] {
+  return DIMENSION_CATALOG;
+}

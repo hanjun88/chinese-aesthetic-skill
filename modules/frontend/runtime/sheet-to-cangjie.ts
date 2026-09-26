@@ -357,7 +357,7 @@ export function sheetToCangjie(
     intent: {
       statement: sheet.designBrief,
       heuristicIds: sheet.structuralDimensions.map((d) => d.id),
-      priority: 1,
+      priority: "P1",
     },
     parameters: params,
     constraints,

@@ -7,7 +7,7 @@ import { planToDom, resolveTokens, MapperError } from "../plan-to-dom.ts";
 import { makeValidParams } from "./fixtures.ts";
 import type { RuntimeExecutionPlan } from "../types/dc-types.ts";
 
-function makePlan(tier: "A" | "B" | "C" = "A"): RuntimeExecutionPlan {
+function makePlan(tier: "TIER_A" | "TIER_B" | "TIER_C" = "TIER_A"): RuntimeExecutionPlan {
   return {
     planId: "plan-test",
     runtimePlan: {
@@ -73,9 +73,9 @@ test("6 组件逐字段映射正确", () => {
 });
 
 test("renderer 通道随 negotiation.selectedTier 降级", () => {
-  assert.equal(planToDom({ plan: makePlan("A"), validatedParams: makeValidParams(), testCaseId: "t" }).renderer, "WebGL2Renderer");
-  assert.equal(planToDom({ plan: makePlan("B"), validatedParams: makeValidParams(), testCaseId: "t" }).renderer, "WebGL1Renderer");
-  assert.equal(planToDom({ plan: makePlan("C"), validatedParams: makeValidParams(), testCaseId: "t" }).renderer, "DOMCanvas");
+  assert.equal(planToDom({ plan: makePlan("TIER_A"), validatedParams: makeValidParams(), testCaseId: "t" }).renderer, "WebGL2Renderer");
+  assert.equal(planToDom({ plan: makePlan("TIER_B"), validatedParams: makeValidParams(), testCaseId: "t" }).renderer, "WebGL1Renderer");
+  assert.equal(planToDom({ plan: makePlan("TIER_C"), validatedParams: makeValidParams(), testCaseId: "t" }).renderer, "DOMCanvas");
 });
 
 test("links 回指 DC 主链 hash", () => {

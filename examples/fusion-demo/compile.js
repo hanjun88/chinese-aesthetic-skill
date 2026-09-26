@@ -113,7 +113,7 @@ const plan = {
       postprocessing: ["grain", "vignette"],
     },
   },
-  negotiation: { selectedTier: "A", downgrades: [] },
+  negotiation: { selectedTier: "TIER_A", downgrades: [] },
   hashes: { rawIRHash, validatedIRHash, executionPlanHash: "" },
 };
 plan.hashes.executionPlanHash = sha256(plan.runtimePlan);

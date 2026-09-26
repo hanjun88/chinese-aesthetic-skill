@@ -242,13 +242,13 @@ export function planToDom(input: PlanToDomInput): DomComponentPlan {
   const globalMotion = resolveMotion(plan);
   const components = buildComponents(input, rootCssVars, globalMotion);
 
-  // negotiation.selectedTier → 渲染通道
+  // negotiation.selectedTier → 渲染通道（对齐 DC ExecutionTier："TIER_A"/"TIER_B"/...）
   const renderer: RendererChannel =
-    plan.negotiation.selectedTier === "A"
+    plan.negotiation.selectedTier === "TIER_A"
       ? "WebGL2Renderer"
-      : plan.negotiation.selectedTier === "B"
+      : plan.negotiation.selectedTier === "TIER_B"
         ? "WebGL1Renderer"
-        : "DOMCanvas"; // C 档降级到 DOM 组件
+        : "DOMCanvas"; // TIER_C / TIER_D / NONE 降级到 DOM 组件
 
   return {
     planId: plan.planId,

@@ -83,7 +83,7 @@ export interface CangjieConcept {
 export interface CangjieRawDesignIR {
   irId: string;
   concept: CangjieConcept;
-  intent: { statement: string; heuristicIds: string[]; priority: number };
+  intent: { statement: string; heuristicIds: string[]; priority: "P0" | "P1" | "P2" };
   parameters: CangjieEstimatedParameter[];
   constraints: CangjieConstraint[];
   provenance: Record<string, unknown>;
@@ -125,7 +125,8 @@ export interface RuntimeExecutionPlan {
     };
   };
   negotiation: {
-    selectedTier: "A" | "B" | "C";
+    /** 对齐 compiler-core/contracts.ts ExecutionTier：DC 真实产物为 "TIER_A" 等 */
+    selectedTier: "TIER_A" | "TIER_B" | "TIER_C" | "TIER_D" | "NONE";
     downgrades: Array<{ feature: string; reason: string; fallbackStrategy: string }>;
   };
   /** 因果链（本地模拟用 sha256 摘要字符串） */
