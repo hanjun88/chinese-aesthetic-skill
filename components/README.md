@@ -7,8 +7,8 @@
 
 ## 0. 依赖与约定
 
-- **设计令牌**：所有颜色、间距、字体、缓动、阴影均来自 `../frontend-modules/tokens.css`。
-  每个组件 `<head>` 里都有 `@import url('../frontend-modules/tokens.css');`，**不要在组件内重新定义颜色**。
+- **设计令牌**：所有颜色、间距、字体、缓动、阴影均来自 `../modules/frontend/tokens.css`。
+  每个组件 `<head>` 里都有 `@import url('../modules/frontend/tokens.css');`，**不要在组件内重新定义颜色**。
 - **类名前缀隔离**：每个组件使用独立前缀，互不冲突：
   | 组件 | 前缀 |
   |---|---|
@@ -79,8 +79,8 @@ xdg-open moon-gate.html    # Linux
 # 或在文件管理器双击
 ```
 
-> 注意：组件用相对路径 `../frontend-modules/tokens.css` 引入令牌。
-> 请保持 `components/` 与 `frontend-modules/` 同级目录结构；若单独拷贝组件到别处，请把 `tokens.css` 放到对应相对位置，或把令牌 `:root{...}` 内联进该文件的 `<style>`。
+> 注意：组件用相对路径 `../modules/frontend/tokens.css` 引入令牌。
+> 请保持 `components/` 与 `modules/frontend/` 的相对目录结构；若单独拷贝组件到别处，请把 `tokens.css` 放到对应相对位置，或把令牌 `:root{...}` 内联进该文件的 `<style>`。
 
 **逐个验证清单：**
 - `moon-gate.html`：点击圆门 → 门扇翻开、山居淡入；再点合上。

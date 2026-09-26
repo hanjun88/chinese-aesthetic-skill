@@ -24,7 +24,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>博古架 CurioShelf — 东方美学组件库</title>
 <style>
-  @import url('../frontend-modules/tokens.css');
+  @import url('../modules/frontend/tokens.css');
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -139,19 +139,19 @@
   </div>
 
   <!--
-    不规则格位示意（grid-template-areas）：
+    不规则格位示意（grid-template-areas，每个命名区域必须是矩形，否则整条声明失效）：
     a a b b c c
     a a b b c c
-    d d e e e c
-    d d e e e f
-    g g g h h f
+    d d e e c c
+    d d e e f f
+    g g g h h .
   -->
   <div class="cs-shelf" style="grid-template-areas:
     'a a b b c c'
     'a a b b c c'
-    'd d e e e c'
-    'd d e e e f'
-    'g g g h h f';">
+    'd d e e c c'
+    'd d e e f f'
+    'g g g h h .';">
     <div class="cs-cell cs-a"><div class="cs-obj cs-obj--vase"></div></div>
     <div class="cs-cell cs-b cs-cell--empty"></div>
     <div class="cs-cell cs-c"><div class="cs-obj cs-obj--stone"></div></div>

@@ -113,23 +113,24 @@ body {
   var el = document.getElementById('{{COMPONENT_CLASS}}');
 
   /* 入场：加载后浮现（emerge，非弹出） */
-  window.addEventListener('load', function () {
+  function onLoad() {
     requestAnimationFrame(function () {
       el.classList.add('is-revealed');
     });
-  });
+  }
+  window.addEventListener('load', onLoad);
 
   /* {{BEHAVIOR_JS}} 例:
      推门：点击按钮 → 屋身微启
-     var btn = el.querySelector('__btn');
+     var btn = el.querySelector('.{{COMPONENT_CLASS}}__btn');
      btn.addEventListener('click', function() {
        el.classList.toggle('is-open');
      });
   */
 
-  /* 销毁闭环 */
+  /* 销毁闭环：pagehide 时移除 load 监听，避免悬挂 */
   window.addEventListener('pagehide', function () {
-    window.removeEventListener('load', arguments.callee);
+    window.removeEventListener('load', onLoad);
   });
 })();
 </script>

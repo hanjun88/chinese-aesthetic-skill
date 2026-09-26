@@ -14,7 +14,7 @@
 {{PROJECT_NAME}}/
 ├── index.html                 # 入口 HTML（由 index.html.template 生成）
 ├── styles/
-│   ├── tokens.css             # 设计令牌（直接复制 frontend-modules/tokens.css，不改值）
+│   ├── tokens.css             # 设计令牌（直接复制 modules/frontend/tokens.css，不改值）
 │   └── main.css               # 主样式（由 styles.css.template 生成）
 ├── scripts/
 │   └── main.js                # 主逻辑（由 main.js.template 生成）
