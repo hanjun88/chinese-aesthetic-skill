@@ -22,6 +22,12 @@ const input = JSON.parse(readFileSync(inputPath, "utf8"));
 const scheme = generateColorScheme({ preset: "temple-dawn" });
 
 // —— 2. 装配 AestheticConstraintSheet（融合层契约 A 输入形状）——
+// Composition inputs declared once, referenced by both sheet fields and
+// computeComposition() — no duplicate literals, change one place syncs all.
+const voidSolidRatio = "7:5";
+const spatialAxis = "strict";
+const focalPointsMax = 1;
+
 const sheet = {
   sheetId: "act-shuyuan-entrance",
   designBrief: input.brief,
@@ -49,12 +55,12 @@ const sheet = {
   proportion: {
     baseModulePx: 8,
     spacingScale: [1, 2, 3, 4, 6, 8],
-    voidSolidRatio: "7:5",
-    focalPointsMax: 1,
+    voidSolidRatio,
+    focalPointsMax,
   },
-  spatial: { axis: "strict", bays: 3, hierarchyLevelsMin: 3 },
-  // canonical composition — SSOT via computeComposition(), no inline mirror
-  composition: computeComposition("7:5", "strict", 1),
+  spatial: { axis: spatialAxis, bays: 3, hierarchyLevelsMin: 3 },
+  // canonical composition — SSOT via computeComposition(), reads same vars as above
+  composition: computeComposition(voidSolidRatio, spatialAxis, focalPointsMax),
   // canonical typography — CAS 根据 mood 推荐的字体族，DC gate context 直接读取
   typography: { families: ["Noto Serif SC", "Ma Shan Zheng"] },
   lighting: { primarySource: "skylight", timeSetting: "cloudy", lightDarkRatio: "3:7" },

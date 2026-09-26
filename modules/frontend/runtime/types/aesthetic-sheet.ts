@@ -117,6 +117,8 @@ export interface AestheticConstraintSheet {
   score: number;
 }
 
+import { computeComposition as computeCompositionImpl } from "../utils/compute-composition.js";
+
 /**
  * 从 sheet 的 proportion.voidSolidRatio / spatial.axis / focalPointsMax
  * 计算 canonical composition 字段。CAS 生产者在构造 sheet 时应调用此函数
@@ -131,9 +133,7 @@ export function computeComposition(sheet: {
   proportion: { voidSolidRatio: string; focalPointsMax: number };
   spatial: { axis: "strict" | "offset" | "hidden"; bays: number };
 }): { negativeSpaceRatio: number; symmetry: number; focalPoint: [number, number] } {
-  // @ts-expect-error — JS utility has no type declarations; runtime shape verified by tests
-  const { computeComposition: impl } = require("../utils/compute-composition.js");
-  return impl(sheet.proportion.voidSolidRatio, sheet.spatial.axis, sheet.proportion.focalPointsMax);
+  return computeCompositionImpl(sheet.proportion.voidSolidRatio, sheet.spatial.axis, sheet.proportion.focalPointsMax);
 }
 
 function parseRatioPair(ratio: string): [number, number] {
