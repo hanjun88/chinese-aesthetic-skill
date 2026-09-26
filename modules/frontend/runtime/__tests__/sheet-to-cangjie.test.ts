@@ -11,8 +11,10 @@ import {
   PARAMETER_PATH_MAPPINGS,
   resolvePlanHashes,
   EMPTY_PLAN_HASHES,
+  validateRequiredPaths,
+  assertRequiredPaths,
 } from "../sheet-to-cangjie.ts";
-import type { RuntimeExecutionPlan } from "../types/dc-types.ts";
+import type { RuntimeExecutionPlan, CangjieEstimatedParameter } from "../types/dc-types.ts";
 import { makeValidSheet } from "./fixtures.ts";
 
 const OPTS = { advisorVersion: "chinese-aesthetic-skill@1.0.0", capturedAt: "2026-09-26T00:00:00Z" };
@@ -153,9 +155,95 @@ test("确定性：同 sheet 同 capturedAt → 同一份参数序列化（哈希
   assert.equal(JSON.stringify(a), JSON.stringify(b));
 });
 
-test("缺失 requiredPath 数据时抛 BLOCKED_DATA", () => {
-  // 正常 sheet 不抛，且错误分支 code=BLOCKED_DATA
+/* ------------------------------------------------------------------ *
+ * G1 BLOCKED_DATA 负向测试（真正构造失败场景）
+ *
+ * 说明：sheetToCangjie() 的 7 条 requiredPaths 均为无条件 push，且
+ * confidence / calibration.status 在生产代码里是硬编码合法值，
+ * SheetToCangjieOptions 不支持 overrides。因此无法通过 sheet 数据让
+ * 主入口抛错。这里直接对导出的 G1 校验门（validateRequiredPaths /
+ * assertRequiredPaths）构造被破坏的参数集，覆盖 missing / lowConfidence /
+ * calibration 三类失败分支，并以合法产出参数集做正面对照。
+ * ------------------------------------------------------------------ */
+
+/** 由合法 sheet 产出的一份完整参数集（G1 应全部通过） */
+function validParams(): CangjieEstimatedParameter[] {
+  return sheetToCangjie(makeValidSheet(), OPTS).cangjieIR.parameters;
+}
+
+/** 深拷贝参数集，便于安全地破坏某一条而不影响后续用例 */
+function cloneParams(params: CangjieEstimatedParameter[]): CangjieEstimatedParameter[] {
+  return params.map((p) => ({ ...p, calibration: { ...p.calibration } }));
+}
+
+/** 捕获 assertRequiredPaths 抛出的 BLOCKED_DATA 错误；未抛则直接让用例失败 */
+function captureBlocked(fn: () => void): { code: string; missing: string[]; lowConfidence: string[] } {
+  try {
+    fn();
+  } catch (e) {
+    const err = e as Error & { code?: string; missing?: string[]; lowConfidence?: string[] };
+    assert.equal(err.code, "BLOCKED_DATA");
+    return {
+      code: err.code,
+      missing: err.missing ?? [],
+      lowConfidence: err.lowConfidence ?? [],
+    };
+  }
+  throw new assert.AssertionError({ message: "期望 assertRequiredPaths 抛 BLOCKED_DATA，但未抛错" });
+}
+
+test("G1-A: 缺失 requiredPath（移除 focalPoint 参数）→ BLOCKED_DATA", () => {
+  const params = cloneParams(validParams());
+  const idx = params.findIndex((p) => p.path.startsWith("/composition/focalPoint"));
+  assert.ok(idx >= 0, "前置条件：合法产出应包含 focalPoint");
+  params.splice(idx, 1);
+
+  // 纯函数报告：focalPoint 进入 missing，其余 requiredPath 不受影响
+  const report = validateRequiredPaths(params);
+  assert.ok(report.missing.includes("/composition/focalPoint"));
+  assert.equal(report.lowConfidence.length, 0);
+
+  // 抛错门：真正抛出 BLOCKED_DATA，且错误对象携带 missing 数组
+  const err = captureBlocked(() => assertRequiredPaths(params));
+  assert.ok(err.missing.includes("/composition/focalPoint"));
+  assert.equal(err.lowConfidence.length, 0);
+});
+
+test("G1-B: confidence < 0.85（/color/dominant 降到 0.7）→ BLOCKED_DATA.lowConfidence", () => {
+  const params = cloneParams(validParams());
+  const dom = params.find((p) => p.path.startsWith("/color/dominant"))!;
+  dom.confidence = 0.7;
+
+  const report = validateRequiredPaths(params);
+  assert.equal(report.missing.length, 0);
+  assert.ok(report.lowConfidence.includes("/color/dominant"));
+
+  const err = captureBlocked(() => assertRequiredPaths(params));
+  assert.ok(err.lowConfidence.includes("/color/dominant"));
+  assert.equal(err.missing.length, 0);
+});
+
+test("G1-C: calibration.status != PRODUCTION（/camera/fov 设为 EXPERIMENTAL）→ BLOCKED_DATA", () => {
+  const params = cloneParams(validParams());
+  const fov = params.find((p) => p.path.startsWith("/camera/fov"))!;
+  fov.calibration.status = "EXPERIMENTAL";
+
+  const report = validateRequiredPaths(params);
+  assert.equal(report.missing.length, 0);
+  assert.ok(report.lowConfidence.includes("/camera/fov"));
+
+  const err = captureBlocked(() => assertRequiredPaths(params));
+  assert.ok(err.lowConfidence.includes("/camera/fov"));
+});
+
+test("G1-D: 合法 sheet 产出的参数集通过 G1（正面对照，回归 doesNotThrow）", () => {
+  // 主入口本身不抛
   assert.doesNotThrow(() => sheetToCangjie(makeValidSheet(), OPTS));
+  // 且其产出参数集经 G1 校验门无 missing / lowConfidence
+  const report = validateRequiredPaths(validParams());
+  assert.deepEqual(report.missing, []);
+  assert.deepEqual(report.lowConfidence, []);
+  assert.doesNotThrow(() => assertRequiredPaths(validParams()));
 });
 
 /* ------------------------------------------------------------------ *

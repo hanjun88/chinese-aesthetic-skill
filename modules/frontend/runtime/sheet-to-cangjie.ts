@@ -51,6 +51,64 @@ export const REQUIRED_CONFIDENCE_FLOOR = 0.85;
 /** G1 全局置信度地板 */
 export const G1_CONFIDENCE_FLOOR = 0.6;
 
+/** G1 requiredPaths 校验结果（纯数据，不抛错） */
+export interface G1RequiredPathsReport {
+  /** params 中完全缺失的 requiredPath */
+  missing: string[];
+  /** 命中但 confidence<0.85 或 calibration.status!=PRODUCTION 的 requiredPath */
+  lowConfidence: string[];
+}
+
+/**
+ * G1 前置：7 条 requiredPaths 硬约束校验（纯函数，供测试与主入口共用）。
+ *
+ * 对每条 requiredPath：
+ *   - params 中无任何 path 以其为前缀 → 计入 `missing`；
+ *   - 命中但 confidence < REQUIRED_CONFIDENCE_FLOOR 或
+ *     calibration.status !== "PRODUCTION" → 计入 `lowConfidence`。
+ *
+ * 不抛错、不修改入参；调用方据此决定是否抛 BLOCKED_DATA。
+ */
+export function validateRequiredPaths(params: CangjieEstimatedParameter[]): G1RequiredPathsReport {
+  const missing: string[] = [];
+  const lowConfidence: string[] = [];
+  for (const req of REQUIRED_PATHS) {
+    const hit = params.find((p) => p.path.startsWith(req));
+    if (!hit) {
+      missing.push(req);
+    } else if (hit.confidence < REQUIRED_CONFIDENCE_FLOOR || hit.calibration.status !== "PRODUCTION") {
+      lowConfidence.push(req);
+    }
+  }
+  return { missing, lowConfidence };
+}
+
+/** BLOCKED_DATA 错误的形状（带机器可读 code / missing / lowConfidence） */
+export interface BlockedDataError extends Error {
+  code: "BLOCKED_DATA";
+  missing: string[];
+  lowConfidence: string[];
+}
+
+/**
+ * G1 前置校验的抛错版本：requiredPaths 缺失或置信度不足时抛 BLOCKED_DATA。
+ * 主入口与测试共用，保证测试覆盖到真正的抛错分支。
+ * @throws {BlockedDataError} 当 missing 或 lowConfidence 非空
+ */
+export function assertRequiredPaths(params: CangjieEstimatedParameter[]): asserts params {
+  const { missing, lowConfidence } = validateRequiredPaths(params);
+  if (missing.length > 0 || lowConfidence.length > 0) {
+    const err = new Error(
+      `[sheet-to-cangjie] G1 BLOCKED_DATA: requiredPaths 校验失败 ` +
+        `missing=[${missing.join(", ")}] lowConfidence=[${lowConfidence.join(", ")}]`,
+    ) as BlockedDataError;
+    err.code = "BLOCKED_DATA";
+    err.missing = missing;
+    err.lowConfidence = lowConfidence;
+    throw err;
+  }
+}
+
 /* ------------------------------------------------------------------ *
  * plan.hashes 安全访问（DC HASH FLOW CONTRACT 降级）
  * ------------------------------------------------------------------ */
@@ -360,27 +418,8 @@ export function sheetToCangjie(
     if (patch) p.range = { ...(p.range ?? {}), ...patch };
   }
 
-  // —— G1 前置：7 条 requiredPaths 硬约束校验 ——
-  const missing: string[] = [];
-  const lowConfidence: string[] = [];
-  for (const req of REQUIRED_PATHS) {
-    const hit = params.find((p) => p.path.startsWith(req));
-    if (!hit) {
-      missing.push(req);
-    } else if (hit.confidence < REQUIRED_CONFIDENCE_FLOOR || hit.calibration.status !== "PRODUCTION") {
-      lowConfidence.push(req);
-    }
-  }
-  if (missing.length > 0 || lowConfidence.length > 0) {
-    const err: Error & { code?: string; missing?: string[]; lowConfidence?: string[] } = new Error(
-      `[sheet-to-cangjie] G1 BLOCKED_DATA: requiredPaths 校验失败 ` +
-        `missing=[${missing.join(", ")}] lowConfidence=[${lowConfidence.join(", ")}]`,
-    );
-    err.code = "BLOCKED_DATA";
-    err.missing = missing;
-    err.lowConfidence = lowConfidence;
-    throw err;
-  }
+  // —— G1 前置：7 条 requiredPaths 硬约束校验（失败抛 BLOCKED_DATA）——
+  assertRequiredPaths(params);
 
   // —— unmappedDimensions：无 Core IR 落点的维度 ——
   const unmappedDimensions: CanonicalDimensionId[] = (
