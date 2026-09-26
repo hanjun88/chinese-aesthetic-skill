@@ -52,6 +52,17 @@ const sheet = {
     focalPointsMax: 1,
   },
   spatial: { axis: "strict", bays: 3, hierarchyLevelsMin: 3 },
+  // canonical composition — 镜像 computeComposition() 推导，确保真实产物含 SSOT 字段
+  composition: (() => {
+    const [vp, sp] = "7:5".split(":").map(Number);
+    return {
+      negativeSpaceRatio: Number((vp / (vp + sp)).toFixed(4)),
+      symmetry: 1, // strict 轴
+      focalPoint: [0.62, 0.38], // strict 单焦点 → 黄金分割点，不硬编码 [0.5,0.5]
+    };
+  })(),
+  // canonical typography — CAS 根据 mood 推荐的字体族，DC gate context 直接读取
+  typography: { families: ["Noto Serif SC", "Ma Shan Zheng"] },
   lighting: { primarySource: "skylight", timeSetting: "cloudy", lightDarkRatio: "3:7" },
   motion: {
     prototypes: ["light", "cloud"],

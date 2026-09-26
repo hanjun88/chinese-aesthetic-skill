@@ -102,6 +102,20 @@
     "bays": 3,
     "hierarchyLevelsMin": 3
   },
+  "composition": {
+    "negativeSpaceRatio": 0.5833,
+    "symmetry": 1,
+    "focalPoint": [
+      0.62,
+      0.38
+    ]
+  },
+  "typography": {
+    "families": [
+      "Noto Serif SC",
+      "Ma Shan Zheng"
+    ]
+  },
   "lighting": {
     "primarySource": "skylight",
     "timeSetting": "cloudy",
