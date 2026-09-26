@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  组件 2/6：卷轴 ScrollPanel  (前缀 sp-)
+  ------------------------------------------------------------
+  美学约束（为什么是东方的）：
+    · 展开为露、卷收为藏 —— 手卷（手卷画）"边展边看、展一段看一段"，
+      不是一次性摊开。收起是把信息重新卷回轴中（藏），展开是徐徐展露（露）。
+      来源：03-void-solid.md「藏与露」。
+    · 节奏如展卷 —— 展卷有重量、有方向：轴头先动，纸面随之铺开。
+      用 --ease-water（有重量感），禁止瞬间铺开/弹性回弹。
+      来源：08-motion.md「水：流畅、有重量、随形而变」。
+    · 轴为界 —— 两端木轴（深色杆 + 古金轴头旋钮）是纸面的"界"，
+      界收则纸藏，界张则纸露。
+  技术：transform scaleX/scaleY + transform-origin（从轴侧展开），
+        端轴随展开位移。JS 仅做 expanded 布尔态切换。
+  朝向：data-orientation="horizontal" | "vertical" 两种。
+  内存：toggle 按钮监听可移除。
+  状态：DRAFT v0.1 —— 待优化：真实卷轴杆滚动（旋转轴头）与纸边卷边效果。
+  ============================================================
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>卷轴 ScrollPanel — 东方美学组件库</title>
+<style>
+  @import url('../frontend-modules/tokens.css');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3xl);
+    background: var(--color-bg);
+    font-family: var(--font-serif);
+    padding: var(--space-4xl) var(--space-lg);
+  }
+
+  .sp-caption {
+    color: var(--color-text-secondary);
+    font-size: var(--font-sm);
+    letter-spacing: 0.15em;
+    text-align: center;
+    line-height: var(--leading-normal);
+  }
+  .sp-caption b { color: var(--color-text); font-weight: var(--weight-medium); }
+
+  /* ============ 卷轴本体（横向为默认） ============ */
+  .sp-scroll {
+    display: flex;
+    align-items: stretch;
+    width: 520px;
+    max-width: 90vw;
+  }
+
+  /* 轴杆：深色木杆 + 上下古金轴头 */
+  .sp-rod {
+    position: relative;
+    width: 18px;
+    flex: none;
+    background: linear-gradient(90deg, var(--dai-700), var(--dai-500), var(--dai-700));
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-skylight);
+    /* 端轴要随展开而动：横向时右端轴平移 */
+    transition: transform var(--dur-reveal) var(--ease-water);
+  }
+  /* 轴头旋钮（古金） */
+  .sp-rod::before,
+  .sp-rod::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 26px; height: 14px;
+    background: var(--color-accent);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-inset);
+  }
+  .sp-rod::before { top: -10px; }
+  .sp-rod::after  { bottom: -10px; }
+
+  /* 纸面内容 */
+  .sp-paper {
+    position: relative;
+    background:
+      linear-gradient(180deg, var(--color-surface), var(--yuebai-100));
+    border-top: var(--border-thin);
+    border-bottom: var(--border-thin);
+    /* 从固定轴侧展开 */
+    transform-origin: left center;
+    transform: scaleX(0);
+    opacity: 0;
+    transition: transform var(--dur-reveal) var(--ease-water),
+                opacity var(--dur-reveal) var(--ease-cloud);
+    overflow: hidden;
+  }
+  .sp-paper__inner {
+    width: 484px;            /* = 容器宽 - 两轴宽，避免缩放后挤压内容 */
+    max-width: 80vw;
+    padding: var(--space-2xl) var(--space-2xl);
+    color: var(--color-text);
+    line-height: var(--leading-loose);
+    font-size: var(--font-sm);
+  }
+  .sp-paper__inner h3 {
+    font-size: var(--font-lg);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.3em;
+    margin-bottom: var(--space-lg);
+    color: var(--dai-blue-700);
+  }
+  .sp-paper__inner .sp-seal {
+    display: inline-block;
+    margin-top: var(--space-lg);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-danger);
+    color: var(--color-text-inverse);
+    font-family: var(--font-kai);
+    font-size: var(--font-xs);
+    border-radius: var(--radius-sm);
+  }
+
+  /* ====== 展开态（横向） ====== */
+  .sp-scroll.is-expanded .sp-paper {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  /* 端轴（右）随纸面铺开向右让出 */
+  .sp-scroll.is-expanded .sp-rod--end {
+    transform: translateX(0);
+  }
+
+  /* ============ 竖向变体 ============ */
+  .sp-scroll[data-orientation="vertical"] {
+    flex-direction: column;
+    width: 260px;
+  }
+  .sp-scroll[data-orientation="vertical"] .sp-rod {
+    width: 100%;
+    height: 18px;
+    background: linear-gradient(180deg, var(--dai-700), var(--dai-500), var(--dai-700));
+  }
+  .sp-scroll[data-orientation="vertical"] .sp-rod::before,
+  .sp-scroll[data-orientation="vertical"] .sp-rod::after {
+    left: auto; top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 26px;
+  }
+  .sp-scroll[data-orientation="vertical"] .sp-rod::before { left: -10px; }
+  .sp-scroll[data-orientation="vertical"] .sp-rod::after  { right: -10px; left: auto; }
+  .sp-scroll[data-orientation="vertical"] .sp-paper {
+    border-left: var(--border-thin);
+    border-right: var(--border-thin);
+    border-top: none; border-bottom: none;
+    transform-origin: center top;
+    transform: scaleY(0);
+  }
+  .sp-scroll[data-orientation="vertical"] .sp-paper__inner {
+    width: 100%;
+  }
+
+  /* 控制按钮 */
+  .sp-toggle {
+    font-family: var(--font-serif);
+    font-size: var(--font-sm);
+    letter-spacing: 0.3em;
+    color: var(--color-text-inverse);
+    background: var(--dai-blue-700);
+    border: none;
+    padding: var(--space-md) var(--space-2xl);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background var(--dur-instant) var(--ease-cloud);
+  }
+  .sp-toggle:hover { background: var(--qing-700); }
+</style>
+</head>
+<body>
+
+  <div class="sp-caption">
+    <b>卷轴 ScrollPanel</b>　横卷 · 点按展卷 / 收卷<br>
+    展开为露 · 卷收为藏
+  </div>
+
+  <!-- 横向卷轴：内容写在 .sp-paper__inner -->
+  <div class="sp-scroll" id="myScrollH" data-orientation="horizontal">
+    <div class="sp-rod"></div>
+    <div class="sp-paper">
+      <div class="sp-paper__inner">
+        <h3>溪山行旅</h3>
+        <p>远山如黛，近水含烟。孤帆远影碧空尽，唯见长江天际流。展卷之际，方寸之间已历千里。</p>
+        <span class="sp-seal">醉墨</span>
+      </div>
+    </div>
+    <div class="sp-rod sp-rod--end"></div>
+  </div>
+
+  <!-- 竖向卷轴 -->
+  <div class="sp-scroll" id="myScrollV" data-orientation="vertical" style="margin-top:8px;">
+    <div class="sp-rod"></div>
+    <div class="sp-paper">
+      <div class="sp-paper__inner">
+        <p style="writing-mode:vertical-rl;letter-spacing:0.4em;">独坐幽篁里，弹琴复长啸。深林人不知，明月来相照。</p>
+      </div>
+    </div>
+    <div class="sp-rod sp-rod--end"></div>
+  </div>
+
+  <button class="sp-toggle" id="spBtn">展　卷</button>
+
+<script>
+  (function () {
+    'use strict';
+    var h = document.getElementById('myScrollH');
+    var v = document.getElementById('myScrollV');
+    var btn = document.getElementById('spBtn');
+    var expanded = false;
+
+    function render() {
+      h.classList.toggle('is-expanded', expanded);
+      v.classList.toggle('is-expanded', expanded);
+      btn.textContent = expanded ? '收　卷' : '展　卷';
+    }
+    function onClick() { expanded = !expanded; render(); }
+
+    btn.addEventListener('click', onClick);
+
+    window.__spCleanup = function () {
+      btn.removeEventListener('click', onClick);
+    };
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!--
+===============================================================================
+ index.html.template — 主 HTML 模板（语义化 + tokens 引用 + 组件挂载点）
+ 状态: DRAFT v0.1
+ -------------------------------------------------------------------------------
+ 占位符变量（来源: CodeGenerationPlan）:
+   {{PAGE_TITLE}}        页面标题，来自 AestheticConstraintSheet.design_brief
+   {{LANG}}              文档语言，默认 zh-CN
+   {{TOKENS_PATH}}       tokens.css 相对路径，默认 styles/tokens.css
+   {{MAIN_CSS_PATH}}     主样式相对路径，默认 styles/main.css
+   {{MAIN_JS_PATH}}      主脚本相对路径，默认 scripts/main.js
+   {{H1_TEXT}}           正殿标题（全页唯一 h1），来自 design_brief
+   {{SUBTITLE_TEXT}}     副标题（匾额下小字）
+   {{NAV_ITEMS}}         导航项数组渲染为 <a>，来自 components[].name
+   {{COMPONENT_MOUNTS}}  组件挂载点占位：每个 component 一个 <div id="...">
+   {{ENTRY_RITUAL_CLASS}} 进入仪式根类名，默认 .entry-scene
+ 替换后: 直接浏览器打开即可运行（需同目录有 styles/ 与 scripts/）。
+===============================================================================
+-->
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PAGE_TITLE}}</title>
+  <link rel="stylesheet" href="{{TOKENS_PATH}}">
+  <link rel="stylesheet" href="{{MAIN_CSS_PATH}}">
+</head>
+<body>
+
+  <!-- 外院：界之外（哲学 01）。语义分区 = header -->
+  <header class="outer-court">
+    <nav class="hall-nav" aria-label="主导航">
+      {{#each NAV_ITEMS}}
+      <a href="{{this.href}}" class="hall-nav__link">{{this.label}}</a>
+      {{/each}}
+    </nav>
+  </header>
+
+  <!-- 内殿：核心空间（哲学 01 / 空间秩序 02）。语义分区 = main -->
+  <main class="inner-hall {{ENTRY_RITUAL_CLASS}}">
+
+    <!-- 远景层：藏（虚实 03）——默认被雾/云遮挡，滚动后浮现 -->
+    <section class="layer layer--far" data-depth="0.2" aria-hidden="true">
+      {{LAYER_FAR_CONTENT}}
+    </section>
+
+    <!-- 中景层：门/屏风/漏窗（建筑 09 / 虚实 03） -->
+    <section class="layer layer--mid" data-depth="0.5">
+      {{COMPONENT_MOUNTS}}
+    </section>
+
+    <!-- 近景层：核心内容（焦点 ≤1） -->
+    <section class="layer layer--near" data-depth="1.0">
+      <h1 class="hall-title">{{H1_TEXT}}</h1>
+      <p class="hall-subtitle">{{SUBTITLE_TEXT}}</p>
+
+      <!-- 核心表单/内容挂载点（如登录表单、作品列表） -->
+      <div class="hall-core" id="hall-core">
+        {{CORE_CONTENT}}
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 内界之外：footer（哲学 01 的收束） -->
+  <footer class="inner-boundary">
+    <p class="attribution">{{ATTRIBUTION_STATEMENT}}</p>
+  </footer>
+
+  <script src="{{MAIN_JS_PATH}}"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+/* ============================================================
+ * POC: 修复后合规页面 CSS（正面教材）
+ * 基于 tokens.css 标准，结构先于装饰
+ * ============================================================ */
+
+/* 国潮贴图感 → 改为结构留白 + 月白底 */
+.hero-banner {
+  background: var(--color-bg); /* 月白 #E8E4D9 */
+  border: none; /* 删除金色描边 */
+  padding: var(--space-5xl) var(--space-4xl); /* 96px 殿堂级留白 */
+  font-family: var(--font-serif); /* 宋体系，非毛笔字 */
+  text-align: center;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  color: var(--dai-blue-700); /* 黛青文字，非正红 */
+  font-size: var(--font-3xl);
+  font-weight: var(--weight-light); /* 300，不用 bold */
+  letter-spacing: 0.2em; /* 字距偏松，宋体系感 */
+  text-shadow: none; /* 删除金色光晕 */
+}
+
+/* 古装影视感 → 改为低饱和配色方案 */
+.palace-scene {
+  background-color: var(--zhusha-700); /* 深朱砂 hsl(16, 70%, 22%) */
+  border: none; /* 删除明黄边框 */
+  color: var(--yuebai-100); /* 月白文字 */
+  padding: var(--space-3xl);
+}
+
+.lantern-deco {
+  /* 删除灯笼元素，用光影暗示氛围 */
+  background: linear-gradient(180deg, 
+    hsl(45, 30%, 96%, 0.1) 0%, 
+    hsl(45, 25%, 88%, 0.05) 100%);
+  box-shadow: var(--shadow-skylight); /* 天光漫射，非舞台聚光 */
+}
+
+/* 仿古景区感 → 删除做旧滤镜和木纹贴图 */
+.tourist-page {
+  filter: none; /* 删除 sepia */
+  background: var(--color-bg); /* 纯净月白底 */
+}
+
+.ticket-stub {
+  /* 删除票根样式，用排版表达信息层级 */
+  background: var(--color-surface); /* 缟素面 */
+  border: var(--border-thin); /* 1px 淡边框 */
+  border-radius: var(--radius-md); /* 4px 克制圆角 */
+  padding: var(--space-lg);
+}
+
+/* AI国风感 → 收敛渐变和光晕，删除粒子 */
+.ai-glow {
+  /* 删除彩虹渐变，改为同色系两色渐变 */
+  background: linear-gradient(180deg, 
+    var(--xuan-800) 0%, 
+    var(--dai-blue-700) 100%);
+  /* 收敛阴影 blur，参考天光 */
+  box-shadow: var(--shadow-skylight);
+}
+
+.particle-container {
+  /* 删除粒子系统 */
+  display: none;
+}
+
+.ink-brush-bg {
+  /* 删除水墨笔刷贴图，用留白意境 */
+  background: var(--yuebai-50); /* 大面积月白 = 水墨留白 */
+}
+
+/* 动效俗套 → 东方缓动 + 长时长 */
+.cliche-animation {
+  /* 删除 bounce/spin，改用推门入场 */
+  animation: reveal-in var(--dur-reveal) var(--ease-cloud); /* 1500ms 云缓动 */
+  transition: opacity var(--dur-instant) var(--ease-water); /* 800ms 水缓动 */
+}
+
+/* 纯黑纯白 → 黛色/月白 */
+.pure-black {
+  color: var(--dai-700); /* 黛 hsl(0, 5%, 17%) */
+  background: var(--yuebai-100); /* 月白浅 hsl(42, 25%, 92%) */
+}
+
+/* 高饱和颜色 → 降饱和 */
+.saturated-box {
+  background-color: var(--shilv-700); /* 石绿 hsl(120, 30%, 30%) */
+  border-color: var(--zhusha-500); /* 暗朱砂 hsl(16, 82%, 27%) */
+}
+
+/* 推门入场关键帧（从遮挡中浮现） */
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

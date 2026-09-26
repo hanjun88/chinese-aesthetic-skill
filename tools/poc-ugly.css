@@ -1,0 +1,81 @@
+/* ============================================================
+ * POC: 典型俗套页面 CSS（反面教材）
+ * 本文件故意包含大量俗套模式，用于测试 anti-cliche-lint.js
+ * ============================================================ */
+
+/* 国潮贴图感 — 祥云背景满铺 + 金色描边 + 毛笔字体 */
+.hero-banner {
+  background-image: url('xiangyun-cloud-pattern.png');
+  background-repeat: repeat;
+  background: linear-gradient(135deg, #FF0000, #FFD700, #FF6B00);
+  border: 3px solid #FFD700;
+  font-family: "Maobi Brush", "STXingkai", cursive;
+  padding: 60px;
+}
+
+.hero-title {
+  font-family: "Calligraphy", "Brush Script MT", cursive;
+  color: #FF0000;
+  text-shadow: 0 0 20px #FFD700;
+  font-size: 72px;
+}
+
+/* 古装影视感 — 正红+明黄+翠绿 宫墙配色 */
+.palace-scene {
+  background-color: #FF0000;
+  border: 2px solid #FFD700;
+  color: #00C853;
+}
+
+.lantern-deco {
+  background: radial-gradient(circle at center, #FFD700, #FF0000);
+  box-shadow: 0 0 150px #FFD700, 0 0 300px #FF0000;
+}
+
+/* 仿古景区感 — sepia做旧 + 木纹贴图 + 门票印章 */
+.tourist-page {
+  filter: sepia(0.8);
+  background: url('woodgrain-texture.jpg');
+  background-repeat: repeat;
+}
+
+.ticket-stub {
+  background: #FFD700;
+  border: 2px dashed #FF0000;
+  border-radius: 5px;
+}
+
+/* AI国风感 — 粒子飘散 + 多色渐变 + 过度光晕 */
+.ai-glow {
+  background: linear-gradient(45deg, #FF0000, #FFD700, #00FF00, #00FFFF, #FF00FF);
+  box-shadow: 0 0 200px #FFD700, 0 0 400px #FF0000;
+}
+
+.particle-container {
+  /* 粒子系统：花瓣飘散效果 */
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.ink-brush-bg {
+  background: url('ink-wash-brush.png');
+}
+
+/* 动效俗套 — 弹跳 + 快速 + 线性 + 旋转 */
+.cliche-animation {
+  animation: bounce-in 500ms ease-out, spin 800ms linear infinite;
+  transition: all 200ms linear;
+}
+
+/* 纯黑纯白 */
+.pure-black {
+  color: #000000;
+  background: #FFFFFF;
+}
+
+/* 高饱和颜色 */
+.saturated-box {
+  background-color: hsl(120, 85%, 50%);
+  border-color: hsl(0, 90%, 50%);
+}

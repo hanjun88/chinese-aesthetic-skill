@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  组件 4/6：花窗 LatticeWindow  (前缀 lw-)
+  ------------------------------------------------------------
+  美学约束（为什么是东方的）：
+    · 窗是画框 —— 花窗把窗外的山水"框"成一幅画，不是随便开窗，
+      是「框景」。来源：03-void-solid.md「借（Borrowing）」。
+    · 漏景 —— 窗格把完整的景打碎成一片片漏进来，欲露还藏：
+      你看到的永远是被窗格切割过的景，不是全景。
+      来源：03-void-solid.md「藏与露」。
+    · 借景 —— 窗外远山（远借）随鼠标微动而视差移动，
+      远的慢、近的快，模拟空间进深。
+      来源：10-interaction.md「视差层次 ≥3 层」+ 08-motion.md。
+  三种纹样：冰裂纹 / 步步锦 / 灯笼框。
+  技术：窗格用 repeating-linear-gradient 叠加出棂条；
+        窗外景分 3 层山，JS mousemove 给每层不同位移做视差。
+  内存：mousemove 监听可移除；rAF 取消。
+  状态：DRAFT v0.1 —— 待优化：SVG 真实棂条纹样、格心雕花。
+  ============================================================
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>花窗 LatticeWindow — 东方美学组件库</title>
+<style>
+  @import url('../frontend-modules/tokens.css');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3xl);
+    background: var(--dai-blue-700);
+    font-family: var(--font-serif);
+    padding: var(--space-4xl) var(--space-lg);
+  }
+
+  .lw-caption {
+    color: var(--yuebai-300);
+    font-size: var(--font-sm);
+    letter-spacing: 0.15em;
+    text-align: center;
+    line-height: var(--leading-normal);
+  }
+  .lw-caption b { color: var(--yuebai-50); font-weight: var(--weight-medium); }
+
+  /* ============ 粉墙 + 花窗 ============ */
+  .lw-wall {
+    position: relative;
+    width: 360px;
+    height: 460px;
+    background: var(--yuebai-200);
+    padding: 30px;
+    box-shadow: var(--shadow-raking);
+  }
+
+  /* 窗洞：圆窗（海棠形近似用圆角） */
+  .lw-window {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50% / 42%;       /* 海棠式圆窗 */
+    overflow: hidden;
+    border: 10px solid var(--dai-blue-700);
+    box-shadow: var(--shadow-inset);
+    cursor: crosshair;
+  }
+
+  /* 窗外之景 —— 三层山，视差移动 */
+  .lw-scene {
+    position: absolute;
+    inset: -30%;                     /* 预留视差移动余量 */
+    background: linear-gradient(180deg, var(--qing-blue-300) 0%, var(--yuebai-100) 55%, var(--qing-100) 100%);
+  }
+  .lw-layer {
+    position: absolute;
+    left: -10%; right: -10%;
+    transition: transform var(--dur-water) var(--ease-cloud); /* 缓跟随 */
+    will-change: transform;
+  }
+  /* 远山（最慢最淡） */
+  .lw-layer--far {
+    bottom: 30%; height: 50%;
+    background: var(--qing-blue-300);
+    border-radius: 50% 60% 0 0 / 100% 100% 0 0;
+    opacity: 0.6;
+  }
+  /* 中山 */
+  .lw-layer--mid {
+    bottom: 18%; height: 42%;
+    background: var(--qing-300);
+    border-radius: 40% 50% 0 0 / 100% 100% 0 0;
+    opacity: 0.8;
+  }
+  /* 近树（最快最深） */
+  .lw-layer--near {
+    bottom: 0; height: 34%;
+    background: var(--qing-700);
+    border-radius: 50% 40% 0 0 / 100% 100% 0 0;
+  }
+  /* 窗中月 */
+  .lw-moon {
+    position: absolute;
+    top: 16%; left: 60%;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: var(--yuebai-50);
+    box-shadow: 0 0 30px hsl(45, 60%, 80%, 0.6);
+  }
+
+  /* 窗格棂条（覆盖在景之上，镂空见景） */
+  .lw-lattice {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* 默认 步步锦：横竖棂条 */
+    background-image:
+      repeating-linear-gradient(0deg,
+        transparent 0 26px,
+        var(--dai-blue-700) 26px 30px),
+      repeating-linear-gradient(90deg,
+        transparent 0 26px,
+        var(--dai-blue-700) 26px 30px);
+    opacity: 0.85;
+  }
+  /* 冰裂纹：斜向交叉棂条 */
+  .lw-window[data-pattern="ice"] .lw-lattice {
+    background-image:
+      repeating-linear-gradient(45deg,
+        transparent 0 22px,
+        var(--dai-blue-700) 22px 25px),
+      repeating-linear-gradient(-45deg,
+        transparent 0 30px,
+        var(--dai-blue-700) 30px 33px);
+  }
+  /* 灯笼框：中心一个灯笼形框格 + 疏棂 */
+  .lw-window[data-pattern="lantern"] .lw-lattice {
+    background-image:
+      repeating-linear-gradient(90deg,
+        transparent 0 44px,
+        var(--dai-blue-700) 44px 48px);
+  }
+  .lw-lantern-frame {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 110px; height: 170px;
+    transform: translate(-50%, -50%);
+    border: 4px solid var(--dai-blue-700);
+    border-radius: 45% 45% 50% 50% / 8% 8% 12% 12%;
+    pointer-events: none;
+    opacity: 0.85;
+    display: none;
+  }
+  .lw-window[data-pattern="lantern"] .lw-lantern-frame { display: block; }
+
+  /* 纹样切换按钮 */
+  .lw-patterns { display: flex; gap: var(--space-md); }
+  .lw-pat-btn {
+    font-family: var(--font-serif);
+    font-size: var(--font-xs);
+    letter-spacing: 0.2em;
+    color: var(--yuebai-100);
+    background: transparent;
+    border: 1px solid var(--yuebai-300);
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background var(--dur-instant) var(--ease-cloud);
+  }
+  .lw-pat-btn:hover, .lw-pat-btn.is-active {
+    background: var(--yuebai-200);
+    color: var(--dai-blue-700);
+  }
+</style>
+</head>
+<body>
+
+  <div class="lw-caption">
+    <b>花窗 LatticeWindow</b>　框景 · 漏景 · 借景<br>
+    移动鼠标看窗外山光随视差流转
+  </div>
+
+  <div class="lw-wall">
+    <div class="lw-window" id="myWindow" data-pattern="step">
+      <div class="lw-scene">
+        <div class="lw-layer lw-layer--far"  data-depth="8"></div>
+        <div class="lw-moon"></div>
+        <div class="lw-layer lw-layer--mid"  data-depth="20"></div>
+        <div class="lw-layer lw-layer--near" data-depth="38"></div>
+      </div>
+      <div class="lw-lattice"></div>
+      <div class="lw-lantern-frame"></div>
+    </div>
+  </div>
+
+  <div class="lw-patterns">
+    <button class="lw-pat-btn is-active" data-pat="step">步步锦</button>
+    <button class="lw-pat-btn" data-pat="ice">冰裂纹</button>
+    <button class="lw-pat-btn" data-pat="lantern">灯笼框</button>
+  </div>
+
+<script>
+  (function () {
+    'use strict';
+    var win = document.getElementById('myWindow');
+    var layers = win.querySelectorAll('.lw-layer');
+    var btns = document.querySelectorAll('.lw-pat-btn');
+    var rafId = null;
+    var targetX = 0, targetY = 0;
+
+    function onMove(e) {
+      var r = win.getBoundingClientRect();
+      // 归一化到 -1 ~ 1
+      targetX = ((e.clientX - r.left) / r.width  - 0.5) * 2;
+      targetY = ((e.clientY - r.top)  / r.height - 0.5) * 2;
+      if (rafId === null) rafId = requestAnimationFrame(apply);
+    }
+    function apply() {
+      layers.forEach(function (layer) {
+        var depth = parseFloat(layer.getAttribute('data-depth')) || 10;
+        // 视差：远层位移小，近层位移大
+        var x = -targetX * depth;
+        var y = -targetY * depth * 0.4;
+        layer.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+      });
+      rafId = null;
+    }
+
+    function onPattern(e) {
+      var pat = e.currentTarget.getAttribute('data-pat');
+      win.setAttribute('data-pattern', pat);
+      btns.forEach(function (b) { b.classList.remove('is-active'); });
+      e.currentTarget.classList.add('is-active');
+    }
+
+    win.addEventListener('mousemove', onMove);
+    btns.forEach(function (b) { b.addEventListener('click', onPattern); });
+
+    window.__lwCleanup = function () {
+      win.removeEventListener('mousemove', onMove);
+      btns.forEach(function (b) { b.removeEventListener('click', onPattern); });
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  })();
+</script>
+</body>
+</html>
