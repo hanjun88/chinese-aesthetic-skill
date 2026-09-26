@@ -1,5 +1,5 @@
 /**
- * sheet-to-cangjie.test.ts — 契约 A：13 条映射 + 7 条 requiredPaths + severity/range 落地
+ * sheet-to-cangjie.test.ts — 契约 A：15 条映射规则（21 条参数 path）+ 7 条 requiredPaths + severity/range 落地
  *
  * 路径约定：所有产出 path 均为节点级（对齐 DC POINTER_MAP），无 /value 后缀。
  */
@@ -21,8 +21,8 @@ function param(result: ReturnType<typeof sheetToCangjie>, path: string) {
   return result.cangjieIR.parameters.find((p) => p.path === path);
 }
 
-test("PARAMETER_PATH_MAPPINGS 恰好 13 条", () => {
-  assert.equal(PARAMETER_PATH_MAPPINGS.length, 13);
+test("PARAMETER_PATH_MAPPINGS 恰好 15 条规则", () => {
+  assert.equal(PARAMETER_PATH_MAPPINGS.length, 15);
 });
 
 test("7 条 requiredPaths 全部输出且 confidence≥0.85 && calibration=PRODUCTION", () => {
@@ -35,11 +35,14 @@ test("7 条 requiredPaths 全部输出且 confidence≥0.85 && calibration=PRODU
   }
 });
 
-test("13 条映射值正确（色彩/构图/光影/材质/相机，节点级路径无 /value）", () => {
+test("21 条参数值正确（色彩/构图/光影/材质/相机，节点级路径无 /value；含 contrastRatio 与 intensity）", () => {
   const r = sheetToCangjie(makeValidSheet(), OPTS);
   assert.equal(param(r, "/color/dominant")?.value, "#EDEAE4");
   assert.equal(param(r, "/color/secondary")?.value, "#2C3E50");
   assert.equal(param(r, "/color/accent")?.value, "#B8860B");
+  // contrastRatio：WCAG 保守兜底
+  assert.equal(param(r, "/color/contrastRatio")?.value, 4.5);
+  assert.equal(param(r, "/color/contrastRatio")?.unit, "ratio");
   // 7:5 → 7/12 ≈ 0.5833
   assert.equal(param(r, "/composition/negativeSpaceRatio")?.value, 0.5833);
   // strict axis → symmetry 1
@@ -49,6 +52,9 @@ test("13 条映射值正确（色彩/构图/光影/材质/相机，节点级路�
   assert.equal(param(r, "/lighting/keyLight/azimuth")?.value, 0);
   assert.equal(param(r, "/lighting/keyLight/elevation")?.value, 78);
   assert.equal(param(r, "/lighting/keyLight/colorTemp")?.value, 5600); // cloudy
+  // intensity：主光强度兜底
+  assert.equal(param(r, "/lighting/keyLight/intensity")?.value, 1.0);
+  assert.equal(param(r, "/lighting/keyLight/intensity")?.unit, "scalar");
   // 3:7 → ambient 7/10=0.7
   assert.equal(param(r, "/lighting/ambientRatio")?.value, 0.7);
   // 材质
@@ -57,6 +63,19 @@ test("13 条映射值正确（色彩/构图/光影/材质/相机，节点级路�
   // 相机
   assert.equal(param(r, "/camera/fov")?.value, 35);
   assert.deepEqual(param(r, "/composition/focalPoint")?.value, [0.5, 0.5]);
+});
+
+test("新增的 contrastRatio / intensity 路径为节点级，不带 /value 后缀", () => {
+  const r = sheetToCangjie(makeValidSheet(), OPTS);
+  const cr = param(r, "/color/contrastRatio");
+  const inten = param(r, "/lighting/keyLight/intensity");
+  assert.ok(cr, "应输出 /color/contrastRatio");
+  assert.ok(inten, "应输出 /lighting/keyLight/intensity");
+  assert.ok(!cr!.path.endsWith("/value"));
+  assert.ok(!inten!.path.endsWith("/value"));
+  // 置信度落在 Contract A schema 约定区间
+  assert.ok(cr!.confidence >= 0.7 && cr!.confidence <= 0.85);
+  assert.ok(inten!.confidence >= 0.7 && inten!.confidence <= 0.85);
 });
 
 test("所有产出 path（参数/约束/规则）均为节点级，无 /value 后缀", () => {

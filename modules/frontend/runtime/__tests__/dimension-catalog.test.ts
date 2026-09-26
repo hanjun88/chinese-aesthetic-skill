@@ -9,6 +9,8 @@ import {
   getDimensionByKebab,
   getDimensionByChinese,
   DIMENSION_CATALOG,
+  V2_NUMBERED_DIMENSIONS,
+  ALL_CANONICAL_DIMENSIONS,
 } from "../dimension-registry.ts";
 import { EXTENDED_RULES, getRuleById } from "../grammar-rules/index.ts";
 
@@ -66,4 +68,27 @@ test("越界编号 / 未知 kebab 抛错", () => {
   assert.throws(() => getDimensionByNumber(12));
   // @ts-expect-error 故意传非法 kebab
   assert.throws(() => getDimensionByKebab("not-a-dim"));
+});
+
+/* ------------------------------------------------------------------ *
+ * 11D / 12D 边界：catalog 与 V2_NUMBERED_DIMENSIONS 顺序对齐
+ * ------------------------------------------------------------------ */
+
+test("V2_NUMBERED_DIMENSIONS 顺序与 DIMENSION_CATALOG kebabName 一致（id 1..11）", () => {
+  assert.equal(V2_NUMBERED_DIMENSIONS.length, 11);
+  for (let i = 0; i < 11; i++) {
+    assert.equal(
+      V2_NUMBERED_DIMENSIONS[i],
+      DIMENSION_CATALOG[i].kebabName,
+      `V2_NUMBERED_DIMENSIONS[${i}] 应与 catalog id ${i + 1} 的 kebabName 一致`,
+    );
+  }
+});
+
+test("ALL_CANONICAL_DIMENSIONS = 11 v2 + temporal，catalog 不含 temporal", () => {
+  assert.equal(ALL_CANONICAL_DIMENSIONS.length, 12);
+  assert.equal(ALL_CANONICAL_DIMENSIONS[11], "temporal");
+  // catalog 仅 11 项，不含 temporal
+  assert.equal(DIMENSION_CATALOG.length, 11);
+  assert.ok(!DIMENSION_CATALOG.some((d) => d.kebabName === "temporal"));
 });

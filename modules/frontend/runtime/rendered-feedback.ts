@@ -4,9 +4,15 @@
  * 对齐 docs/fusion-architecture.md §2.3 与 §3 接入点⑥。
  *
  * 闭环：生成的前端代码（HTML/CSS/JS 或 DomComponentPlan）
- *   → deserializeGeneratedCode 反序列化为 11 维美学评分
+ *   → deserializeGeneratedCode 反序列化为美学评分
  *   → compareFidelity 与原始 AestheticConstraintSheet 约束对比
  *   → generateFidelityReport 产出 AestheticEvaluationReport（sidecar）
+ *
+ * 维度边界（11D / 12D）：
+ *   - **默认 11 维 v2 评分**（V2_NUMBERED_DIMENSIONS，modules/01..11）。
+ *   - temporal 为 legacy expansion（legacy "time" 时间感展开，走 runtime），
+ *     **需显式 includeLegacyTemporal=true 才输出**（此时变为 12 维）。
+ *   - summary.totalDimensions 反映实际输出的维度数（11 或 12）。
  *
  * 铁律：报告自算 reportHash，但**不进** FROZEN 的 5 元 hashChain；
  * 绝不往 DC FidelityEvaluationResult.metrics 塞任何维度。
@@ -17,7 +23,7 @@
 import { createHash } from "node:crypto";
 import type { AestheticConstraintSheet } from "./types/aesthetic-sheet.ts";
 import {
-  ALL_CANONICAL_DIMENSIONS,
+  V2_NUMBERED_DIMENSIONS,
   type CanonicalDimensionId,
 } from "./dimension-registry.ts";
 import {
@@ -262,18 +268,40 @@ function weightOf(sheet: AestheticConstraintSheet, dim: CanonicalDimensionId): D
 }
 
 /**
+ * 解析报告输出的维度列表。
+ * 默认 11 维 v2（V2_NUMBERED_DIMENSIONS）；includeLegacyTemporal=true 时
+ * 追加 legacy expansion 项 temporal（变为 12 维）。
+ */
+function resolveReportDimensions(includeLegacyTemporal: boolean): CanonicalDimensionId[] {
+  if (includeLegacyTemporal) {
+    return [...V2_NUMBERED_DIMENSIONS, "temporal" as CanonicalDimensionId];
+  }
+  return [...V2_NUMBERED_DIMENSIONS];
+}
+
+/** compareFidelity 选项 */
+export interface CompareFidelityOptions {
+  /** 是否追加 legacy expansion 维度 temporal（默认 false = 11 维 v2） */
+  includeLegacyTemporal?: boolean;
+}
+
+/**
  * 对比原始约束与反序列化实测分，产出维度级 fidelity。
  *
  * @param sheet  原始美学约束单
  * @param scores deserializeGeneratedCode 的产物
- * @returns 12 维全量 fidelity 条目（含 expected/actual/fidelity）
+ * @param options includeLegacyTemporal=true 时追加 temporal（12 维），默认 11 维 v2
+ * @returns fidelity 条目（默认 11 维；includeLegacyTemporal=true 时 12 维）
  */
 export function compareFidelity(
   sheet: AestheticConstraintSheet,
   scores: DimensionScore[],
+  options: CompareFidelityOptions = {},
 ): FidelityDimensionEntry[] {
+  const includeLegacyTemporal = options.includeLegacyTemporal ?? false;
+  const reportDimensions = resolveReportDimensions(includeLegacyTemporal);
   const byDim = new Map(scores.map((s) => [s.dimension, s]));
-  return ALL_CANONICAL_DIMENSIONS.map((dim) => {
+  return reportDimensions.map((dim) => {
     const weight = weightOf(sheet, dim);
     const expected = EXPECTED_BY_WEIGHT[weight];
     const actual = byDim.get(dim)?.actualScore ?? 0;
@@ -314,6 +342,11 @@ export interface GenerateReportInput {
   links: ReportLinks;
   /** 顾问版本号，默认 chinese-aesthetic-skill@1.0.0 */
   advisorVersion?: string;
+  /**
+   * 是否追加 legacy expansion 维度 temporal（默认 false = 11 维 v2 评分）。
+   * 设为 true 时报告输出 12 维（11 v2 + temporal）。
+   */
+  includeLegacyTemporal?: boolean;
 }
 
 /** 由违例推导改进建议（回灌 CAS Step3 反俗套复检） */
@@ -360,10 +393,14 @@ export function computeReportHash(report: Omit<AestheticEvaluationReport, "repor
  * 流程：extractSignals → reviewAntiCliche → scoreDimensions →
  * compareFidelity → 组装报告 → 自算 reportHash。
  *
+ * 默认输出 11 维 v2 评分；includeLegacyTemporal=true 时追加 temporal（12 维）。
+ * summary.totalDimensions 反映实际输出的维度数（11 或 12）。
+ *
  * @throws FeedbackError 当 code 全空
  */
 export function generateFidelityReport(input: GenerateReportInput): AestheticEvaluationReport {
   const { sheet, code, links } = input;
+  const includeLegacyTemporal = input.includeLegacyTemporal ?? false;
   const hasText = Boolean((code.css ?? "") || (code.html ?? "") || (code.js ?? ""));
   if (!hasText && !code.plan) {
     throw new FeedbackError("[rendered-feedback] generateFidelityReport 需要可分析的渲染产物");
@@ -372,7 +409,7 @@ export function generateFidelityReport(input: GenerateReportInput): AestheticEva
   const signals = extractSignals(code);
   const violations = reviewAntiCliche(signals, sheet);
   const scores = scoreDimensions(signals, violations);
-  const dimensions = compareFidelity(sheet, scores);
+  const dimensions = compareFidelity(sheet, scores, { includeLegacyTemporal });
 
   // 总体 fidelity：按 sheet 权重加权
   let num = 0;
@@ -403,6 +440,9 @@ export function generateFidelityReport(input: GenerateReportInput): AestheticEva
     advisorVersion: input.advisorVersion ?? "chinese-aesthetic-skill@1.0.0",
     advisorScore: sheet.score,
     overallFidelity,
+    summary: {
+      totalDimensions: dimensions.length,
+    },
     measures,
     dimensions,
     violations,

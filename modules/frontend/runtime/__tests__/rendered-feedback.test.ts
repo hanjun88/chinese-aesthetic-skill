@@ -21,7 +21,7 @@ import type {
   ComponentPrefix,
   DomComponentPlan,
 } from "../types/dom-component-plan.ts";
-import { ALL_CANONICAL_DIMENSIONS } from "../dimension-registry.ts";
+import { V2_NUMBERED_DIMENSIONS } from "../dimension-registry.ts";
 
 /* ------------------------------------------------------------------ *
  * 夹具
@@ -127,8 +127,10 @@ test("完美 fidelity：克制调色 + 呼吸循环 + 6 组件齐装 → 零违�
   assert.equal(report.measures.bannedEasingHits.length, 0);
   assert.ok(report.measures.breathingLoops >= 1);
   assert.equal(report.measures.actualNegativeSpaceRatio, 0.45);
-  // 12 维全量
-  assert.equal(report.dimensions.length, ALL_CANONICAL_DIMENSIONS.length);
+  // 默认 11 维 v2（不含 temporal）
+  assert.equal(report.dimensions.length, V2_NUMBERED_DIMENSIONS.length);
+  assert.equal(report.summary.totalDimensions, 11);
+  assert.ok(!report.dimensions.some((d) => d.dimension === "temporal"));
 });
 
 /* ------------------------------------------------------------------ *
@@ -289,4 +291,73 @@ test("compareFidelity：primary 维度期望 90，fidelity=100-|expected-actual|
   // 未声明维度为 unspecified=60
   const philosophy = entries.find((e) => e.dimension === "philosophy");
   assert.equal(philosophy?.weight, "tertiary"); // sheet 里声明了 philosophy tertiary
+});
+
+/* ------------------------------------------------------------------ *
+ * 10) 11D / 12D 边界：默认 11 维 v2，includeLegacyTemporal 追加 temporal
+ * ------------------------------------------------------------------ */
+
+test("默认 fidelity 报告输出 11 维 v2（不含 temporal）", () => {
+  const sheet = makeMutedSheet();
+  const report = generateFidelityReport({
+    sheet,
+    code: { css: CLEAN_CSS, plan: makePlan() },
+    links: LINKS,
+  });
+  assert.equal(report.dimensions.length, 11);
+  assert.equal(report.summary.totalDimensions, 11);
+  assert.ok(!report.dimensions.some((d) => d.dimension === "temporal"), "默认不应含 temporal");
+  // 11 维与 V2_NUMBERED_DIMENSIONS 顺序一致
+  for (let i = 0; i < 11; i++) {
+    assert.equal(report.dimensions[i].dimension, V2_NUMBERED_DIMENSIONS[i]);
+  }
+});
+
+test("includeLegacyTemporal: true 时报告输出 12 维（追加 temporal）", () => {
+  const sheet = makeMutedSheet();
+  const report = generateFidelityReport({
+    sheet,
+    code: { css: CLEAN_CSS, plan: makePlan() },
+    links: LINKS,
+    includeLegacyTemporal: true,
+  });
+  assert.equal(report.dimensions.length, 12);
+  assert.equal(report.summary.totalDimensions, 12);
+  const temporal = report.dimensions.find((d) => d.dimension === "temporal");
+  assert.ok(temporal, "includeLegacyTemporal=true 应含 temporal");
+  assert.equal(report.dimensions[11].dimension, "temporal");
+});
+
+test("11 维模式 reportHash 与 12 维模式不同（hash 覆盖实际输出维度）", () => {
+  const sheet = makeMutedSheet();
+  const report11 = generateFidelityReport({
+    sheet,
+    code: { css: CLEAN_CSS, plan: makePlan() },
+    links: LINKS,
+  });
+  const report12 = generateFidelityReport({
+    sheet,
+    code: { css: CLEAN_CSS, plan: makePlan() },
+    links: LINKS,
+    includeLegacyTemporal: true,
+  });
+  assert.notEqual(report11.reportHash, report12.reportHash, "11 维与 12 维 reportHash 必须不同");
+  // 各自模式内恒等
+  const report11b = generateFidelityReport({
+    sheet,
+    code: { css: CLEAN_CSS, plan: makePlan() },
+    links: LINKS,
+  });
+  assert.equal(report11.reportHash, report11b.reportHash, "同模式同输入 hash 恒等");
+});
+
+test("compareFidelity：默认 11 维，includeLegacyTemporal=true 时 12 维", () => {
+  const sheet = makeMutedSheet();
+  const scores = deserializeGeneratedCode({ css: CLEAN_CSS, plan: makePlan() }, sheet);
+  const entries11 = compareFidelity(sheet, scores);
+  const entries12 = compareFidelity(sheet, scores, { includeLegacyTemporal: true });
+  assert.equal(entries11.length, 11);
+  assert.equal(entries12.length, 12);
+  assert.ok(!entries11.some((e) => e.dimension === "temporal"));
+  assert.ok(entries12.some((e) => e.dimension === "temporal"));
 });

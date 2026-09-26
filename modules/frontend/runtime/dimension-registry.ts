@@ -13,6 +13,21 @@
  *
  * 本文件是**唯一权威注册表**：不改 lib/、不改 modules/01..11，纯增量查表。
  *
+ * ----------------------------------------------------------------------------
+ * 11D / 12D 边界说明
+ * ----------------------------------------------------------------------------
+ * - **v2 编号维度 = 11 个**（modules/01..11-*.md，id 1..11）：
+ *   philosophy, spatial-order, void-solid, proportion, material, light, color,
+ *   motion, architecture, interaction, anti-cliche。
+ *   这是产品叙述与架构文档的权威维度数，对应 NumberedDimensionId 与
+ *   DIMENSION_CATALOG。
+ * - **Canonical 维度 = 12 个 = 11 v2 + 1 legacy expansion（temporal）**。
+ *   temporal 来自 legacy skill.yaml 的 "time" 时间感展开，走 runtime，
+ *   不属于 v2 编号 1..11，标记为 legacy-expansion tier。
+ * - 报告/评分默认输出 **11 维 v2**；需显式 includeLegacyTemporal 才追加
+ *   temporal（变为 12 维）。详见 rendered-feedback.ts。
+ * ----------------------------------------------------------------------------
+ *
  * @module modules/frontend/runtime/dimension-registry
  */
 
@@ -107,7 +122,12 @@ const CANONICAL_TO_LEGACY: Partial<Record<CanonicalDimensionId, string>> = {
   // architecture: 无 legacy 对应（v2 新增）
 };
 
-/** 全部 canonical 维度（固定顺序，v2 11 维 + temporal 展开） */
+/**
+ * 全部 canonical 维度（固定顺序）。
+ * **12 = 11 v2 + 1 legacy expansion (temporal)**。
+ * 前 11 项为 v2 编号维度（与 DIMENSION_CATALOG 顺序一致）；
+ * 末尾 temporal 为 legacy 时间感展开项，不属于 v2 编号。
+ */
 export const ALL_CANONICAL_DIMENSIONS: CanonicalDimensionId[] = [
   "philosophy",
   "spatial-order",
@@ -122,6 +142,52 @@ export const ALL_CANONICAL_DIMENSIONS: CanonicalDimensionId[] = [
   "anti-cliche",
   "temporal",
 ];
+
+/**
+ * 维度分层：
+ * - `"v2"`：v2 编号 1..11 的权威维度（产品叙述与架构文档的 11 维）。
+ * - `"legacy-expansion"`：legacy 展开项（仅 temporal），走 runtime，不参与 v2 编号。
+ */
+export type DimensionTier = "v2" | "legacy-expansion";
+
+/**
+ * v2 编号维度列表（11 个），与 DIMENSION_CATALOG 的 id 1..11 顺序一致。
+ * 不含 temporal（legacy expansion）。
+ */
+export const V2_NUMBERED_DIMENSIONS: NumberedDimensionId[] = [
+  "philosophy",
+  "spatial-order",
+  "void-solid",
+  "proportion",
+  "material",
+  "light",
+  "color",
+  "motion",
+  "architecture",
+  "interaction",
+  "anti-cliche",
+];
+
+/** 返回 v2 编号维度列表（11 维，不含 temporal）。 */
+export function getV2Dimensions(): NumberedDimensionId[] {
+  return [...V2_NUMBERED_DIMENSIONS];
+}
+
+/**
+ * 判断一个维度 id 是否为 legacy expansion 项（仅 temporal 返回 true）。
+ * @param id 任意字符串（canonical id 或别名）
+ */
+export function isLegacyExpansionDimension(id: string): boolean {
+  return id === "temporal";
+}
+
+/**
+ * 返回 canonical 维度的 tier 标记。
+ * v2 编号维度返回 "v2"；temporal 返回 "legacy-expansion"。
+ */
+export function getDimensionTier(id: CanonicalDimensionId): DimensionTier {
+  return id === "temporal" ? "legacy-expansion" : "v2";
+}
 
 /**
  * 把任意别名（legacy id / v2 module id / DC 术语）解析为 canonical id。

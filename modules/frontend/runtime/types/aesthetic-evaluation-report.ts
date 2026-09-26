@@ -138,9 +138,14 @@ export interface AestheticEvaluationReport {
   advisorScore: number;
   /** 总体 fidelity 0-100（按 sheet 权重加权） */
   overallFidelity: number;
+  /** 报告摘要：反映实际输出的维度数（默认 11 v2；includeLegacyTemporal=true 时 12） */
+  summary: {
+    /** 实际输出的维度条目数（11 或 12） */
+    totalDimensions: number;
+  };
   /** 渲染后实测采样 */
   measures: RenderedMeasures;
-  /** 11 维（canonical 全量）fidelity 对比 */
+  /** fidelity 对比条目（默认 11 维 v2；includeLegacyTemporal=true 时含 temporal 共 12 维） */
   dimensions: FidelityDimensionEntry[];
   /** 反俗套违例清单 */
   violations: RuleViolation[];

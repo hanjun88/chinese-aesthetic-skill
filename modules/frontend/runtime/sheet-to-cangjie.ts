@@ -3,7 +3,7 @@
  *
  * 纯函数：AestheticConstraintSheet → { cangjieIR, advisorRulePack, unmappedDimensions, aestheticScore }。
  * 对齐 docs/fusion-architecture.md §2.1：
- *   - 13 条参数 path 映射（PARAMETER_PATH_MAPPINGS）；
+ *   - 15 条映射规则（PARAMETER_PATH_MAPPINGS，展开为 21 条参数 path）；
  *   - 7 条 requiredPaths 硬约束（confidence≥0.85 && calibration.status=PRODUCTION）；
  *   - P0 violation → range.fatalBelow + CangjieConstraint{type:threshold}；
  *   - P1 violation → range.hard:[min,max]；
@@ -79,7 +79,7 @@ export function resolvePlanHashes(
 }
 
 /* ------------------------------------------------------------------ *
- * 13 条参数 path 映射表（fusion-arch §2.1 确定性映射表）
+ * 15 条映射规则（展开为 21 条参数 path；fusion-arch §2.1 确定性映射表）
  * ------------------------------------------------------------------ */
 
 export interface PathMapping {
@@ -96,20 +96,23 @@ export interface PathMapping {
 }
 
 /**
- * 13 条映射（materials 与 camera 各为一条映射规则、展开为多 path，
- * 与架构文档 §2.1 表格行一一对应）。
+ * 15 条映射规则（materials 与 camera 各为一条映射规则、展开为多 path，
+ * 与架构文档 §2.1 表格行一一对应；contrastRatio / intensity 为
+ * DC POINTER_MAP 必选路径的兜底派生值）。
  * 路径均为节点级（对齐 DC POINTER_MAP），无 /value 后缀。
  */
 export const PARAMETER_PATH_MAPPINGS: PathMapping[] = [
   { source: "colorSystem.palette[dominant]", targetPath: "/color/dominant", unit: "hex", confidence: 0.9, required: true, dimension: "color" },
   { source: "colorSystem.palette[secondary]", targetPath: "/color/secondary", unit: "hex", confidence: 0.9, required: false, dimension: "color" },
   { source: "colorSystem.palette[accent]", targetPath: "/color/accent", unit: "hex", confidence: 0.9, required: false, dimension: "color" },
+  { source: "WCAG 保守兜底=4.5", targetPath: "/color/contrastRatio", unit: "ratio", confidence: 0.8, required: false, dimension: "color" },
   { source: "proportion.voidSolidRatio→ratio", targetPath: "/composition/negativeSpaceRatio", unit: "ratio", confidence: 0.88, required: true, dimension: "void-solid" },
   { source: "spatial.axis=strict", targetPath: "/composition/symmetry", unit: "ratio", confidence: 0.85, required: false, dimension: "spatial-order" },
   { source: "spatial.hierarchyLevelsMin", targetPath: "/composition/depthLayerCount", unit: "scalar", confidence: 0.8, required: false, dimension: "architecture" },
   { source: "lighting.primarySource→azimuth", targetPath: "/lighting/keyLight/azimuth", unit: "degrees", confidence: 0.85, required: true, dimension: "light" },
   { source: "lighting.primarySource→elevation", targetPath: "/lighting/keyLight/elevation", unit: "degrees", confidence: 0.85, required: true, dimension: "light" },
   { source: "lighting.timeSetting→colorTemp", targetPath: "/lighting/keyLight/colorTemp", unit: "kelvin", confidence: 0.82, required: false, dimension: "light" },
+  { source: "主光强度兜底=1.0", targetPath: "/lighting/keyLight/intensity", unit: "scalar", confidence: 0.8, required: false, dimension: "light" },
   { source: "lighting.lightDarkRatio", targetPath: "/lighting/ambientRatio", unit: "ratio", confidence: 0.8, required: false, dimension: "light" },
   { source: "material.role=dominant→{baseType,roughness,metalness,wear}", targetPath: "/materials/0/{baseType,roughness,metalness,wear}", unit: "scalar", confidence: 0.85, required: true, dimension: "material" },
   { source: "proportion.focalPointsMax=1", targetPath: "/composition/focalPoint", unit: "vector2", confidence: 0.85, required: true, dimension: "interaction" },
@@ -319,21 +322,23 @@ export function sheetToCangjie(
   const params: CangjieEstimatedParameter[] = [];
   const push = (p: CangjieEstimatedParameter) => params.push(p);
 
-  // —— 3 条色彩（节点级路径）——
+  // —— 4 条色彩（节点级路径；contrastRatio 为 WCAG 保守兜底值）——
   push(makeParam("/color/dominant", dominant.hex, "hex", 0.9, "color", opts, { range: { preferred: [0.6, 0.7] } }));
   push(makeParam("/color/secondary", secondary.hex, "hex", 0.9, "color", opts));
   push(makeParam("/color/accent", accent.hex, "hex", 0.9, "color", opts, { range: { preferred: [0.02, 0.08] } }));
+  push(makeParam("/color/contrastRatio", 4.5, "ratio", 0.8, "color", opts));
 
-  // —— 3 条构图（节点级路径）——
+  // —— 4 条构图（节点级路径）——
   push(makeParam("/composition/negativeSpaceRatio", negativeSpaceRatio, "ratio", 0.88, "void-solid", opts, { range: { preferred: [0.42, 0.55], hard: [0.35, 0.42], fatalBelow: 0.3 } }));
   push(makeParam("/composition/symmetry", symmetry, "ratio", 0.85, "spatial-order", opts));
   push(makeParam("/composition/depthLayerCount", sheet.spatial.hierarchyLevelsMin, "scalar", 0.8, "architecture", opts));
   push(makeParam("/composition/focalPoint", [0.5, 0.5], "vector2", 0.85, "interaction", opts));
 
-  // —— 4 条光影（节点级路径）——
+  // —— 5 条光影（节点级路径；intensity 为主光强度兜底值）——
   push(makeParam("/lighting/keyLight/azimuth", angles.azimuth, "degrees", 0.85, "light", opts));
   push(makeParam("/lighting/keyLight/elevation", angles.elevation, "degrees", 0.85, "light", opts, { range: { hard: [20, 70] } }));
   push(makeParam("/lighting/keyLight/colorTemp", colorTemp, "kelvin", 0.82, "light", opts));
+  push(makeParam("/lighting/keyLight/intensity", 1.0, "scalar", 0.8, "light", opts));
   push(makeParam("/lighting/ambientRatio", ambientRatio, "ratio", 0.8, "light", opts));
 
   // —— 4 条材质（/materials/0/* 节点级路径）——

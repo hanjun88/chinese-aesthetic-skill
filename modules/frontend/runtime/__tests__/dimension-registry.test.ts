@@ -10,6 +10,12 @@ import {
   tryGetDimensionId,
   DIMENSION_REGISTRY,
   DIMENSION_TO_TARGET,
+  ALL_CANONICAL_DIMENSIONS,
+  V2_NUMBERED_DIMENSIONS,
+  getV2Dimensions,
+  isLegacyExpansionDimension,
+  getDimensionTier,
+  type CanonicalDimensionId,
 } from "../dimension-registry.ts";
 
 test("legacy 10 维全部可解析为 canonical", () => {
@@ -58,4 +64,44 @@ test("getAllDimensions 覆盖 12 个 canonical 且落点归类合法", () => {
 test("未知别名抛错（SSOT 严格模式）", () => {
   assert.throws(() => getDimensionId("not-a-dimension"));
   assert.equal(tryGetDimensionId("not-a-dimension"), undefined);
+});
+
+/* ------------------------------------------------------------------ *
+ * 11D / 12D 边界：v2 编号维度 vs canonical 全量
+ * ------------------------------------------------------------------ */
+
+test("V2_NUMBERED_DIMENSIONS 恰好 11 维且不含 temporal", () => {
+  assert.equal(V2_NUMBERED_DIMENSIONS.length, 11);
+  assert.ok(!V2_NUMBERED_DIMENSIONS.includes("temporal"), "v2 编号维度不应含 temporal");
+});
+
+test("ALL_CANONICAL_DIMENSIONS 恰好 12 维（11 v2 + 1 legacy expansion）", () => {
+  assert.equal(ALL_CANONICAL_DIMENSIONS.length, 12);
+  // 前 11 项与 V2_NUMBERED_DIMENSIONS 一致
+  for (let i = 0; i < 11; i++) {
+    assert.equal(ALL_CANONICAL_DIMENSIONS[i], V2_NUMBERED_DIMENSIONS[i]);
+  }
+  // 第 12 项为 temporal
+  assert.equal(ALL_CANONICAL_DIMENSIONS[11], "temporal");
+});
+
+test("getV2Dimensions 返回 11 维列表", () => {
+  const v2 = getV2Dimensions();
+  assert.equal(v2.length, 11);
+  assert.deepEqual(v2, V2_NUMBERED_DIMENSIONS);
+});
+
+test("getDimensionTier：temporal=legacy-expansion，其余 11 维=v2", () => {
+  assert.equal(getDimensionTier("temporal"), "legacy-expansion");
+  for (const id of V2_NUMBERED_DIMENSIONS) {
+    assert.equal(getDimensionTier(id as CanonicalDimensionId), "v2", `${id} 应为 v2 tier`);
+  }
+});
+
+test("isLegacyExpansionDimension：仅 temporal 返回 true", () => {
+  assert.equal(isLegacyExpansionDimension("temporal"), true);
+  for (const id of V2_NUMBERED_DIMENSIONS) {
+    assert.equal(isLegacyExpansionDimension(id), false, `${id} 不应是 legacy expansion`);
+  }
+  assert.equal(isLegacyExpansionDimension("not-a-dimension"), false);
 });
