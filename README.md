@@ -60,7 +60,7 @@ npm install github:hanjun88/chinese-aesthetic-skill
 }
 ```
 
-## 核心引擎（8个可执行决策引擎）
+## 核心引擎（10个可执行决策引擎）
 
 本 Skill 的核心不是规则手册，是**可执行的决策引擎**。每个引擎输入设计参数，输出判定结果或生成方案。
 
@@ -88,7 +88,7 @@ const cliches = clicheDetector.detectCliches({
 const scheme = colorEngine.generateColorScheme({ preset: 'act0-cloud-gate' });
 // → { colors: { main: '#E8E4D9', secondary: '#2C3E50', accent: '#B8860B' }, ratio: {...} }
 
-// 4. 一站式综合评估（运行所有8个引擎）
+// 4. 一站式综合评估（运行所有10个引擎）
 const full = fullAssessment(design);
 // → { overallScore: 91, level: 'authentic', engines: {...}, recommendations: [...] }
 ```
@@ -103,6 +103,8 @@ const full = fullAssessment(design);
 | **interactionEngine** | 交互语义映射器 | 用户动作 → 东方意象响应 + 动画参数 + FSM状态转换 |
 | **proportionEngine** | 比例校验与生成器 | 尺寸参数 → √2/三段式/出檐/巨构比例合规性 + 推荐值 |
 | **materialEngine** | 材质决策器 | 元素类型 → PBR材质参数(color/roughness/metalness) + 风化包浆 |
+| **antiAIArtifacts** | AI生图伪影检测与消除 | 生图参数 → 风险评分 + 三类伪影（超自然细节/不可能光照/完美对称）+ 修复策略 |
+| **videoMotionEngine** | 视频动势决策器 | 情绪/时长 → 相机运动 + 剪辑节奏 + 情绪曲线 + 生图/放大/后期参数 |
 
 ### 引擎测试
 
@@ -158,7 +160,7 @@ chinese-aesthetic-skill/
 │       ├── interaction-timeline.md
 │       └── fsm.md
 ├── tests/                  # 验证脚本
-│   ├── engines.test.js     # ★ 8个核心引擎集成测试（74项）
+│   ├── engines.test.js     # ★ 10个核心引擎集成测试（112项）
 │   ├── gate1-structure.test.js
 │   ├── gate2-rules.test.js
 │   └── gate3-algorithm.test.js

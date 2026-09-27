@@ -1,0 +1,13 @@
+# 构建产物
+dist/
+node_modules/
+
+# 锁文件：本仓库以 bun.lock 为准（CI 注释亦说明 npm ci 会失败）
+package-lock.json
+
+# 编辑器
+.DS_Store
+*.swp
+
+# 打包备份（scripts/pack-skill.cjs --install 原子替换时的旧版本）
+*.bak-*

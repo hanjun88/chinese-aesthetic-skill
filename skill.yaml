@@ -12,18 +12,31 @@ description: |
   不适用：纯功能性UI无美学诉求；明确要求西方/现代/极简风格；功能需求/内容故事/文案撰写。
 
 license: MIT
-repository: https://github.com/HEARTMIRROR/chinese-aesthetic-skill
+repository: https://github.com/hanjun88/chinese-aesthetic-skill
 
-# 依赖的现有 Skill（管线位置：finesse-brief → 本Skill → finesse-skill → frame-smith → finesse-term）
-dependencies:
+# 构建期依赖：无。本 Skill 为零运行时 npm 依赖的自包含包。
+# 下方为「管线集成点」——同一设计管线中的相邻 Skill，定义数据契约与调用顺序，
+# 但不由本包 import/require，也不参与安装解析。详见 docs/references.md §4。
+runtime_dependencies: []
+
+# 管线集成点（非构建依赖；顺序：finesse-brief → 本Skill → finesse-skill → frame-smith → finesse-term）
+integration_points:
   - name: finesse-brief
+    repo: https://github.com/mouse-lin/finesse-brief
     role: 上游需求规格
+    contract: 读取其 spec.md 的 aesthetic_constraints 字段
   - name: finesse-skill
+    repo: https://github.com/mouse-lin/finesse-skill
     role: 下游界面设计执行
+    contract: 输出 recommendations（colors/layout/materials/effects）供其应用
   - name: frame-smith
+    repo: https://github.com/mouse-lin/frame-smith
     role: 下游动效执行
+    contract: 读取 motion/effects 中的动势约束
   - name: finesse-term
+    repo: https://github.com/mouse-lin/finesse-term
     role: 术语对齐
+    contract: 本 Skill 术语（界/虚实/举折/出檐等）在其术语库可查
 
 # 调用接口
 api:

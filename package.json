@@ -1,7 +1,7 @@
 {
   "name": "chinese-aesthetic-skill",
   "version": "1.0.0",
-  "description": "东方空间美学决策引擎 — 8个可执行核心引擎，回答\"这个设计为什么是中国的\"",
+  "description": "东方空间美学决策引擎 — 10个可执行核心引擎，回答\"这个设计为什么是中国的\"",
   "main": "lib/index.js",
   "type": "module",
   "scripts": {
@@ -27,13 +27,13 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "dependencies": {
+  "dependencies": {},
+  "comment_dependencies": "lib/ 引擎层零运行时依赖（纯 ESM，零 import）。下列 React 系依赖仅供 src/ 的 Vite UI demo 使用，运行时不需要。",
+  "devDependencies": {
     "lucide-react": "^1.47.0",
     "motion": "^13.4.0",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
-  },
-  "devDependencies": {
+    "react-dom": "^19.3.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
