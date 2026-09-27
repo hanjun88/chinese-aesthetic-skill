@@ -1,0 +1,376 @@
+{
+  "video_id": "7654777174852138213",
+  "video_title": "北冥有鱼，其名为鲲；化而为鸟，其名为鹏",
+  "keyframes_analyzed": 6,
+  "rendering_pipeline": {
+    "render_path": "Unreal Engine 5 Lumen global illumination + Nanite virtualized geometry, cinematic path-traced volumetrics",
+    "antialiasing": "TAA (Temporal Anti-Aliasing) with high-quality sub-pixel jitter",
+    "tone_mapping": "ACES Filmic / AgX custom look, cinematic contrast curve",
+    "exposure_ev": 0.3,
+    "color_grading": {
+      "lift": "#1A2A4A",
+      "gamma": "#8FB8D8",
+      "gain": "#E8F4FF",
+      "contrast": 1.25,
+      "saturation": 1.15,
+      "temperature_k": 7200
+    }
+  },
+  "light_shadow": {
+    "key_light": {
+      "type": "directional sun / top-down volumetric light through water surface",
+      "elevation_deg": 75,
+      "azimuth_deg": 180,
+      "intensity": 3.5,
+      "color_temp_k": 8500,
+      "color_hex": "#BFE8FF"
+    },
+    "fill_ratio": 0.35,
+    "ambient_type": "hemisphere sky ambient + underwater scattered blue",
+    "ambient_intensity": 0.6,
+    "ibl_intensity": 0.8,
+    "shadows": {
+      "type": "soft penumbra contact shadows",
+      "map_resolution": 2048,
+      "bias": 0.0005,
+      "radius": 4
+    }
+  },
+  "volumetric_effects": {
+    "god_rays": {
+      "enabled": true,
+      "technique": "volumetric raymarching through homogeneous scattering medium",
+      "light_elevation_deg": 80,
+      "density": 0.08,
+      "weight": 0.6,
+      "decay": 0.92,
+      "exposure": 0.7,
+      "medium": "underwater suspended particulate haze",
+      "phase_function": "Henyey-Greenstein forward-scattering g=0.3",
+      "color_hex": "#D4F0FF"
+    },
+    "fog": {
+      "type": "exp2 height fog + underwater exponential density falloff",
+      "density": 0.012,
+      "near": 2.0,
+      "far": 120.0,
+      "color_hex": "#3A7CB8",
+      "aerial_perspective": true
+    }
+  },
+  "postprocessing": {
+    "bloom": {
+      "enabled": true,
+      "strength": 0.35,
+      "radius": 6.0,
+      "threshold": 0.85,
+      "smooth_width": 0.15,
+      "tint_hex": "#C8E8FF"
+    },
+    "ao": {
+      "type": "screen-space ambient occlusion + ray-traced GI",
+      "radius": 0.5,
+      "intensity": 0.6,
+      "samples": 16
+    },
+    "ssr": {
+      "enabled": true,
+      "max_distance": 8.0,
+      "thickness": 0.5
+    },
+    "dof": {
+      "enabled": false,
+      "focus_distance_m": 0,
+      "focal_length_mm": 0,
+      "aperture": 0,
+      "max_blur": 0
+    },
+    "motion_blur": {
+      "enabled": true,
+      "shutter_angle_deg": 180,
+      "intensity": 0.5
+    },
+    "aberration": {
+      "chromatic": 0.0,
+      "vignetting": 0.15,
+      "film_grain": 0.04
+    }
+  },
+  "material": [
+    {
+      "name": "Kun whale skin / 鲲身",
+      "brdf": "subsurface-scaled microfiber with fine longitudinal striations",
+      "base_color_hex": "#7FB8D8",
+      "metallic": 0.0,
+      "roughness": 0.35,
+      "clearcoat": 0.2,
+      "sheen": 0.4,
+      "sss": 0.6,
+      "transmission": 0.0,
+      "ior": 1.35
+    },
+    {
+      "name": "Peng feathered wing / 鹏羽",
+      "brdf": "layered keratin feather strands with micro-scale iridescent edge",
+      "base_color_hex": "#D49A5C",
+      "metallic": 0.0,
+      "roughness": 0.55,
+      "clearcoat": 0.0,
+      "sheen": 0.7,
+      "sss": 0.15,
+      "transmission": 0.0,
+      "ior": 1.45
+    },
+    {
+      "name": "Hanfu robe fabric / 儒袍",
+      "brdf": "matte linen-weave cloth with soft cotton sheen",
+      "base_color_hex": "#C8C0B0",
+      "metallic": 0.0,
+      "roughness": 0.85,
+      "clearcoat": 0.0,
+      "sheen": 0.3,
+      "sss": 0.05,
+      "transmission": 0.0,
+      "ior": 1.4
+    },
+    {
+      "name": "Ancient rock platform / 石台",
+      "brdf": "weathered granite with moss lichen micro-detail",
+      "base_color_hex": "#4A5A68",
+      "metallic": 0.0,
+      "roughness": 0.9,
+      "clearcoat": 0.0,
+      "sheen": 0.0,
+      "sss": 0.0,
+      "transmission": 0.0,
+      "ior": 1.5
+    },
+    {
+      "name": "Cloud volume / 云海",
+      "brdf": "volumetric phase-scattered water droplet cloud",
+      "base_color_hex": "#E8D8C0",
+      "metallic": 0.0,
+      "roughness": 1.0,
+      "clearcoat": 0.0,
+      "sheen": 0.0,
+      "sss": 0.8,
+      "transmission": 0.3,
+      "ior": 1.33
+    }
+  ],
+  "water": {
+    "enabled": true,
+    "wave_technique": "gerstner waves + procedural normal perturbation",
+    "amplitude_m": 0.05,
+    "frequency_hz": 0.8,
+    "speed_ms": 0.3,
+    "color_shallow_hex": "#5FA8D8",
+    "color_deep_hex": "#1A4A7C",
+    "depth_absorption": 0.6,
+    "fresnel_bias": 0.3,
+    "caustics": true,
+    "caustics_intensity": 0.5,
+    "foam_coverage": 0.0,
+    "sun_glint": true
+  },
+  "particles": [
+    {
+      "name": "small fish schools",
+      "count": 12,
+      "rendering_mode": "instanced meshes with flocking boids",
+      "motion_type": "schooling lateral drift",
+      "velocity_range": [0.5, 1.5],
+      "lifespan_s": 0,
+      "size": 0.8,
+      "blending": "opaque",
+      "color_gradient": ["#2A4A68", "#4A6A88"],
+      "trail_length": 0.0
+    },
+    {
+      "name": "floating plankton / marine snow",
+      "count": 200,
+      "rendering_mode": "soft billboard particles",
+      "motion_type": "slow downward drift + current sway",
+      "velocity_range": [0.05, 0.2],
+      "lifespan_s": 8.0,
+      "size": 0.02,
+      "blending": "additive soft glow",
+      "color_gradient": ["#B8E0F0", "#FFFFFF"],
+      "trail_length": 0.0
+    },
+    {
+      "name": "mountain bird flock",
+      "count": 40,
+      "rendering_mode": "silhouette instanced sprites",
+      "motion_type": "flock circling upper-left",
+      "velocity_range": [2.0, 4.0],
+      "lifespan_s": 0,
+      "size": 0.3,
+      "blending": "opaque dark silhouette",
+      "color_gradient": ["#2A2A3A", "#1A1A28"],
+      "trail_length": 0.0
+    },
+    {
+      "name": "celestial stardust",
+      "count": 80,
+      "rendering_mode": "additive glow points",
+      "motion_type": "gentle upward drift with parallax",
+      "velocity_range": [0.1, 0.4],
+      "lifespan_s": 12.0,
+      "size": 0.03,
+      "blending": "additive screen",
+      "color_gradient": ["#88C8FF", "#FFFFFF"],
+      "trail_length": 0.5
+    }
+  ],
+  "camera_composition": {
+    "projection": "perspective",
+    "fov_deg": 60,
+    "focal_length_mm": 24,
+    "aspect_ratio": "9:16",
+    "motion": {
+      "type": "slow dolly-in + tilt-up reveal",
+      "speed": 0.5,
+      "easing": "ease-in-out cubic",
+      "shake_amplitude": 0.0
+    },
+    "composition": {
+      "type": "low-angle monumental / epic scale contrast",
+      "horizon_position": "lower third",
+      "negative_space_ratio": 0.65,
+      "depth_layers": 4,
+      "symmetry_axis": "vertical central axis with figure centered below colossal beast"
+    }
+  },
+  "chinese_aesthetic_six_laws": {
+    "qiyun_shengdong": {
+      "score": 9,
+      "evidence": "frame_01~03 鲲自上而下俯冲游动，水流与鱼群形成生命律动；frame_04~05 鹏鸟头颈昂扬穿云而出，动态气势磅礴；frame_06 鲸悬于云海之巅，星尘浮动，气韵贯通天地"
+    },
+    "gufa_yongbi": {
+      "score": 8,
+      "evidence": "frame_01~03 岩壁皴法清晰，石台纹理如斧劈；frame_04 山脊线条硬朗勾勒如北派斧劈皴；frame_06 衣袍褶皱流畅如行云流水，用笔力量感足"
+    },
+    "yingwu_xiangxing": {
+      "score": 9,
+      "evidence": "frame_01~03 鲲取鲸形而神化，身型比例夸张至数十丈；frame_04~05 鹏融合鹰鹫与凤羽，头颈高昂展翅遮天；frame_06 半透明鲸身叠加星辰，形神兼备似与不似之间"
+    },
+    "suilei_fucai": {
+      "score": 9,
+      "evidence": "frame_01~03 北冥水色以青蓝为主调，符合东方水德之色；frame_04~05 日落山巅以赭金黄昏染云霞，类石涛设色；frame_06 青蓝与月白对比，色彩随类赋形不越其位"
+    },
+    "jingying_weizhi": {
+      "score": 9,
+      "evidence": "frame_01 人物居下三分之一，鲲居右上对角，留白于左上方水光之境；frame_04 双人物于下三分之一山巅，鹏居右上，左上飞鸟群成势；frame_06 人物右下、巨鲸居中偏左，右上星球留白，构图疏密有致"
+    },
+    "chuanyi_moxie": {
+      "score": 8,
+      "evidence": "frame_01~03 水下光线穿透水体形成丁达尔光柱，水雾氤氲似米友仁云山；frame_04 云气翻涌层叠如山，雾气弥漫山谷；frame_06 云海翻涌与星光交融，虚实相生"
+    }
+  },
+  "effect_to_library_mapping": [
+    {
+      "effect": "underwater god rays through surface",
+      "library": "UE5 Volumetric Fog + Light Shafts",
+      "parameters": {
+        "scattering": "Henyey-Greenstein g=0.3 forward",
+        "density": 0.08,
+        "color": "#D4F0FF"
+      }
+    },
+    {
+      "effect": "caustic light patterns on water surface",
+      "library": "Procedural Caustics Texture UV scroll",
+      "parameters": {
+        "intensity": 0.5,
+        "speed": 0.5,
+        "scale": 4.0
+      }
+    },
+    {
+      "effect": "colossal scale contrast figure",
+      "library": "foreground human silhouette + background monumental creature",
+      "parameters": {
+        "scale_ratio": "1:50",
+        "depth_layers": 4
+      }
+    },
+    {
+      "effect": "golden hour backlit cumulus",
+      "library": "Exponential Height Fog + Directional Light warm color temp",
+      "parameters": {
+        "sun_color": "#FFD89A",
+        "sun_elevation": 12,
+        "fog_color": "#E8B888"
+      }
+    },
+    {
+      "effect": "cloud sea inversion (clouds as ocean)",
+      "library": "volumetric cloud layer below horizon + top-down camera",
+      "parameters": {
+        "cloud_height": 3.0,
+        "coverage": 0.85,
+        "color": "#D8E8F8"
+      }
+    },
+    {
+      "effect": "celestial body rim light",
+      "library": "secondary directional fill light from planet",
+      "parameters": {
+        "color": "#6AB8FF",
+        "intensity": 0.5,
+        "elevation": 30
+      }
+    }
+  ],
+  "color_system": {
+    "primary_hex": "#2A6FA8",
+    "secondary_hex": "#E8B878",
+    "accent_hex": "#FFFFFF",
+    "wufang_zhengse_distribution": {
+      "qing": 0.45,
+      "chi": 0.15,
+      "huang": 0.2,
+      "hei": 0.1,
+      "bai": 0.1
+    },
+    "saturation": 0.65,
+    "contrast": 1.25,
+    "color_temperature_k": 7200
+  },
+  "motion": {
+    "camera_motion_type": "slow push-in with gradual tilt-up, revealing the colossal beast; underwater sequence then cross-dissolve to golden mountain sequence then dissolve to cosmic cloud-sea sequence",
+    "duration_estimate_seconds": 12.0,
+    "transition_type": "slow cross-dissolve / cinematic dissolve between water→sky→cosmos chapters",
+    "easing": "ease-in-out cubic"
+  },
+  "midjourney_prompt": {
+    "medium": "epic cinematic 3D render meets Chinese mythic ink-wash realism",
+    "art_movement": "Chinese mythology surrealism, xianxia grand landscape, romantic sublime",
+    "artist_reference": "inspired by Moebius cinematic compositions, James Jean ethereal mythology, Chinese shan shui painting masters Fan Kuan and Guo Xi",
+    "subject": "colossal mythical beast kun transforming from deep-sea whale to soaring peng bird, lone ancient chinese scholar in flowing hanfu robe standing on a weathered stone platform gazing upward at the divine beast, epic scale contrast between tiny human and monumental creature, ancient Chinese mythology, Zhuangzi Xiaoyaoyou, deep ocean to sky transformation",
+    "style_constraints": "colossal mythical beast, ancient Chinese mythology, deep ocean to sky transformation, monumental scale, ethereal sublime atmosphere, Chinese mythic realism, cinematic epic, divine creature aesthetic, spiritual transcendence, dramatic vertical composition, layered depth, misty atmospheric perspective, soft volumetric god rays, cinematic lighting, ultra detailed, masterpiece quality",
+    "lighting": "volumetric god rays filtering through deep blue water surface, warm golden hour sunset backlight on cumulus clouds, cool celestial blue rim light from cosmic planet, soft atmospheric haze, Rembrandt-style dramatic chiaroscuro on beast",
+    "camera": "low-angle epic shot, drone aerial perspective, 24mm wide-angle lens, shallow depth on foreground figure, deep focus on distant beast, vertical 9:16 composition, monumental scale framing, figure in lower third, negative space above",
+    "material_texture": "smooth whale skin with fine longitudinal striations and subtle subsurface scattering, layered keratin feather wings with soft iridescent sheen, matte linen hanfu robe with natural folds, weathered granite rock with moss lichen, volumetric cotton-like cloud sea, translucent glowing water with suspended particles",
+    "palette": {
+      "primary": "#2A6FA8",
+      "secondary": "#E8B878",
+      "accent": "#FFFFFF",
+      "deep_ocean": "#1A4A7C",
+      "sky_cyan": "#7FC8E8",
+      "golden_hour": "#D89A4C",
+      "cloud_peach": "#E8C0A0",
+      "cool_blue_shadow": "#1A3A5C"
+    },
+    "mood": "transcendent awe, philosophical solitude, mythic grandeur, ethereal serenity, the sublime of Zhuangzi's free and easy wandering",
+    "full_prompt": "colossal mythical beast kun transforming from deep-sea whale to soaring peng bird, lone ancient chinese scholar in flowing hanfu robe standing on a weathered stone platform gazing upward at the divine beast, epic scale contrast between tiny human and monumental creature, ancient Chinese mythology, Zhuangzi Xiaoyaoyou, deep ocean to sky transformation, colossal mythical beast, monumental scale, Chinese mythic realism, cinematic epic, spiritual transcendence, soft volumetric god rays through deep blue water, warm golden hour sunset on towering cumulus clouds, cool celestial blue rim light, ethereal sublime atmosphere, layered misty atmospheric perspective, epic cinematic 3D render meets Chinese mythic ink-wash realism, xianxia grand landscape, inspired by Moebius compositions and Chinese shan shui painting, smooth whale skin with subsurface scattering, layered feather wings, matte linen robe, weathered granite rock, volumetric cloud sea, deep ocean blue #2A6FA8, golden amber #E8B878, luminous white #FFFFFF, cool shadow blue #1A3A5C, transcendent awe, philosophical solitude, mythic grandeur --ar 9:16 --stylize 450 --weird 50 --v 8.2",
+    "recommended_params": {
+      "ar": "9:16",
+      "stylize": 450,
+      "weird": 50,
+      "style_raw": false,
+      "hd_or_sd": "hd"
+    }
+  }
+}

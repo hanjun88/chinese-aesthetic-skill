@@ -1,0 +1,359 @@
+{
+  "video_id": "7657349875822024569",
+  "video_title": "忽逢桃花林，夹岸数百步，中无杂树，芳草鲜美，落英缤纷",
+  "keyframes_analyzed": 6,
+
+  "rendering_pipeline": {
+    "render_path": "photorealistic 3D cinematic render, Unreal Engine 5 Lumen-style global illumination, soft semi-painterly post-grade",
+    "antialiasing": "TAA temporal anti-aliasing",
+    "tone_mapping": "ACES filmic",
+    "exposure_ev": 0.3,
+    "color_grading": {
+      "lift": "#f0c8d8",
+      "gamma": "#f5d8e8",
+      "gain": "#ffe8d0",
+      "contrast": 1.08,
+      "saturation": 1.15,
+      "temperature_k": 5800
+    }
+  },
+
+  "light_shadow": {
+    "key_light": {
+      "type": "directional sun light filtering through canopy",
+      "elevation_deg": 35,
+      "azimuth_deg": 180,
+      "intensity": 2.2,
+      "color_temp_k": 5200,
+      "color_hex": "#ffd9a8"
+    },
+    "fill_ratio": 0.55,
+    "ambient_type": "pink bounced skylight from blossom canopy",
+    "ambient_intensity": 0.6,
+    "ibl_intensity": 0.8,
+    "shadows": {
+      "type": "soft area shadow",
+      "map_resolution": 2048,
+      "bias": 0.0005,
+      "radius": 6
+    }
+  },
+
+  "volumetric_effects": {
+    "god_rays": {
+      "enabled": true,
+      "technique": "volumetric scattering through tree canopy gaps",
+      "light_elevation_deg": 35,
+      "density": 0.08,
+      "weight": 0.6,
+      "decay": 0.92,
+      "exposure": 1.1,
+      "medium": "misty air mixed with floating pink petals",
+      "phase_function": "Henyey-Greenstein g=0.45",
+      "color_hex": "#ffe0b8"
+    },
+    "fog": {
+      "type": "exponential height fog, pink-tinted",
+      "density": 0.035,
+      "near": 2.0,
+      "far": 60.0,
+      "color_hex": "#f2c8d8",
+      "aerial_perspective": true
+    }
+  },
+
+  "postprocessing": {
+    "bloom": {
+      "enabled": true,
+      "strength": 0.35,
+      "radius": 0.6,
+      "threshold": 0.75,
+      "smooth_width": 0.15,
+      "tint_hex": "#ffd0e0"
+    },
+    "ao": {
+      "type": "screen-space ambient occlusion",
+      "radius": 0.4,
+      "intensity": 0.5,
+      "samples": 16
+    },
+    "ssr": {
+      "enabled": true,
+      "max_distance": 8.0,
+      "thickness": 0.3
+    },
+    "dof": {
+      "enabled": true,
+      "focus_distance_m": 6.0,
+      "focal_length_mm": 50.0,
+      "aperture": 2.8,
+      "max_blur": 0.025
+    },
+    "motion_blur": {
+      "enabled": true,
+      "shutter_angle_deg": 180,
+      "intensity": 0.4
+    },
+    "aberration": {
+      "chromatic": 0.0015,
+      "vignetting": 0.25,
+      "film_grain": 0.03
+    }
+  },
+
+  "material": [
+    {
+      "name": "peach_blossom_petals",
+      "brdf": "Lambertian with thin subsurface scattering",
+      "base_color_hex": "#f7a8c4",
+      "metallic": 0.0,
+      "roughness": 0.65,
+      "clearcoat": 0.0,
+      "sheen": 0.8,
+      "sss": 0.4,
+      "transmission": 0.15,
+      "ior": 1.35
+    },
+    {
+      "name": "old_bamboo_wood_raft",
+      "brdf": "rough dielectric wood",
+      "base_color_hex": "#8a5a2b",
+      "metallic": 0.0,
+      "roughness": 0.75,
+      "clearcoat": 0.05,
+      "sheen": 0.0,
+      "sss": 0.0,
+      "transmission": 0.0,
+      "ior": 1.45
+    },
+    {
+      "name": "robed_fabric_linen",
+      "brdf": "cloth microfacet with sheen",
+      "base_color_hex": "#6b5a48",
+      "metallic": 0.0,
+      "roughness": 0.85,
+      "clearcoat": 0.0,
+      "sheen": 0.5,
+      "sss": 0.05,
+      "transmission": 0.0,
+      "ior": 1.4
+    },
+    {
+      "name": "stream_water",
+      "brdf": "physical water with refraction",
+      "base_color_hex": "#3a5a6a",
+      "metallic": 0.0,
+      "roughness": 0.08,
+      "clearcoat": 1.0,
+      "sheen": 0.0,
+      "sss": 0.0,
+      "transmission": 0.9,
+      "ior": 1.333
+    },
+    {
+      "name": "mossy_bank_vegetation",
+      "brdf": "rough organic foliage",
+      "base_color_hex": "#c8a048",
+      "metallic": 0.0,
+      "roughness": 0.9,
+      "clearcoat": 0.0,
+      "sheen": 0.2,
+      "sss": 0.1,
+      "transmission": 0.0,
+      "ior": 1.4
+    }
+  ],
+
+  "water": {
+    "enabled": true,
+    "wave_technique": "gerstner waves + small ambient ripples",
+    "amplitude_m": 0.03,
+    "frequency_hz": 0.5,
+    "speed_ms": 0.15,
+    "color_shallow_hex": "#7a8a9a",
+    "color_deep_hex": "#2a4a5a",
+    "depth_absorption": 0.6,
+    "fresnel_bias": 0.03,
+    "caustics": true,
+    "caustics_intensity": 0.3,
+    "foam_coverage": 0.05,
+    "sun_glint": true
+  },
+
+  "particles": [
+    {
+      "name": "falling_peach_blossom_petals",
+      "count": 1200,
+      "rendering_mode": "soft billboard with alpha cutout",
+      "motion_type": "gravity fall + lateral wind drift + gentle tumble",
+      "velocity_range": [0.1, 0.6],
+      "lifespan_s": 8.0,
+      "size": [0.02, 0.06],
+      "blending": "normal with soft alpha",
+      "color_gradient": ["#ffd0e0", "#f7a8c4", "#e88ab0"],
+      "trail_length": 0.0
+    },
+    {
+      "name": "floating_petals_on_water",
+      "count": 800,
+      "rendering_mode": "billboard lying flat on water plane",
+      "motion_type": "drift with water current + tiny bobbing",
+      "velocity_range": [0.02, 0.08],
+      "lifespan_s": 30.0,
+      "size": [0.03, 0.08],
+      "blending": "normal",
+      "color_gradient": ["#ffe0ec", "#f7b8cc", "#e89ab8"],
+      "trail_length": 0.0
+    },
+    {
+      "name": "floating_pollen_dust_in_light",
+      "count": 300,
+      "rendering_mode": "soft additive glow points",
+      "motion_type": "slow ambient float",
+      "velocity_range": [0.01, 0.04],
+      "lifespan_s": 5.0,
+      "size": [0.005, 0.015],
+      "blending": "additive",
+      "color_gradient": ["#fff0d8", "#ffe8c8"],
+      "trail_length": 0.0
+    }
+  ],
+
+  "camera_composition": {
+    "projection": "perspective",
+    "fov_deg": 60,
+    "focal_length_mm": 35.0,
+    "aspect_ratio": "9:16",
+    "motion": {
+      "type": "slow forward dolly following the boat",
+      "speed": 0.3,
+      "easing": "smooth cubic",
+      "shake_amplitude": 0.002
+    },
+    "composition": {
+      "type": "centered symmetrical corridor composition, river as leading line",
+      "horizon_position": 0.42,
+      "negative_space_ratio": 0.25,
+      "depth_layers": 4,
+      "symmetry_axis": "central river axis"
+    }
+  },
+
+  "chinese_aesthetic_six_laws": {
+    "qiyun_shengdong": {
+      "score": 9,
+      "evidence": "Frame 1-2 volumetric god rays through pink canopy with drifting petals create vivid breathing qi; Frame 3 distant misty boat evokes Taoist wanderlust spirit."
+    },
+    "gufa_yongbi": {
+      "score": 7,
+      "evidence": "Frame 1 and Frame 6 use classical Chinese shan-shui composition of river flanked by trees夹岸, echoing 桃花源记 literati painting brushwork; figure silhouette minimal like减笔人物."
+    },
+    "yingwu_xiangxing": {
+      "score": 8,
+      "evidence": "Frame 3 faithfully renders '中无杂树' pure peach grove; Frame 4-5 petal-covered water realizes '落英缤纷'; Frame 6 aerial view matches '夹岸数百步' spatial scale."
+    },
+    "suilei_fucai": {
+      "score": 9,
+      "evidence": "Frame 1-6 unified pink-gold palette with warm lifted shadows; Frame 4 shallow close-up uses pink reflections on water; color follows emotional tone of dreamlike utopia."
+    },
+    "jingying_weizhi": {
+      "score": 8,
+      "evidence": "Frame 3 centered boat in vast petal-covered river places figure at emotional focal point; Frame 6 top-down symmetrical layout creates formal balance; negative space in mist."
+    },
+    "chuanyi_moxie": {
+      "score": 6,
+      "evidence": "Frame 1-2 low-angle perspective and Frame 4-5 close-up oar stroke show spatial depth and temporal motion; Frame 3 slow dolly implies journey continuation, though limited by still keyframes."
+    }
+  },
+
+  "effect_to_library_mapping": [
+    {
+      "effect": "volumetric god rays through blossom canopy",
+      "library": "UE5 Volumetric Fog + Light Shaft",
+      "parameters": {"density": 0.08, "scattering": 0.6, "tint": "#ffe0b8"}
+    },
+    {
+      "effect": "peach blossom petal particles falling",
+      "library": "Niagara GPU Particle System",
+      "parameters": {"spawn_rate": 150, "gravity": 0.3, "drag": 0.4, "tumble": true}
+    },
+    {
+      "effect": "petals floating on water surface",
+      "library": "Runtime Virtual Texture / decal mesh on water plane",
+      "parameters": {"coverage": 0.6, "drift_speed": 0.05, "bobbing": 0.02}
+    },
+    {
+      "effect": "pink-tinted exponential height fog",
+      "library": "UE5 ExponentialHeightFog",
+      "parameters": {"fog_density": 0.035, "fog_color": "#f2c8d8", "start_dist": 200}
+    },
+    {
+      "effect": "soft bloom with pink tint",
+      "library": "Unreal Bloom PostProcess",
+      "parameters": {"threshold": 0.75, "intensity": 0.35, "tint": "#ffd0e0"}
+    },
+    {
+      "effect": "dof bokeh on foreground petals",
+      "library": "Cinematic Depth of Field",
+      "parameters": {"f-stop": 2.8, "focal_length": 50, "focus_distance": 6.0}
+    }
+  ],
+
+  "color_system": {
+    "primary_hex": "#f7a8c4",
+    "secondary_hex": "#ffd9a8",
+    "accent_hex": "#3a5a6a",
+    "wufang_zhengse_distribution": {
+      "qing": 0.12,
+      "chi": 0.55,
+      "huang": 0.25,
+      "hei": 0.03,
+      "bai": 0.05
+    },
+    "saturation": 1.15,
+    "contrast": 1.08,
+    "color_temperature_k": 5800
+  },
+
+  "motion": {
+    "camera_motion_type": "slow forward dolly along river following the boat",
+    "duration_estimate_seconds": 8.0,
+    "transition_type": "dissolve between wide and close-up shots",
+    "easing": "smooth cubic ease-in-out"
+  },
+
+  "midjourney_prompt": {
+    "medium": "ethereal cinematic 3D render meets Chinese shan-shui ink painting, soft painterly finish",
+    "art_movement": "Chinese shan-shui landscape fantasy, ukiyo-e inspired composition, dreamlike utopian aesthetic",
+    "artist_reference": "in the spirit of Moebius composition + James Jean ethereal color + Guo Xi monumental landscape",
+    "subject": "a lone robed ancient traveler with a woven bamboo conical hat standing on a small wooden raft drifting down a narrow river, flanked on both banks by dense blooming pink peach blossom forest, no other trees, falling pink peach blossom petals filling the air and carpeting the water surface, falling cherry blossom petals, pink peach blossom forest, volumetric light through trees",
+    "style_constraints": [
+      "ethereal dreamlike utopian atmosphere",
+      "pink and gold harmonious palette",
+      "soft volumetric god rays filtering through blossom canopy",
+      "misty pink haze between trees",
+      "classical Chinese shan-shui corridor composition",
+      "delicate petal particles floating in air and on water",
+      "tranquil meditative mood"
+    ],
+    "lighting": "warm golden backlight filtering through pink canopy, soft pink bounced ambient skylight, gentle rim light on the robed figure, volumetric scattering, misty aerial perspective",
+    "camera": "shot on 35mm, low angle river-level wide shot, shallow depth of field with soft bokeh foreground petals, centered symmetrical composition, 9:16 vertical",
+    "material_texture": "rough weathered bamboo raft wood, soft linen robe fabric, delicate thin translucent peach petals, rippling clear stream water with pink reflections, mossy golden-brown bank vegetation",
+    "palette": {
+      "primary": "#f7a8c4",
+      "secondary": "#ffd9a8",
+      "accent": "#3a5a6a",
+      "shadows": "#d8a8c0",
+      "highlights": "#fff0e0"
+    },
+    "mood": "serene, nostalgic, dreamlike, utopian, solitary wonder, Taoist wandering",
+    "full_prompt": "a lone robed ancient traveler with woven bamboo conical hat standing on a small wooden raft drifting down a narrow river, flanked on both banks by dense blooming pink peach blossom forest, no other trees, falling pink peach blossom petals filling the air and carpeting the water surface, falling cherry blossom petals, pink peach blossom forest, volumetric light through trees, ethereal dreamlike utopian atmosphere, pink and gold harmonious palette, soft volumetric god rays filtering through blossom canopy, misty pink haze between trees, classical Chinese shan-shui corridor composition, delicate petal particles floating in air and on water, tranquil meditative mood, ethereal cinematic 3D render meets Chinese shan-shui ink painting, soft painterly finish, in the spirit of Moebius composition and James Jean ethereal color, warm golden backlight filtering through pink canopy, soft pink bounced ambient skylight, gentle rim light on the robed figure, misty aerial perspective, shot on 35mm, low angle river-level wide shot, shallow depth of field with soft bokeh foreground petals, centered symmetrical composition, rough weathered bamboo raft wood, soft linen robe fabric, delicate translucent peach petals, rippling clear stream water with pink reflections, mossy golden-brown bank vegetation, serene nostalgic dreamlike utopian solitary wonder --ar 9:16 --stylize 450 --v 8.2",
+    "recommended_params": {
+      "ar": "9:16",
+      "stylize": 450,
+      "weird": 0,
+      "style_raw": false,
+      "hd_or_sd": "hd"
+    }
+  }
+}

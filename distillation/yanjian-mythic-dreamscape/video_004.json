@@ -1,0 +1,163 @@
+{
+  "video_id": "7661482707994560201",
+  "video_title": "当电影感配色遇上中国古诗词",
+  "keyframes_analyzed": ["frame_01.jpg", "frame_02.jpg", "frame_03.jpg", "frame_04.jpg", "frame_05.jpg", "frame_06.jpg"],
+  "rendering_pipeline": {
+    "render_path": "photorealistic cinematic render, paired B&W reference frame plus graded color frame",
+    "antialiasing": "TAA temporal anti-aliasing, 2x quality",
+    "tone_mapping": "ACES filmic, soft highlight rolloff",
+    "exposure_ev": 0.0,
+    "color_grading": {
+      "lift": {"r": 0.02, "g": 0.05, "b": 0.08},
+      "gamma": {"r": 0.98, "g": 1.0, "b": 1.02},
+      "gain": {"r": 1.05, "g": 1.0, "b": 0.95},
+      "contrast": 1.15,
+      "saturation": 0.85,
+      "temperature_k": 5600,
+      "per_scene": {
+        "scene_1_chrysanthemum": {"temp_k": 6200, "tint": "warm amber gold", "shadow_tint": "#2A1F14", "highlight_tint": "#E8B84A"},
+        "scene_2_rain_pine": {"temp_k": 7200, "tint": "cool teal cyan", "shadow_tint": "#0E2A2A", "highlight_tint": "#7FC8C8"},
+        "scene_3_moon_bridge": {"temp_k": 8500, "tint": "moonlit indigo", "shadow_tint": "#0A0A1A", "highlight_tint": "#E8E8F5"}
+      }
+    }
+  },
+  "light_shadow": {
+    "key_light": {
+      "type": "directional sun or moon key",
+      "elevation_deg": 28,
+      "azimuth_deg": 210,
+      "intensity": 2.2,
+      "color_temp_k": 5200,
+      "color_hex": "#F5E6C8",
+      "per_scene": {
+        "scene_1": {"type": "low angle afternoon sun", "elevation_deg": 18, "azimuth_deg": 250, "color_temp_k": 5600, "color_hex": "#F0C060"},
+        "scene_2": {"type": "overcast diffuse skylight through rain canopy", "elevation_deg": 60, "azimuth_deg": 180, "color_temp_k": 7500, "color_hex": "#9FD8D8"},
+        "scene_3": {"type": "full moon backlight", "elevation_deg": 35, "azimuth_deg": 180, "color_temp_k": 9000, "color_hex": "#E8E8F5"}
+      }
+    },
+    "fill_ratio": 0.35,
+    "ambient_type": "sky dome ambient plus atmospheric haze bounce",
+    "ambient_intensity": 0.4,
+    "ibl_intensity": 0.5,
+    "shadows": {"type": "soft contact shadows plus volumetric occlusion", "map_resolution": 2048, "bias": 0.0008, "radius": 6.0}
+  },
+  "volumetric_effects": {
+    "god_rays": {
+      "enabled": true,
+      "technique": "volumetric scattering through rain canopy and mountain mist",
+      "light_elevation_deg": 45,
+      "density": 0.035,
+      "weight": 0.6,
+      "decay": 0.92,
+      "exposure": 1.1,
+      "medium": "wet rain scattered air plus mountain haze",
+      "phase_function": "Henyey-Greenstein g=0.35 forward scatter",
+      "color_hex": "#A8D8D8"
+    },
+    "fog": {
+      "type": "aerial perspective layered mist between ridges plus rain forest haze",
+      "density": 0.018,
+      "near": 5.0,
+      "far": 120.0,
+      "color_hex": "#8FA8B8",
+      "aerial_perspective": true
+    }
+  },
+  "postprocessing": {
+    "bloom": {"enabled": true, "strength": 0.35, "radius": 8.0, "threshold": 0.82, "smooth_width": 0.08, "tint_hex": "#C8D8E8"},
+    "ao": {"type": "screen space ambient occlusion plus baked contact AO", "radius": 0.45, "intensity": 1.2, "samples": 16},
+    "ssr": {"enabled": true, "max_distance": 3.0, "thickness": 0.05},
+    "dof": {"enabled": true, "focus_distance_m": 4.5, "focal_length_mm": 50, "aperture": 2.8, "max_blur": 0.012},
+    "motion_blur": {"enabled": false, "shutter_angle_deg": 0, "intensity": 0.0},
+    "aberration": {"chromatic": 0.002, "vignetting": 0.25, "film_grain": 0.06}
+  },
+  "material": [
+    {"name": "weathered dead wood root", "brdf": "GGX high roughness micro relief", "base_color_hex": "#2A1E12", "metallic": 0.0, "roughness": 0.85, "clearcoat": 0.05, "sheen": 0.0, "sss": 0.0, "transmission": 0.0, "ior": 1.45},
+    {"name": "golden chrysanthemum petals", "brdf": "sheen plus subsurface scattering", "base_color_hex": "#D8A838", "metallic": 0.0, "roughness": 0.7, "clearcoat": 0.0, "sheen": 0.4, "sss": 0.25, "transmission": 0.05, "ior": 1.35},
+    {"name": "raw silk Hanfu robe", "brdf": "cloth BRDF soft sheen", "base_color_hex": "#EDE8DC", "metallic": 0.0, "roughness": 0.6, "clearcoat": 0.0, "sheen": 0.35, "sss": 0.08, "transmission": 0.0, "ior": 1.4},
+    {"name": "wet granite rock", "brdf": "GGX plus clearcoat wetness", "base_color_hex": "#1E2E2E", "metallic": 0.0, "roughness": 0.35, "clearcoat": 0.6, "sheen": 0.0, "sss": 0.0, "transmission": 0.0, "ior": 1.5},
+    {"name": "pine needles", "brdf": "thin foliage dark waxy", "base_color_hex": "#1A3A2A", "metallic": 0.0, "roughness": 0.55, "clearcoat": 0.15, "sheen": 0.1, "sss": 0.05, "transmission": 0.0, "ior": 1.4},
+    {"name": "calm reflective water", "brdf": "dielectric near mirror micro ripple", "base_color_hex": "#0A0A18", "metallic": 0.0, "roughness": 0.08, "clearcoat": 0.0, "sheen": 0.0, "sss": 0.0, "transmission": 0.0, "ior": 1.333}
+  ],
+  "water": {
+    "enabled": true,
+    "wave_technique": "staggered sinusoidal normal perturbation very low amplitude",
+    "amplitude_m": 0.015,
+    "frequency_hz": 0.5,
+    "speed_ms": 0.05,
+    "color_shallow_hex": "#1A2A3A",
+    "color_deep_hex": "#050510",
+    "depth_absorption": 0.4,
+    "fresnel_bias": 0.05,
+    "caustics": false,
+    "caustics_intensity": 0.0,
+    "foam_coverage": 0.0,
+    "sun_glint": false
+  },
+  "particles": [
+    {"name": "rain streaks", "count": 1200, "rendering_mode": "line segment billboards velocity stretch", "motion_type": "steady vertical fall with wind drift", "velocity_range": [6.0, 9.0], "lifespan_s": 1.5, "size": 0.02, "blending": "additive soft", "color_gradient": ["#C8E8E8", "#7FB8B8"], "trail_length": 0.4},
+    {"name": "floating mist droplets", "count": 200, "rendering_mode": "soft point sprites", "motion_type": "slow drifting air current", "velocity_range": [0.05, 0.15], "lifespan_s": 6.0, "size": 0.01, "blending": "alpha soft", "color_gradient": ["#E8D8B0", "#D8C898"], "trail_length": 0.0}
+  ],
+  "camera_composition": {
+    "projection": "perspective",
+    "fov_deg": 40,
+    "focal_length_mm": 50,
+    "aspect_ratio": "16:9",
+    "motion": {"type": "static locked off cinematic stills with slow cross dissolve", "speed": 0.0, "easing": "ease in out cross dissolve 1.2s", "shake_amplitude": 0.0},
+    "composition": {"type": "three layer depth foreground mid figure distant misty mountains", "horizon_position": "upper third in frame_02, lower third in frame_06", "negative_space_ratio": 0.45, "depth_layers": 3, "symmetry_axis": "frame_06 vertical bilateral symmetry moon bridge water reflection; other frames left weighted figure right open sky"}
+  },
+  "chinese_aesthetic_six_laws": {
+    "qiyun_shengdong": {"score": 9, "evidence": "frame_02 robed figure tilting head back to drink wine against layered ridges; frame_04 meditating silhouette on rock under rain; frame_06 lone figure on bridge beneath full moon, conveying quiet reclusive spirit"},
+    "gufa_yongbi": {"score": 7, "evidence": "frame_01 gnarled dead root trunk forms strong calligraphic contour on left; frame_06 twisted leafless branches cut black silhouettes across moon like dry brush strokes"},
+    "yingwu_xiangxing": {"score": 8, "evidence": "frame_02 chrysanthemum petals naturalistic; frame_04 wet rock forms; frame_06 stone arch bridge and moon rendered as observed recognizable forms"},
+    "suilei_fucai": {"score": 10, "evidence": "the video thesis: B&W frames frame_01 frame_03 frame_06 carry flat color swatch bars revealing per poem grade, warm gold #D8A838 for chrysanthemum frame_02, deep teal #1E5A5A for mountain spring frame_04 and frame_05, moonlit indigo #3A3A6A for plum moon frame_06; color assigned by poetic mood not literal object"},
+    "jingying_weizhi": {"score": 9, "evidence": "frame_02 foreground chrysanthemum sea plus mid figure plus layered blue ridges equals classic three depth shan shui; frame_04 overhead pine branches frame the figure; frame_06 exact vertical symmetry of moon bridge water reflection"},
+    "chuanyi_moxie": {"score": 6, "evidence": "cinematic reinterpretation of canonical poetic imagery rather than direct copy of a specific painting; transmits mood not brushwork"}
+  },
+  "effect_to_library_mapping": [
+    {"effect": "layered mountain aerial perspective", "library": "height fog", "parameters": {"fog_density": 0.018, "height_fog_volume": 120, "fog_color": "#8FA8B8"}},
+    {"effect": "volumetric rain god rays through canopy", "library": "volumetric fog plus light shafts", "parameters": {"scattering": 0.35, "extinction": 0.12, "multi_scattering": 0.3}},
+    {"effect": "rain streak particles", "library": "GPU particle system", "parameters": {"spawn_rate": 1200, "velocity_z": -7.5, "lifetime": 1.5, "alignment": "velocity stretch"}},
+    {"effect": "mirror water reflection", "library": "planar reflection", "parameters": {"roughness": 0.08, "normal_amplitude": 0.015}},
+    {"effect": "filmic color grade per poem", "library": "LUT color grading", "parameters": {"per_scene_luts": ["warm_gold.cube", "teal_rain.cube", "indigo_moon.cube"]}},
+    {"effect": "foreground bokeh chrysanthemums", "library": "circle DOF", "parameters": {"aperture": 2.8, "focal_distance": 4.5}}
+  ],
+  "color_system": {
+    "primary_hex": "#1E5A5A",
+    "secondary_hex": "#D8A838",
+    "accent_hex": "#3A3A6A",
+    "wufang_zhengse_distribution": {"qing": 0.45, "chi": 0.2, "huang": 0.2, "hei": 0.12, "bai": 0.03},
+    "saturation": 0.55,
+    "contrast": 1.15,
+    "color_temperature_k": 6500,
+    "palette_notes": "qing teal cyan dominates rain forest sequence; huang warm gold carries chrysanthemum scene; chi indigo accent in moonlit bridge; hei wet rocks and twisted branches; bai moon and silk robe; dominant temperature switches per poem 6200K warm then 7500K cool then 9000K moonlit"
+  },
+  "motion": {
+    "camera_motion_type": "static locked off stills, no camera move",
+    "duration_estimate_seconds": 15,
+    "transition_type": "slow cross dissolve B&W to color then cut to next poem",
+    "easing": "ease in out 1.2s dissolve"
+  },
+  "midjourney_prompt": {
+    "medium": "cinematic matte painting, 35mm film still, photorealistic yet painterly",
+    "art_movement": "Chinese shan shui ink landscape reimagined as cinematic chiaroscuro",
+    "artist_reference": "Roger Deakins lighting meets Guo Xi ink composition, Wong Kar wai restrained color grading",
+    "subject": "a solitary robed scholar in weathered raw silk Hanfu sitting on a mossy wet boulder, small contemplative back view silhouette in a vast layered misty mountain landscape, holding a wine gourd, ancient gnarled pine branches framing the upper edge, foreground sea of warm golden chrysanthemums, distant layered blue ridges fading into atmospheric haze, still dark water reflecting a full moon",
+    "style_constraints": [
+      "cinematic matte painting meets Chinese shan shui ink painting",
+      "three layer depth foreground flowers mid figure distant misty peaks",
+      "restrained desaturated palette single dominant hue per scene",
+      "soft volumetric rain haze aerial perspective between ridges",
+      "contemplative negative space figure small against landscape",
+      "chiaroscuro soft key light low contrast shadows",
+      "no text no watermark no modern elements"
+    ],
+    "lighting": "diffuse overcast skylight with subtle volumetric god rays through pine canopy, cool teal cyan key 7500K, soft fill, long misty shadows, moonlit rim backlight",
+    "camera": "50mm f2.8 shallow depth of field on foreground chrysanthemums, figure sharp, distant ridges soft, eye level locked off static composition, rule of thirds figure on left third",
+    "material_texture": "weathered rough wet stone, waxy pine needles, delicate translucent chrysanthemum petals, twisted dry wood grain, raw silk soft sheen",
+    "palette": {"dominant": "#1E5A5A", "secondary": "#D8A838", "accent": "#3A3A6A", "shadow": "#0E2A2A", "highlight": "#C8D8D8", "sky_mist": "#8FA8B8", "robe_white": "#EDE8DC"},
+    "mood": "serene solitary poetic reclusion, melancholic calm, misty stillness",
+    "full_prompt": "a solitary robed scholar in weathered raw silk Hanfu sitting on a mossy wet boulder, small contemplative back view silhouette in a vast layered misty mountain landscape, holding a wine gourd, ancient gnarled pine branches framing the upper edge, foreground sea of warm golden chrysanthemums, distant layered blue ridges fading into atmospheric haze, still dark water reflecting a full moon, cinematic matte painting meets Chinese shan shui ink landscape, three layer depth foreground midground distance, restrained desaturated palette with dominant deep teal cyan and warm gold accents, soft volumetric rain haze and aerial perspective, chiaroscuro soft overcast key light at 7500K with moonlit rim backlight, 50mm f2.8 shallow depth of field on foreground chrysanthemums, eye level locked off static composition, weathered rough wet stone, waxy pine needles, delicate translucent petals, twisted dry wood, serene solitary reclusion mood, melancholic stillness, classical Chinese poetry atmosphere --ar 9:16 --stylize 400 --v 8.2 --style raw",
+    "recommended_params": {"ar": "9:16", "stylize": 400, "weird": 0, "style_raw": true, "hd_or_sd": "hd", "notes": "Use style raw to suppress hyper vibrant default and preserve muted ink palette. SD first to explore composition then HD. For warm chrysanthemum variant swap dominant to #D8A838 at 6200K; for moonlit bridge variant swap to indigo #3A3A6A and add full moon backlit stone arch bridge mirror water reflection."}
+  }
+}
