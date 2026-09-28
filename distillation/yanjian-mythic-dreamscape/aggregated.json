@@ -1,0 +1,1226 @@
+{
+  "overview": {
+    "total_videos": 8,
+    "total_keyframes_analyzed": 48,
+    "author_name": "岩見",
+    "videos": [
+      {
+        "file": "video_001.json",
+        "video_id": "7687182041276447909",
+        "video_title": "踏遍千古，伴我无声"
+      },
+      {
+        "file": "video_002.json",
+        "video_id": "7682628975633373882",
+        "video_title": "灵兽同行，山河入梦"
+      },
+      {
+        "file": "video_003.json",
+        "video_id": "7680539919403938745",
+        "video_title": "一眼千载，与兽同栖"
+      },
+      {
+        "file": "video_004.json",
+        "video_id": "7661482707994560201",
+        "video_title": "当电影感配色遇上中国古诗词"
+      },
+      {
+        "file": "video_005.json",
+        "video_id": "7658980481836621499",
+        "video_title": "当电影感配色遇上中国古诗词"
+      },
+      {
+        "file": "video_006.json",
+        "video_id": "7657349875822024569",
+        "video_title": "忽逢桃花林，夹岸数百步，中无杂树，芳草鲜美，落英缤纷"
+      },
+      {
+        "file": "video_007.json",
+        "video_id": "7654777174852138213",
+        "video_title": "北冥有鱼，其名为鲲；化而为鸟，其名为鹏"
+      },
+      {
+        "file": "video_008.json",
+        "video_id": "7653550185679793594",
+        "video_title": "绥绥白狐，九尾庞庞"
+      }
+    ]
+  },
+  "rendering_pipeline_distribution": {
+    "render_path_breakdown": {
+      "offline path-tracing 3D render (C4D/Octane/Redshift equivalent) with baked sky gradient, smooth analytic geometry": 1,
+      "offline cinematic path-traced 3D render, stylized surreal dreamscape": 1,
+      "2D digital gongbi illustration, layered flat mineral-pigment washes over fine ink outline underdrawing; simulated silk/rice-paper substrate": 1,
+      "photorealistic cinematic render, paired B&W reference frame plus graded color frame": 1,
+      "path-traced CGI composite + film emulation grade": 1,
+      "photorealistic 3D cinematic render, Unreal Engine 5 Lumen-style global illumination, soft semi-painterly post-grade": 1,
+      "Unreal Engine 5 Lumen global illumination + Nanite virtualized geometry, cinematic path-traced volumetrics": 1,
+      "offline cinematic 3D CGI render + digital paint over, strand-based fur simulation, path-traced reflections on water, hybrid real-time PBR look": 1
+    },
+    "antialiasing": {
+      "TAA_enabled_count": 7,
+      "TAA_rate": 0.875,
+      "msaa_supersample_variants": {
+        "MSAA 8x": 1,
+        "supersample 4x": 2,
+        "MSAA 4x": 1
+      }
+    },
+    "tone_mapping": {
+      "ACES_filmic_count": 7,
+      "ACES_rate": 0.875,
+      "non_ACES_variants": {
+        "art-directed flat value separation (no filmic curve); 4-5 stepped ink-wash value bands": 1
+      }
+    },
+    "exposure_ev": {
+      "values": [
+        0.3,
+        0.3,
+        -0.3,
+        0.0,
+        -0.3,
+        0.3,
+        0.3,
+        0.3
+      ],
+      "mean": 0.112
+    },
+    "color_grading": {
+      "contrast_values": [
+        1.08,
+        1.15,
+        1.15,
+        1.15,
+        1.15,
+        1.08,
+        1.25,
+        1.15
+      ],
+      "contrast_mean": 1.145,
+      "contrast_min": 1.08,
+      "contrast_max": 1.25,
+      "saturation_values": [
+        1.15,
+        1.25,
+        0.82,
+        0.85,
+        1.25,
+        1.15,
+        1.15,
+        0.82
+      ],
+      "saturation_mean": 1.055,
+      "saturation_min": 0.82,
+      "saturation_max": 1.25,
+      "temperature_k_values": [
+        6800,
+        7200,
+        5200,
+        5600,
+        4200,
+        5800,
+        7200,
+        7200
+      ],
+      "temperature_k_mean": 6150.0,
+      "temperature_k_min": 4200,
+      "temperature_k_max": 7200
+    }
+  },
+  "six_laws_aggregate": {
+    "per_law_stats": {
+      "qiyun_shengdong": {
+        "mean": 9.0,
+        "max": 9,
+        "min": 9,
+        "std": 0.0,
+        "values_per_video": [
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9
+        ]
+      },
+      "gufa_yongbi": {
+        "mean": 7.25,
+        "max": 9,
+        "min": 6,
+        "std": 0.829,
+        "values_per_video": [
+          7,
+          6,
+          9,
+          7,
+          7,
+          7,
+          8,
+          7
+        ]
+      },
+      "yingwu_xiangxing": {
+        "mean": 8.25,
+        "max": 9,
+        "min": 8,
+        "std": 0.433,
+        "values_per_video": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          9,
+          9
+        ]
+      },
+      "suilei_fucai": {
+        "mean": 9.25,
+        "max": 10,
+        "min": 9,
+        "std": 0.433,
+        "values_per_video": [
+          9,
+          9,
+          9,
+          10,
+          10,
+          9,
+          9,
+          9
+        ]
+      },
+      "jingying_weizhi": {
+        "mean": 8.75,
+        "max": 9,
+        "min": 8,
+        "std": 0.433,
+        "values_per_video": [
+          9,
+          9,
+          8,
+          9,
+          9,
+          8,
+          9,
+          9
+        ]
+      },
+      "chuanyi_moxie": {
+        "mean": 7.0,
+        "max": 8,
+        "min": 6,
+        "std": 0.866,
+        "values_per_video": [
+          7,
+          8,
+          7,
+          6,
+          8,
+          6,
+          8,
+          6
+        ]
+      }
+    },
+    "per_video_table": [
+      {
+        "video": "video_001.json",
+        "title": "踏遍千古，伴我无声",
+        "qiyun_shengdong": 9,
+        "gufa_yongbi": 7,
+        "yingwu_xiangxing": 8,
+        "suilei_fucai": 9,
+        "jingying_weizhi": 9,
+        "chuanyi_moxie": 7
+      },
+      {
+        "video": "video_002.json",
+        "title": "灵兽同行，山河入梦",
+        "qiyun_shengdong": 9,
+        "gufa_yongbi": 6,
+        "yingwu_xiangxing": 8,
+        "suilei_fucai": 9,
+        "jingying_weizhi": 9,
+        "chuanyi_moxie": 8
+      },
+      {
+        "video": "video_003.json",
+        "title": "一眼千载，与兽同栖",
+        "qiyun_shengdong": 9,
+        "gufa_yongbi": 9,
+        "yingwu_xiangxing": 8,
+        "suilei_fucai": 9,
+        "jingying_weizhi": 8,
+        "chuanyi_moxie": 7
+      },
+      {
+        "video": "video_004.json",
+        "title": "当电影感配色遇上中国古诗词",
+        "qiyun_shengdong": 9,
+        "gufa_yongbi": 7,
+        "yingwu_xiangxing": 8,
+        "suilei_fucai": 10,
+        "jingying_weizhi": 9,
+        "chuanyi_moxie": 6
+      },
+      {
+        "video": "video_005.json",
+        "title": "当电影感配色遇上中国古诗词",
+        "qiyun_shengdong": 9,
+        "gufa_yongbi": 7,
+        "yingwu_xiangxing": 8,
+        "suilei_fucai": 10,
+        "jingying_weizhi": 9,
+        "chuanyi_moxie": 8
+      },
+      {
+        "video": "video_006.json",
+        "title": "忽逢桃花林，夹岸数百步，中无杂树，芳草鲜美，落英缤纷",
+        "qiyun_shengdong": 9,
+        "gufa_yongbi": 7,
+        "yingwu_xiangxing": 8,
+        "suilei_fucai": 9,
+        "jingying_weizhi": 8,
+        "chuanyi_moxie": 6
+      },
+      {
+        "video": "video_007.json",
+        "title": "北冥有鱼，其名为鲲；化而为鸟，其名为鹏",
+        "qiyun_shengdong": 9,
+        "gufa_yongbi": 8,
+        "yingwu_xiangxing": 9,
+        "suilei_fucai": 9,
+        "jingying_weizhi": 9,
+        "chuanyi_moxie": 8
+      },
+      {
+        "video": "video_008.json",
+        "title": "绥绥白狐，九尾庞庞",
+        "qiyun_shengdong": 9,
+        "gufa_yongbi": 7,
+        "yingwu_xiangxing": 9,
+        "suilei_fucai": 9,
+        "jingying_weizhi": 9,
+        "chuanyi_moxie": 6
+      }
+    ]
+  },
+  "color_system_aggregate": {
+    "primary_hex_all": [
+      "#f5a8a0",
+      "#1e3a8a",
+      "#1f4d52",
+      "#1E5A5A",
+      "#d4a04a",
+      "#f7a8c4",
+      "#2A6FA8",
+      "#16233f"
+    ],
+    "primary_hex_frequency": [
+      {
+        "hex": "#f5a8a0",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#1e3a8a",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#1f4d52",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#1E5A5A",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#d4a04a",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#f7a8c4",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#2A6FA8",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#16233f",
+        "count": 1,
+        "pct": 0.125
+      }
+    ],
+    "secondary_hex_all": [
+      "#7b9ede",
+      "#c026d3",
+      "#dce8e6",
+      "#D8A838",
+      "#3a6a4a",
+      "#ffd9a8",
+      "#E8B878",
+      "#e6e4f0"
+    ],
+    "secondary_hex_frequency": [
+      {
+        "hex": "#7b9ede",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#c026d3",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#dce8e6",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#D8A838",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#3a6a4a",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#ffd9a8",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#E8B878",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#e6e4f0",
+        "count": 1,
+        "pct": 0.125
+      }
+    ],
+    "accent_hex_all": [
+      "#f2a65a",
+      "#fb923c",
+      "#c85a2a",
+      "#3A3A6A",
+      "#d4889a",
+      "#3a5a6a",
+      "#FFFFFF",
+      "#9a7fd4"
+    ],
+    "accent_hex_frequency": [
+      {
+        "hex": "#f2a65a",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#fb923c",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#c85a2a",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#3A3A6A",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#d4889a",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#3a5a6a",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#FFFFFF",
+        "count": 1,
+        "pct": 0.125
+      },
+      {
+        "hex": "#9a7fd4",
+        "count": 1,
+        "pct": 0.125
+      }
+    ],
+    "wufang_zhengse_mean": {
+      "qing": 0.387,
+      "chi": 0.25,
+      "huang": 0.147,
+      "hei": 0.12,
+      "bai": 0.097
+    },
+    "wufang_zhengse_per_video": [
+      {
+        "video": "video_001.json",
+        "qing": 0.35,
+        "chi": 0.25,
+        "huang": 0.15,
+        "hei": 0.2,
+        "bai": 0.05
+      },
+      {
+        "video": "video_002.json",
+        "qing": 0.45,
+        "chi": 0.3,
+        "huang": 0.05,
+        "hei": 0.12,
+        "bai": 0.08
+      },
+      {
+        "video": "video_003.json",
+        "qing": "#1f4d52",
+        "chi": "#c85a2a",
+        "huang": "#d8a83a",
+        "hei": "#0e222b",
+        "bai": "#eef3f0"
+      },
+      {
+        "video": "video_004.json",
+        "qing": 0.45,
+        "chi": 0.2,
+        "huang": 0.2,
+        "hei": 0.12,
+        "bai": 0.03
+      },
+      {
+        "video": "video_005.json",
+        "qing": "#3a6a4a",
+        "chi": "#6b1a1a",
+        "huang": "#d4a04a",
+        "hei": "#1a1a22",
+        "bai": "#e8e4d8"
+      },
+      {
+        "video": "video_006.json",
+        "qing": 0.12,
+        "chi": 0.55,
+        "huang": 0.25,
+        "hei": 0.03,
+        "bai": 0.05
+      },
+      {
+        "video": "video_007.json",
+        "qing": 0.45,
+        "chi": 0.15,
+        "huang": 0.2,
+        "hei": 0.1,
+        "bai": 0.1
+      },
+      {
+        "video": "video_008.json",
+        "qing": 0.5,
+        "chi": 0.05,
+        "huang": 0.03,
+        "hei": 0.15,
+        "bai": 0.27
+      }
+    ],
+    "saturation": {
+      "values": [
+        1.15,
+        1.25,
+        0.6,
+        0.55,
+        0.65,
+        1.15,
+        0.65,
+        0.45
+      ],
+      "mean": 0.806,
+      "min": 0.45,
+      "max": 1.25
+    },
+    "contrast": {
+      "values": [
+        1.08,
+        1.15,
+        1.15,
+        1.15,
+        1.15,
+        1.08,
+        1.25,
+        1.15
+      ],
+      "mean": 1.145,
+      "min": 1.08,
+      "max": 1.25
+    },
+    "color_temperature_k": {
+      "values": [
+        6800,
+        7200,
+        5200,
+        6500,
+        4200,
+        5800,
+        7200,
+        7200
+      ],
+      "mean": 6262.5,
+      "min": 4200,
+      "max": 7200
+    },
+    "dominant_color_dna": "五方正色均值中「qing」占比最高(0.387)；主色primary_hex共8种去重，平均色温6262.5K（区间4200-7200K），饱和度均值0.806（区间0.45-1.25），对比度均值1.145。"
+  },
+  "lighting_patterns": {
+    "key_light_type_distribution": {
+      "large soft gradient sky dome + backlit rim on cloud canopies": 1,
+      "cool celestial dome + small moon key": 1,
+      "soft diffused skylight through canopy (painterly, no hard cast shadow)": 1,
+      "directional sun or moon key": 1,
+      "diffuse skylight + low-angle sun (golden scene); overcast hemispheric (lotus scene); cool moon key (pavilion scene)": 1,
+      "directional sun light filtering through canopy": 1,
+      "directional sun / top-down volumetric light through water surface": 1,
+      "moonlight directional source + emissive self-glow of fox fur": 1
+    },
+    "key_light_color_temp_k": {
+      "values": [
+        5200,
+        9500,
+        6500,
+        5200,
+        3200,
+        5200,
+        8500,
+        8200
+      ],
+      "min": 3200,
+      "max": 9500,
+      "mean": 6437.5
+    },
+    "god_rays_enabled_count": 5,
+    "god_rays_enable_rate": 0.625,
+    "god_rays_density_range": {
+      "min": 0.035,
+      "max": 0.25,
+      "mean": 0.105
+    },
+    "god_rays_color_hex": [
+      "#e8913f",
+      "#A8D8D8",
+      "#ffe0b8",
+      "#D4F0FF",
+      "#a8c0e8"
+    ],
+    "fog_type_distribution": {
+      "very light aerial perspective haze only on distant dunes": 1,
+      "thin low-lying water mist, aerial perspective": 1,
+      "layered atmospheric mist (aerial perspective in shan-shui style)": 1,
+      "aerial perspective layered mist between ridges plus rain forest haze": 1,
+      "height-exponential aerial perspective, dense low-lying cloud sea": 1,
+      "exponential height fog, pink-tinted": 1,
+      "exp2 height fog + underwater exponential density falloff": 1,
+      "exponential height fog hugging water surface": 1
+    },
+    "fog_density_range": {
+      "min": 0.012,
+      "max": 0.35,
+      "mean": 0.102
+    }
+  },
+  "postprocessing_patterns": {
+    "bloom_enable_rate": 1.0,
+    "bloom_enabled_count": 8,
+    "bloom_strength_range": {
+      "min": 0.25,
+      "max": 0.75,
+      "mean": 0.4
+    },
+    "dof_enable_rate": 0.375,
+    "dof_enabled_count": 3,
+    "motion_blur_enable_rate": 0.5,
+    "motion_blur_enabled_count": 4,
+    "motion_blur_intensity_range": {
+      "min": 0.3,
+      "max": 0.5
+    },
+    "film_grain_range": {
+      "min": 0.02,
+      "max": 0.12,
+      "mean": 0.054
+    },
+    "vignetting_range": {
+      "min": 0.05,
+      "max": 0.45,
+      "mean": 0.209
+    }
+  },
+  "material_frequency": {
+    "silk": {
+      "video_count": 8,
+      "rate": 1.0,
+      "videos": [
+        "video_001.json",
+        "video_002.json",
+        "video_003.json",
+        "video_004.json",
+        "video_005.json",
+        "video_006.json",
+        "video_007.json",
+        "video_008.json"
+      ]
+    },
+    "water": {
+      "video_count": 6,
+      "rate": 0.75,
+      "videos": [
+        "video_001.json",
+        "video_002.json",
+        "video_004.json",
+        "video_005.json",
+        "video_006.json",
+        "video_008.json"
+      ]
+    },
+    "fur": {
+      "video_count": 4,
+      "rate": 0.5,
+      "videos": [
+        "video_002.json",
+        "video_003.json",
+        "video_007.json",
+        "video_008.json"
+      ]
+    },
+    "wood": {
+      "video_count": 4,
+      "rate": 0.5,
+      "videos": [
+        "video_002.json",
+        "video_004.json",
+        "video_005.json",
+        "video_006.json"
+      ]
+    },
+    "gem_metal": {
+      "video_count": 4,
+      "rate": 0.5,
+      "videos": [
+        "video_002.json",
+        "video_004.json",
+        "video_005.json",
+        "video_008.json"
+      ]
+    },
+    "stone": {
+      "video_count": 4,
+      "rate": 0.5,
+      "videos": [
+        "video_004.json",
+        "video_005.json",
+        "video_007.json",
+        "video_008.json"
+      ]
+    },
+    "cloud_volume": {
+      "video_count": 3,
+      "rate": 0.375,
+      "videos": [
+        "video_001.json",
+        "video_002.json",
+        "video_007.json"
+      ]
+    },
+    "petal_flower": {
+      "video_count": 3,
+      "rate": 0.375,
+      "videos": [
+        "video_004.json",
+        "video_005.json",
+        "video_006.json"
+      ]
+    },
+    "ceramic_paint": {
+      "video_count": 2,
+      "rate": 0.25,
+      "videos": [
+        "video_001.json",
+        "video_003.json"
+      ]
+    }
+  },
+  "water_analysis": {
+    "water_enable_rate": 0.875,
+    "water_enabled_count": 7,
+    "shallow_hex_list": [
+      "#7a9cd0",
+      "#3a4a9e",
+      "#1A2A3A",
+      "#c8dcd0",
+      "#7a8a9a",
+      "#5FA8D8",
+      "#2a4a78"
+    ],
+    "deep_hex_list": [
+      "#2a3a6a",
+      "#151a4a",
+      "#050510",
+      "#6a8a7a",
+      "#2a4a5a",
+      "#1A4A7C",
+      "#0e1e3a"
+    ],
+    "reflection_type_distribution": {
+      "SSR_screen_space_reflection": 7,
+      "sun_moon_glint": 5,
+      "caustics": 2
+    }
+  },
+  "particle_analysis": {
+    "particle_enable_rate": 0.75,
+    "particle_enabled_count": 6,
+    "particle_type_distribution": {
+      "floating_light_motes_dust": 6,
+      "falling_petals_leaves": 4,
+      "rain_streaks": 1,
+      "cloth_wisps": 1,
+      "fish_schools": 1,
+      "bird_flock": 1
+    },
+    "count_magnitude_range": {
+      "min": 6,
+      "max": 1200,
+      "mean": 319.286
+    }
+  },
+  "camera_patterns": {
+    "focal_length_mm": {
+      "values": [
+        58,
+        50,
+        50,
+        50,
+        50,
+        35.0,
+        24,
+        50
+      ],
+      "min": 24,
+      "max": 58,
+      "mean": 45.875
+    },
+    "aspect_ratio_distribution": {
+      "9:16": 5,
+      "3:2": 1,
+      "16:9": 2
+    },
+    "negative_space_ratio": {
+      "values": [
+        0.55,
+        0.55,
+        0.45,
+        0.45,
+        0.65,
+        0.25,
+        0.65,
+        0.45
+      ],
+      "min": 0.25,
+      "max": 0.65,
+      "mean": 0.5
+    },
+    "depth_layers": {
+      "values": [
+        4,
+        4,
+        4,
+        3,
+        4,
+        4,
+        4,
+        4
+      ],
+      "min": 3,
+      "max": 4,
+      "mean": 3.875
+    },
+    "symmetry_distribution": {
+      "symmetric": 8
+    }
+  },
+  "motion_patterns": {
+    "camera_motion_type_distribution": {
+      "slow_dolly_in/push_in": 4,
+      "slow_lateral_dolly_parallax": 1,
+      "static_locked_off": 1,
+      "dolly_in+tilt_up_reveal": 1,
+      "other": 1
+    },
+    "transition_type_distribution": {
+      "cross_dissolve": 7,
+      "hard_cut": 1
+    }
+  },
+  "midjourney_pattern_analysis": {
+    "medium_per_video": [
+      "surreal offline path-traced 3D render, Octane-grade smooth surfaces, dreamlike matte finish",
+      "surreal cinematic 3D render, octane path-traced, meets Chinese gongbi ethereal silk-painting elegance",
+      "Chinese gongbi meticulous heavy-color painting, mineral pigments on silk, fine iron-wire outline brushwork, flat layered ink-wash washes",
+      "cinematic matte painting, 35mm film still, photorealistic yet painterly",
+      "cinematic matte painting, 35mm film still, wuxia film frame",
+      "ethereal cinematic 3D render meets Chinese shan-shui ink painting, soft painterly finish",
+      "epic cinematic 3D render meets Chinese mythic ink-wash realism",
+      "cinematic 3D digital painting, ultra-detailed strand-based fur render, path-traced moonlight"
+    ],
+    "medium_category_distribution": {
+      "surreal_cinematic_3D_render": 4,
+      "gongbi_heavy_color_painting": 2,
+      "cinematic_matte_painting_film_still": 2
+    },
+    "art_movement_per_video": [
+      "Chinese mythic surrealism, blending Dunhuang apsara aesthetics with René Magritte's silent stillness",
+      "Chinese mythological surrealism, dreamlike shanshui reinterpretation, minimalist zen composition",
+      "traditional Chinese guofeng illustration meets contemporary surreal fairyland (guofeng xianjing)",
+      "Chinese shan shui ink landscape reimagined as cinematic chiaroscuro",
+      "Chinese shan-shui ink landscape meets cinematic chiaroscuro, one-corner composition (Ma Yuan)",
+      "Chinese shan-shui landscape fantasy, ukiyo-e inspired composition, dreamlike utopian aesthetic",
+      "Chinese mythology surrealism, xianxia grand landscape, romantic sublime",
+      "Chinese mythic fantasy, Shan Hai Jing bestiary, ethereal guofeng concept art"
+    ],
+    "art_movement_category_distribution": {
+      "chinese_mythic_surrealism": 4,
+      "guofeng_gongbi_illustration": 1,
+      "shan_shui_ink_cinematic": 3
+    },
+    "artist_reference_per_video": [
+      "Toshio Saeki serenity + Wang Mu gongbi cloud motifs + James Jean luminous gradients",
+      "ethereal James Jean softness fused with traditional Chinese gongbi figure painting and Moebius-clean silhouettes",
+      "modern gongbi revival blended with moody shan-shui atmosphere",
+      "Roger Deakins lighting meets Guo Xi ink composition, Wong Kar wai restrained color grading",
+      "Roger Deakins lighting, Guo Xi monumental landscape, Wong Kar-wai / Kar Wai wuxia color grading",
+      "in the spirit of Moebius composition + James Jean ethereal color + Guo Xi monumental landscape",
+      "inspired by Moebius cinematic compositions, James Jean ethereal mythology, Chinese shan shui painting masters Fan Kuan and Guo Xi",
+      "WLOP ethereal lighting meets Dong Gunho creature design, Chinese shan shui atmosphere"
+    ],
+    "artist_reference_frequency": [
+      [
+        "Roger Deakins lighting",
+        2
+      ],
+      [
+        "Guo Xi monumental landscape",
+        2
+      ],
+      [
+        "Toshio Saeki serenity",
+        1
+      ],
+      [
+        "Wang Mu gongbi cloud motifs",
+        1
+      ],
+      [
+        "James Jean luminous gradients",
+        1
+      ],
+      [
+        "ethereal James Jean softness",
+        1
+      ],
+      [
+        "traditional Chinese gongbi figure painting",
+        1
+      ],
+      [
+        "Moebius-clean silhouettes",
+        1
+      ],
+      [
+        "modern gongbi revival blended",
+        1
+      ],
+      [
+        "moody shan-shui atmosphere",
+        1
+      ],
+      [
+        "Guo Xi ink composition",
+        1
+      ],
+      [
+        "Wong Kar wai restrained color grading",
+        1
+      ]
+    ],
+    "stylize": {
+      "values": [
+        400,
+        450,
+        400,
+        400,
+        400,
+        450,
+        450,
+        450
+      ],
+      "mean": 425.0,
+      "min": 400,
+      "max": 450
+    },
+    "weird": {
+      "values": [
+        0,
+        200,
+        0,
+        0,
+        0,
+        0,
+        50,
+        0
+      ],
+      "mean": 31.25,
+      "min": 0,
+      "max": 200
+    },
+    "style_raw_enable_rate": 0.125,
+    "style_raw_enabled_count": 1,
+    "hd_sd_distribution": {
+      "hd": 8
+    },
+    "aspect_ratio_distribution": {
+      "9:16": 7,
+      "3:2": 1
+    },
+    "high_frequency_keywords_top30": [
+      [
+        "chinese",
+        21
+      ],
+      [
+        "soft",
+        15
+      ],
+      [
+        "ethereal",
+        10
+      ],
+      [
+        "light",
+        10
+      ],
+      [
+        "warm",
+        10
+      ],
+      [
+        "pink",
+        10
+      ],
+      [
+        "water",
+        9
+      ],
+      [
+        "cinematic",
+        9
+      ],
+      [
+        "flowing",
+        8
+      ],
+      [
+        "white",
+        8
+      ],
+      [
+        "composition",
+        8
+      ],
+      [
+        "deep",
+        8
+      ],
+      [
+        "stylize",
+        8
+      ],
+      [
+        "ancient",
+        7
+      ],
+      [
+        "robe",
+        7
+      ],
+      [
+        "render",
+        7
+      ],
+      [
+        "mythic",
+        7
+      ],
+      [
+        "serene",
+        7
+      ],
+      [
+        "painting",
+        7
+      ],
+      [
+        "volumetric",
+        7
+      ],
+      [
+        "silk",
+        6
+      ],
+      [
+        "standing",
+        6
+      ],
+      [
+        "cloud",
+        6
+      ],
+      [
+        "layered",
+        6
+      ],
+      [
+        "weathered",
+        6
+      ],
+      [
+        "landscape",
+        6
+      ],
+      [
+        "blue",
+        6
+      ],
+      [
+        "matte",
+        5
+      ],
+      [
+        "palette",
+        5
+      ],
+      [
+        "peach",
+        5
+      ]
+    ],
+    "mj_aesthetic_dna": "岩見的MJ转化语言高度统一：以「surreal/cinematic 3D render 融合 Chinese shan-shui / gongbi / mythic surrealism」为核心媒介，艺术家参考高频出现 James Jean、Moebius、Guo Xi(郭熙)、Roger Deakins、Wong Kar-wai；stylize稳定在400-450（均值425.0），weird基本为0（仅v002=200/v007=50做神话变异），绝大多数推荐 hd + 9:16竖版，仅v003工笔画用3:2，仅v004墨色山水启用 --style raw 压制默认艳化。"
+  },
+  "effect_library_aggregate": {
+    "top_effects": [
+      [
+        "bloom",
+        1
+      ],
+      [
+        "water_reflection_ssr",
+        1
+      ],
+      [
+        "ssao",
+        1
+      ],
+      [
+        "color_grading",
+        1
+      ],
+      [
+        "aerial_perspective_fog",
+        1
+      ],
+      [
+        "self-luminous cloud-canopy trees",
+        1
+      ],
+      [
+        "mirror-water perfect reflection",
+        1
+      ],
+      [
+        "magenta-to-indigo vertical sky gradient",
+        1
+      ],
+      [
+        "sheer silk robe transmission",
+        1
+      ],
+      [
+        "small warm moon accent",
+        1
+      ]
+    ],
+    "top_libraries": [
+      [
+        "pmndrs/postprocessing BloomEffect",
+        1
+      ],
+      [
+        "three.js Reflector + custom ripple normal",
+        1
+      ],
+      [
+        "pmndrs/postprocessing SSAOEffect",
+        1
+      ],
+      [
+        "pmndrs/postprocessing ToneMappingEffect + LUT",
+        1
+      ],
+      [
+        "three.js FogExp2",
+        1
+      ],
+      [
+        "procedural volumetric SSS cloud + emissive shader",
+        1
+      ],
+      [
+        "planar reflection probe + SSR",
+        1
+      ],
+      [
+        "gradient sky dome + light wrap",
+        1
+      ],
+      [
+        "subsurface scattering + thin-film sheen",
+        1
+      ],
+      [
+        "emissive sprite + bloom",
+        1
+      ]
+    ]
+  },
+  "blogger_aesthetic_dna": [
+    "【色彩偏好】岩見的色彩DNA以五方「青(qing)」为绝对主调（跨视频均值0.387，显著高于其余四方），辅之以赤(chi)与黄(huang)做象征性点彩。整体色温均值约6262.5K（4200-7200K区间，冷暖随诗意章节切换），饱和度均值0.806偏克制，对比度均值1.145柔和平缓——典型「东方青绿+墨底+一点朱砂/鎏金」的随类赋彩体系，拒绝高饱和艳俗。",
+    "【渲染技术偏好】渲染管线8/8全部采用TAA抗锯齿，7/8走ACES filmic色调映射（仅v003工笔画用平涂色阶分离）；bloom启用率100%（强度均值0.4，柔光辉光），god rays启用率62%（穿林/穿水丁达尔光），SSR水面反射启用率极高，SSAO柔和。整体追求离线路径追踪级的光滑材质（丝绸sheen、次表面散射花瓣/云、毛皮strand），几乎不用硬阴影。",
+    "【构图偏好】焦距集中在50mm标准镜头（24-58mm），9:16竖版为主（5/8），留白(negative space)比例均值0.5（0.25-0.65），景深层数普遍4层；对称构图与三分法交替使用——灵兽/神怪场景走严格中轴对称（拱门、九尾狐、鲲），文人山水走一角留白（马远式）。",
+    "【中式美学特征】六法中「气韵生动」(均值9.0)与「随类赋彩」(均值9.25)、「经营位置」(均值8.75)最为突出；题材高度集中于山海经灵兽（白狐/玄武/鲲鹏/天马）、桃花源、古典诗词意境（黄山云海、江南采莲、月桥），以神话超现实外衣重译宋元山水与敦煌飞天。",
+    "【MJ转化建议】统一套用：medium=surreal/cinematic 3D render + Chinese shan-shui/gongbi mythic surrealism，artist_reference固定 James Jean + Moebius + Guo Xi；--stylize 425.0（400-450），--weird 0-50（神话变异题材可到200），--ar 9:16（工笔横卷改3:2），默认 --hd；墨色低饱和题材务必加 --style raw 压制默认美化，保持青绿/墨黑/朱砂的克制东方调性。"
+  ]
+}

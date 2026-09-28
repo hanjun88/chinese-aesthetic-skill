@@ -1,0 +1,332 @@
+{
+  "video_id": "7687182041276447909",
+  "video_title": "踏遍千古，伴我无声",
+  "blogger": "岩見",
+  "keyframes_analyzed": 6,
+  "keyframe_scene_map": {
+    "frame_01": "嵌套回纹拱门+粉橙云树+白裙女子背影，深蓝夜空，严格对称，水面倒影",
+    "frame_02": "同拱门场景，女子微右移，倒影更清晰，构图微调",
+    "frame_03": "蓝紫调，女子骑白鹿立于浅水，鹿角橙红自发光，棉花糖云树成排",
+    "frame_04": "同白鹿场景，鹿迈步动态，前蹄入水涟漪，镜头略推进",
+    "frame_05": "橙金调，金橙丝绸长裙女子伸手与白猴互动，巨伞盖云树，蓝紫沙丘前景",
+    "frame_06": "同金猴场景，构图与frame_05几乎一致（关键帧冗余）"
+  },
+  "rendering_pipeline": {
+    "render_path": "offline path-tracing 3D render (C4D/Octane/Redshift equivalent) with baked sky gradient, smooth analytic geometry",
+    "antialiasing": "TAA + 8x MSAA equivalent, sub-pixel smooth on hair and silk folds",
+    "tone_mapping": "ACES filmic, soft toe, gentle rolloff preserving highlight detail on glowing clouds",
+    "exposure_ev": 0.3,
+    "color_grading": {
+      "lift": "#1a2440",
+      "gamma": "#c9a8c0",
+      "gain": "#ffd9c2",
+      "contrast": 1.08,
+      "saturation": 1.15,
+      "temperature_k": 6800
+    }
+  },
+  "light_shadow": {
+    "key_light": {
+      "type": "large soft gradient sky dome + backlit rim on cloud canopies",
+      "elevation_deg": 18,
+      "azimuth_deg": 180,
+      "intensity": 2.2,
+      "color_temp_k": 5200,
+      "color_hex": "#ffd2b0"
+    },
+    "fill_ratio": 0.55,
+    "ambient_type": "hemispheric gradient ambient, deep blue above / warm horizon",
+    "ambient_intensity": 0.8,
+    "ibl_intensity": 1.1,
+    "shadows": {
+      "type": "soft contact shadow, almost no hard cast shadow visible",
+      "map_resolution": 2048,
+      "bias": 0.001,
+      "radius": 8.0
+    }
+  },
+  "volumetric_effects": {
+    "god_rays": {
+      "enabled": false,
+      "technique": "none",
+      "light_elevation_deg": 0,
+      "density": 0.0,
+      "weight": 0.0,
+      "decay": 0.0,
+      "exposure": 0.0,
+      "medium": "none",
+      "phase_function": "none",
+      "color_hex": "#000000"
+    },
+    "fog": {
+      "type": "very light aerial perspective haze only on distant dunes",
+      "density": 0.08,
+      "near": 12.0,
+      "far": 60.0,
+      "color_hex": "#8aa0d8",
+      "aerial_perspective": true
+    }
+  },
+  "postprocessing": {
+    "bloom": {
+      "enabled": true,
+      "strength": 0.75,
+      "radius": 6.0,
+      "threshold": 0.72,
+      "smooth_width": 0.15,
+      "tint_hex": "#ffb89a"
+    },
+    "ao": {
+      "type": "baked SSAO, very subtle in silk folds and arch corners",
+      "radius": 0.4,
+      "intensity": 0.35,
+      "samples": 16
+    },
+    "ssr": {
+      "enabled": true,
+      "max_distance": 30.0,
+      "thickness": 0.5
+    },
+    "dof": {
+      "enabled": false,
+      "focus_distance_m": 0.0,
+      "focal_length_mm": 0,
+      "aperture": 0,
+      "max_blur": 0.0
+    },
+    "motion_blur": {
+      "enabled": false,
+      "shutter_angle_deg": 0,
+      "intensity": 0.0
+    },
+    "aberration": {
+      "chromatic": 0.0,
+      "vignetting": 0.05,
+      "film_grain": 0.02
+    }
+  },
+  "material": [
+    {
+      "name": "cloud_canopy_soft",
+      "brdf": "subsurface-scattering cotton-like volume, high roughness, soft self-emissive rim",
+      "base_color_hex": "#f5a8a0",
+      "metallic": 0.0,
+      "roughness": 0.85,
+      "clearcoat": 0.0,
+      "sheen": 0.6,
+      "sss": 0.7,
+      "transmission": 0.0,
+      "ior": 1.3
+    },
+    {
+      "name": "silk_robe",
+      "brdf": "glossy silk fabric with clearcoat sheen, smooth flowing folds",
+      "base_color_hex": "#f2e6f0",
+      "metallic": 0.0,
+      "roughness": 0.32,
+      "clearcoat": 0.45,
+      "sheen": 0.5,
+      "sss": 0.15,
+      "transmission": 0.0,
+      "ior": 1.45
+    },
+    {
+      "name": "ceramic_arch_huiven",
+      "brdf": "smooth matte ceramic / plaster with engraved Chinese huiwen (meander) relief",
+      "base_color_hex": "#b8c4e8",
+      "metallic": 0.0,
+      "roughness": 0.55,
+      "clearcoat": 0.1,
+      "sheen": 0.0,
+      "sss": 0.0,
+      "transmission": 0.0,
+      "ior": 1.5
+    },
+    {
+      "name": "deer_skin_antler_glow",
+      "brdf": "smooth pale deer skin with SSS on ears, self-illuminating coral antlers",
+      "base_color_hex": "#f0e0d8",
+      "metallic": 0.0,
+      "roughness": 0.6,
+      "clearcoat": 0.05,
+      "sheen": 0.2,
+      "sss": 0.4,
+      "transmission": 0.0,
+      "ior": 1.4,
+      "emissive_antler_hex": "#ff8c5a"
+    },
+    {
+      "name": "water_surface",
+      "brdf": "near-mirror dielectric with micro ripple normals, fresnel reflection",
+      "base_color_hex": "#4a6aa8",
+      "metallic": 0.0,
+      "roughness": 0.08,
+      "clearcoat": 1.0,
+      "sheen": 0.0,
+      "sss": 0.0,
+      "transmission": 0.0,
+      "ior": 1.33
+    }
+  ],
+  "water": {
+    "enabled": true,
+    "wave_technique": "procedural gerstner micro-waves, very low amplitude, reflection dominant",
+    "amplitude_m": 0.02,
+    "frequency_hz": 0.15,
+    "speed_ms": 0.1,
+    "color_shallow_hex": "#7a9cd0",
+    "color_deep_hex": "#2a3a6a",
+    "depth_absorption": "#1a2a55",
+    "fresnel_bias": 0.3,
+    "caustics": false,
+    "caustics_intensity": 0.0,
+    "foam_coverage": 0.0,
+    "sun_glint": true
+  },
+  "particles": [],
+  "particles_note": "No floating dust / petal / firefly particles visible in any of the 6 keyframes. Atmosphere is conveyed purely through gradient sky, bloom on clouds, and water reflection.",
+  "camera_composition": {
+    "projection": "perspective",
+    "fov_deg": 32,
+    "focal_length_mm": 58,
+    "aspect_ratio": "9:16",
+    "motion": {
+      "type": "very slow dolly-in + slight vertical drift",
+      "speed": 0.3,
+      "easing": "smooth linear",
+      "shake_amplitude": 0.0
+    },
+    "composition": {
+      "type": "arch scene strict bilateral symmetry; deer & monkey scenes rule-of-thirds with subject at vertical 0.45",
+      "horizon_position": "lower third, waterline at y=0.72 of frame",
+      "negative_space_ratio": 0.55,
+      "depth_layers": 4,
+      "symmetry_axis": "vertical center in frame_01/02"
+    }
+  },
+  "chinese_aesthetic_six_laws": {
+    "qiyun_shengdong": {
+      "score": 9,
+      "evidence": "Silk robes drift, cloud canopies glow from within, deer antlers emit warm light, water breathes with micro ripples — pervasive immortal qi throughout frame_01, frame_03, frame_05"
+    },
+    "gufa_yongbi": {
+      "score": 7,
+      "evidence": "Though 3D-rendered, the contorted trunks of cotton trees and the nested meander-line arch edges (frame_01, frame_03) carry structural bone-force equivalent to calligraphic linework"
+    },
+    "yingwu_xiangxing": {
+      "score": 8,
+      "evidence": "Deer, monkey and woman rendered with accurate but idealized anatomy; cloud canopies abstracted into cotton-candy blobs — formal exaggeration in service of mythic iconography (frame_03, frame_05)"
+    },
+    "suilei_fucai": {
+      "score": 9,
+      "evidence": "Three-act color arc: deep indigo + coral pink (frame_01/02) -> periwinkle blue-violet (frame_03/04) -> molten orange-gold (frame_05/06); palette emotionally unified despite tonal shift"
+    },
+    "jingying_weizhi": {
+      "score": 9,
+      "evidence": "Strict bilateral symmetry around the huiwen arch (frame_01/02), water mirror doubling the composition; subject placed at vertical third in deer/monkey scenes, layered depth from foreground dune to distant canopy (frame_03, frame_05)"
+    },
+    "chuanyi_moxie": {
+      "score": 7,
+      "evidence": "Ancestral sources: Dunhuang apsara drapery, classical Chinese garden moon gates, shanshan cloud motifs — re-interpreted through Western 3D surrealism (René Magritte / Salvador Dalí stillness) rather than direct copying (frame_01, frame_03)"
+    }
+  },
+  "effect_to_library_mapping": [
+    {
+      "effect": "bloom",
+      "library": "pmndrs/postprocessing BloomEffect",
+      "parameters": {
+        "intensity": 0.75,
+        "luminanceThreshold": 0.72,
+        "luminanceSmoothingWidth": 0.15,
+        "mipmapBlur": true,
+        "radius": 6.0
+      }
+    },
+    {
+      "effect": "water_reflection_ssr",
+      "library": "three.js Reflector + custom ripple normal",
+      "parameters": {
+        "textureWidth": 1024,
+        "textureHeight": 1024,
+        "clipBias": 0.003,
+        "color": "#4a6aa8"
+      }
+    },
+    {
+      "effect": "ssao",
+      "library": "pmndrs/postprocessing SSAOEffect",
+      "parameters": {
+        "blur": true,
+        "kernelRadius": 0.4,
+        "minDistance": 0.001,
+        "maxDistance": 0.05
+      }
+    },
+    {
+      "effect": "color_grading",
+      "library": "pmndrs/postprocessing ToneMappingEffect + LUT",
+      "parameters": {
+        "mode": "ACES_FILMIC",
+        "saturation": 1.15,
+        "contrast": 1.08,
+        "temperature": 6800
+      }
+    },
+    {
+      "effect": "aerial_perspective_fog",
+      "library": "three.js FogExp2",
+      "parameters": {
+        "color": "#8aa0d8",
+        "density": 0.012
+      }
+    }
+  ],
+  "color_system": {
+    "primary_hex": "#f5a8a0",
+    "secondary_hex": "#7b9ede",
+    "accent_hex": "#f2a65a",
+    "wufang_zhengse_distribution": {
+      "qing": 0.35,
+      "chi": 0.25,
+      "huang": 0.15,
+      "hei": 0.2,
+      "bai": 0.05
+    },
+    "saturation": 1.15,
+    "contrast": 1.08,
+    "color_temperature_k": 6800
+  },
+  "motion": {
+    "camera_motion_type": "slow dolly-in with vertical drift, scene cross-dissolve between three tableaux",
+    "duration_estimate_seconds": 12,
+    "transition_type": "soft cross-dissolve ~1.5s between arch / deer / monkey scenes",
+    "easing": "ease-in-out cubic"
+  },
+  "midjourney_prompt": {
+    "medium": "surreal offline path-traced 3D render, Octane-grade smooth surfaces, dreamlike matte finish",
+    "art_movement": "Chinese mythic surrealism, blending Dunhuang apsara aesthetics with René Magritte's silent stillness",
+    "artist_reference": "Toshio Saeki serenity + Wang Mu gongbi cloud motifs + James Jean luminous gradients",
+    "subject": "a lone ancient Chinese woman in flowing white silk robe standing at the far end of a nested pale-blue meander-pattern archway, twin giant cotton-candy coral-pink cloud-canopy trees framing the gate on both sides, still mirror water reflecting everything, hair in a sleek low bun, seen from behind, surreal 3D render, dreamlike mythic atmosphere, Chinese fairyland aesthetic",
+    "style_constraints": "surreal 3D render, Chinese fairyland aesthetic, mythic dreamscape, cotton-soft cloud canopies, matte ceramic huiwen meander relief arch, mirror-flat water reflection, pastel dreamlike palette, ethereal immortal qi, perfectly symmetrical composition, no hard shadows, soft gradient sky, cinematic stillness",
+    "lighting": "soft hemispheric gradient light, deep indigo zenith fading to warm peach horizon, backlit rim glow on cloud canopies, gentle bloom on highlights, no hard cast shadows",
+    "camera": "58mm equivalent, eye-level, 32 degree field of view, strict bilateral symmetry, horizon at lower third, waterline doubling the composition",
+    "material_texture": "smooth matte ceramic arch with engraved meander relief, translucent cotton-like cloud foliage with subsurface scattering, glossy silk robe with soft sheen, near-mirror water with micro ripples",
+    "palette": {
+      "deep_indigo_sky": "#1f3a6e",
+      "coral_pink_canopy": "#f5a8a0",
+      "pale_lavender_arch": "#b8c4e8",
+      "warm_horizon_peach": "#ffb89a",
+      "silk_white": "#f2e6f0",
+      "water_deep": "#2a3a6a"
+    },
+    "mood": "serene, melancholic, timeless, ethereal, sacred silence",
+    "full_prompt": "a lone ancient Chinese woman in flowing white silk robe standing at the far end of a nested pale-blue meander-pattern archway, twin giant cotton-candy coral-pink cloud-canopy trees framing the gate on both sides, still mirror water reflecting everything, hair in a sleek low bun, seen from behind, surreal 3D render, surreal 3D render, Chinese fairyland aesthetic, Chinese fairyland aesthetic, mythic dreamscape, cotton-soft cloud canopies, matte ceramic huiwen meander relief arch, mirror-flat water reflection, pastel dreamlike palette, ethereal immortal qi, perfectly symmetrical composition, no hard shadows, soft gradient sky, cinematic stillness, Octane-grade offline path-traced render, smooth ceramic and silk surfaces, soft hemispheric gradient light, deep indigo zenith fading to warm peach horizon, backlit rim glow on cloud canopies, gentle bloom on highlights, 58mm equivalent eye-level camera, strict bilateral symmetry, serene melancholic timeless sacred silence --ar 9:16 --stylize 400 --v 8.2",
+    "recommended_params": {
+      "ar": "9:16",
+      "stylize": 400,
+      "weird": 0,
+      "style_raw": false,
+      "hd_or_sd": "hd"
+    }
+  }
+}

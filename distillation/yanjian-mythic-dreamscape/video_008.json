@@ -1,0 +1,338 @@
+{
+  "video_id": "7653550185679793594",
+  "video_title": "绥绥白狐，九尾庞庞",
+  "keyframes_analyzed": [
+    "frame_01.jpg",
+    "frame_02.jpg",
+    "frame_03.jpg",
+    "frame_04.jpg",
+    "frame_05.jpg",
+    "frame_06.jpg"
+  ],
+  "rendering_pipeline": {
+    "render_path": "offline cinematic 3D CGI render + digital paint over, strand-based fur simulation, path-traced reflections on water, hybrid real-time PBR look",
+    "antialiasing": "TAA + 4x MSAA, fur alpha-to-coverage",
+    "tone_mapping": "ACES filmic, soft shoulder, lifted blacks",
+    "exposure_ev": 0.3,
+    "color_grading": {
+      "lift": "#0a1226",
+      "gamma": "#1a2748",
+      "gain": "#5a6f9e",
+      "contrast": 1.15,
+      "saturation": 0.82,
+      "temperature_k": 7200
+    }
+  },
+  "light_shadow": {
+    "key_light": {
+      "type": "moonlight directional source + emissive self-glow of fox fur",
+      "elevation_deg": 62,
+      "azimuth_deg": 165,
+      "intensity": 2.2,
+      "color_temp_k": 8200,
+      "color_hex": "#c9d8f5"
+    },
+    "fill_ratio": 0.35,
+    "ambient_type": "cool blue sky ambient + forest bounce",
+    "ambient_intensity": 0.4,
+    "ibl_intensity": 0.55,
+    "shadows": {
+      "type": "soft area shadow, contact shadows under fox paws and woman's hem",
+      "map_resolution": 2048,
+      "bias": 0.0015,
+      "radius": 6.0
+    }
+  },
+  "volumetric_effects": {
+    "god_rays": {
+      "enabled": true,
+      "technique": "screen-space volumetric light shaft through canopy, subtle moon glow behind fox silhouette",
+      "light_elevation_deg": 62,
+      "density": 0.08,
+      "weight": 0.25,
+      "decay": 0.92,
+      "exposure": 1.0,
+      "medium": "scattering in humid night air",
+      "phase_function": "Henyey-Greenstein g=0.3",
+      "color_hex": "#a8c0e8"
+    },
+    "fog": {
+      "type": "exponential height fog hugging water surface",
+      "density": 0.06,
+      "near": 2.0,
+      "far": 35.0,
+      "color_hex": "#2a3a5e",
+      "aerial_perspective": "deep blue-teal atmospheric recession on distant treeline"
+    }
+  },
+  "postprocessing": {
+    "bloom": {
+      "enabled": true,
+      "strength": 0.55,
+      "radius": 7.0,
+      "threshold": 0.75,
+      "smooth_width": 0.12,
+      "tint_hex": "#b8c8f0"
+    },
+    "ao": {
+      "type": "ground truth bent normal AO + screen-space AO",
+      "radius": 0.4,
+      "intensity": 0.6,
+      "samples": 16
+    },
+    "ssr": {
+      "enabled": true,
+      "max_distance": 8.0,
+      "thickness": 0.05
+    },
+    "dof": {
+      "enabled": true,
+      "focus_distance_m": 1.8,
+      "focal_length_mm": 100,
+      "aperture": 2.0,
+      "max_blur": 14.0
+    },
+    "motion_blur": {
+      "enabled": true,
+      "shutter_angle_deg": 180,
+      "intensity": 0.35
+    },
+    "aberration": {
+      "chromatic": 0.15,
+      "vignetting": 0.45,
+      "film_grain": 0.06
+    }
+  },
+  "material": [
+    {
+      "name": "white fox fur (nine-tailed)",
+      "brdf": "sheen-weighted GGX fur model, strand-based volumetric scattering",
+      "base_color_hex": "#e8e6f2",
+      "metallic": 0.0,
+      "roughness": 0.62,
+      "clearcoat": 0.0,
+      "sheen": 0.95,
+      "sss": 0.35,
+      "transmission": 0.0,
+      "ior": 1.45
+    },
+    {
+      "name": "fox tail lavender tip gradient",
+      "brdf": "sheen fur with dyed tip emissive glow",
+      "base_color_hex": "#b8a5e0",
+      "metallic": 0.0,
+      "roughness": 0.58,
+      "clearcoat": 0.0,
+      "sheen": 1.0,
+      "sss": 0.45,
+      "transmission": 0.0,
+      "ior": 1.45
+    },
+    {
+      "name": "woman translucent purple silk robe",
+      "brdf": "cloth subsurface, high sheen, partial transmission",
+      "base_color_hex": "#6e5aa8",
+      "metallic": 0.0,
+      "roughness": 0.38,
+      "clearcoat": 0.15,
+      "sheen": 0.85,
+      "sss": 0.4,
+      "transmission": 0.25,
+      "ior": 1.4
+    },
+    {
+      "name": "amethyst purple gemstone jewelry",
+      "brdf": "dielectric polished gem, high transmission",
+      "base_color_hex": "#7a4ec0",
+      "metallic": 0.0,
+      "roughness": 0.08,
+      "clearcoat": 1.0,
+      "sheen": 0.0,
+      "sss": 0.1,
+      "transmission": 0.75,
+      "ior": 1.54
+    },
+    {
+      "name": "silver filigree jewelry setting",
+      "brdf": "metallic GGX, brushed",
+      "base_color_hex": "#c8c8d8",
+      "metallic": 1.0,
+      "roughness": 0.25,
+      "clearcoat": 0.0,
+      "sheen": 0.0,
+      "sss": 0.0,
+      "transmission": 0.0,
+      "ior": 1.5
+    },
+    {
+      "name": "shallow pool water",
+      "brdf": "dielectric water, layered reflection/refraction",
+      "base_color_hex": "#1e3a5f",
+      "metallic": 0.0,
+      "roughness": 0.05,
+      "clearcoat": 1.0,
+      "sheen": 0.0,
+      "sss": 0.0,
+      "transmission": 0.6,
+      "ior": 1.333
+    }
+  ],
+  "water": {
+    "enabled": true,
+    "wave_technique": "gerstner normal perturbation + ripple rings around fox paws",
+    "amplitude_m": 0.03,
+    "frequency_hz": 0.8,
+    "speed_ms": 0.4,
+    "color_shallow_hex": "#2a4a78",
+    "color_deep_hex": "#0e1e3a",
+    "depth_absorption": "#16284a",
+    "fresnel_bias": 0.02,
+    "caustics": false,
+    "caustics_intensity": 0.0,
+    "foam_coverage": 0.03,
+    "sun_glint": "moon glint path on water toward viewer"
+  },
+  "particles": [
+    {
+      "name": "floating spirit light motes / pale butterflies",
+      "count": 180,
+      "rendering_mode": "additive billboard soft sprite",
+      "motion_type": "drifting upward with gentle sinusoidal sway",
+      "velocity_range": "0.05-0.15 m/s",
+      "lifespan_s": 6.0,
+      "size": 0.02,
+      "blending": "additive",
+      "color_gradient": "#d8e4ff to #b89ad8",
+      "trail_length": 0.2
+    }
+  ],
+  "camera_composition": {
+    "projection": "perspective",
+    "fov_deg": 38,
+    "focal_length_mm": 50,
+    "aspect_ratio": "9:16",
+    "motion": {
+      "type": "slow dolly-in on wide shots + push-in macro on fox eye",
+      "speed": 0.3,
+      "easing": "ease-in-out cubic",
+      "shake_amplitude": 0.0
+    },
+    "composition": {
+      "type": "centered symmetry on fox (wide) / off-center close-up (portrait)",
+      "horizon_position": "lower third at waterline",
+      "negative_space_ratio": 0.45,
+      "depth_layers": 4,
+      "symmetry_axis": "vertical center axis through fox in frames 4-6"
+    }
+  },
+  "chinese_aesthetic_six_laws": {
+    "qiyun_shengdong": {
+      "score": 9,
+      "evidence": "frame_03 ribbons and hair streaming in wind, frame_04-06 nine tails fanned and rippling like breathing, particles drifting - breath and motion throughout"
+    },
+    "gufa_yongbi": {
+      "score": 7,
+      "evidence": "frame_01 individual fur strands read as calligraphic strokes radiating from eye; frame_02 jewelry linework crisp; predominantly 3D render so brush bone is interpreted through edge and strand structure"
+    },
+    "yingwu_xiangxing": {
+      "score": 9,
+      "evidence": "frame_01 anatomically correct slit pupil and iris; frame_04 fox proportions and nine-tailed silhouette accurate to Shan Hai Jing bestiary; human face and hands proportioned"
+    },
+    "suilei_fucai": {
+      "score": 9,
+      "evidence": "frame_04-06 cold blue-teal ambient for night forest, silver-white fur as luminous spirit, purple silk and amethyst as mortal longing, warm gold eye as single warm accent - color follows mythic mood"
+    },
+    "jingying_weizhi": {
+      "score": 9,
+      "evidence": "frame_04-06 fox dead-center with woman as left foreground anchor, moon as halo behind head in frame_03, water reflection doubling composition, balanced negative space in canopy"
+    },
+    "chuanyi_moxie": {
+      "score": 6,
+      "evidence": "original digital creation rather than copy after an old master; inherits guofeng / Shan Hai Jing illustrative tradition but no direct model copied"
+    }
+  },
+  "effect_to_library_mapping": [
+    {
+      "effect": "strand fur rendering",
+      "library": "Unreal Engine Groom system / Houdini groom",
+      "parameters": {
+        "hair_strands_per_fox": 120000,
+        "clumping": 0.6,
+        "sheen_color": "#e8e6f2"
+      }
+    },
+    {
+      "effect": "emissive rim glow on tails",
+      "library": "unlit additive emissive material",
+      "parameters": {
+        "emissive_color": "#b8a5e0",
+        "emissive_strength": 1.2
+      }
+    },
+    {
+      "effect": "moonlit water reflection",
+      "library": "planar reflection + SSR",
+      "parameters": {
+        "reflection_roughness": 0.15,
+        "ripple_scale": 0.5
+      }
+    },
+    {
+      "effect": "macro eye close-up",
+      "library": "100mm macro lens DOF",
+      "parameters": {
+        "focus": "iris plane",
+        "background_fur_blur": true
+      }
+    }
+  ],
+  "color_system": {
+    "primary_hex": "#16233f",
+    "secondary_hex": "#e6e4f0",
+    "accent_hex": "#9a7fd4",
+    "wufang_zhengse_distribution": {
+      "qing": 0.5,
+      "chi": 0.05,
+      "huang": 0.03,
+      "hei": 0.15,
+      "bai": 0.27
+    },
+    "saturation": 0.45,
+    "contrast": 1.15,
+    "color_temperature_k": 7200
+  },
+  "motion": {
+    "camera_motion_type": "slow cinematic push-in, macro-to-wide reveal",
+    "duration_estimate_seconds": 8.0,
+    "transition_type": "cross-dissolve between close-up and wide shots",
+    "easing": "ease-in-out"
+  },
+  "midjourney_prompt": {
+    "medium": "cinematic 3D digital painting, ultra-detailed strand-based fur render, path-traced moonlight",
+    "art_movement": "Chinese mythic fantasy, Shan Hai Jing bestiary, ethereal guofeng concept art",
+    "artist_reference": "WLOP ethereal lighting meets Dong Gunho creature design, Chinese shan shui atmosphere",
+    "subject": "nine-tailed white fox, Chinese mythical creature, Shan Hai Jing bestiary, ethereal white fox with nine flowing lavender-tipped tails, standing in moonlit shallow pool, a robed woman in translucent purple silk facing it across the water, single golden-amber slit pupil eye",
+    "style_constraints": "nine-tailed white fox, Chinese mythical creature, Shan Hai Jing bestiary, ethereal mystical atmosphere, silver-white fur with lavender sheen, moonlit night forest, glowing fur rim light, cinematic mythical realism, spirit-fox aura",
+    "lighting": "cool blue moonlight key light 8200K, soft rim glow on fur, faint volumetric moon shafts through canopy, reflective water catchlights, single warm gold eye accent",
+    "camera": "50mm cinematic lens, centered symmetrical composition, lower-third waterline horizon, shallow depth of field on macro eye close-up, vertical 9:16",
+    "material_texture": "strand-level fluffy white fur, translucent weightless silk, polished amethyst gemstones, calm rippling dark blue water, mossy rock banks",
+    "palette": {
+      "deep_shadow_hex": "#16233f",
+      "moonlight_hex": "#c9d8f5",
+      "fox_fur_hex": "#e6e4f0",
+      "lavender_tail_hex": "#9a7fd4",
+      "purple_silk_hex": "#6e5aa8",
+      "golden_eye_hex": "#d9a53a",
+      "blossom_pink_hex": "#c97aa8"
+    },
+    "mood": "serene, sacred, melancholic, transcendent - mortal meeting a mythic spirit under a full moon",
+    "full_prompt": "nine-tailed white fox, Chinese mythical creature, Shan Hai Jing bestiary, ethereal mystical atmosphere, ethereal white fox with nine flowing lavender-tipped tails standing in moonlit shallow pool, a woman in translucent purple silk robe facing it across dark reflective water, deep blue-teal night forest with pale pink blossoms, cool blue moonlight 8200K, soft rim glow on fluffy strand-level fur, faint volumetric moon shafts, single warm golden-amber slit pupil eye, cinematic 3D digital painting, path-traced moonlight, WLOP ethereal lighting meets Chinese shan shui mythic concept art, centered symmetrical composition, lower-third waterline horizon, serene sacred melancholic transcendent mood --ar 9:16 --stylize 450 --weird 0 --v 8.2",
+    "recommended_params": {
+      "ar": "9:16",
+      "stylize": 450,
+      "weird": 0,
+      "style_raw": false,
+      "hd_or_sd": "hd"
+    }
+  }
+}

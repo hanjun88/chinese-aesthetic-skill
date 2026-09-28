@@ -1,0 +1,301 @@
+{
+  "video_id": "7680539919403938745",
+  "video_title": "一眼千载，与兽同栖",
+  "keyframes_analyzed": ["frame_01.jpg", "frame_02.jpg", "frame_03.jpg", "frame_04.jpg", "frame_05.jpg", "frame_06.jpg"],
+  "rendering_pipeline": {
+    "render_path": "2D digital gongbi illustration, layered flat mineral-pigment washes over fine ink outline underdrawing; simulated silk/rice-paper substrate",
+    "antialiasing": "sub-pixel vector line smoothing on outline strokes",
+    "tone_mapping": "art-directed flat value separation (no filmic curve); 4-5 stepped ink-wash value bands",
+    "exposure_ev": -0.3,
+    "color_grading": {
+      "lift": "#0d2a33",
+      "gamma": "#2f5d63",
+      "gain": "#e8d9b0",
+      "contrast": 1.15,
+      "saturation": 0.82,
+      "temperature_k": 5200
+    }
+  },
+  "light_shadow": {
+    "key_light": {
+      "type": "soft diffused skylight through canopy (painterly, no hard cast shadow)",
+      "elevation_deg": 35,
+      "azimuth_deg": 300,
+      "intensity": 0.7,
+      "color_temp_k": 6500,
+      "color_hex": "#cfe3e0"
+    },
+    "fill_ratio": 0.55,
+    "ambient_type": "cool green canopy bounce",
+    "ambient_intensity": 0.45,
+    "ibl_intensity": 0.35,
+    "shadows": {
+      "type": "flat graded ink-wash shadow (painterly, no real-time shadow map)",
+      "map_resolution": "N/A painted",
+      "bias": 0.0,
+      "radius": 0.0
+    }
+  },
+  "volumetric_effects": {
+    "god_rays": {
+      "enabled": true,
+      "technique": "hand-painted soft crepuscular shafts through dark tree canopy, frame_05/frame_06 only",
+      "light_elevation_deg": 12,
+      "density": 0.25,
+      "weight": 0.35,
+      "decay": 0.82,
+      "exposure": 0.9,
+      "medium": "cool misty air",
+      "phase_function": "soft forward scatter",
+      "color_hex": "#e8913f"
+    },
+    "fog": {
+      "type": "layered atmospheric mist (aerial perspective in shan-shui style)",
+      "density": 0.35,
+      "near": 2.0,
+      "far": 30.0,
+      "color_hex": "#9fc0bd",
+      "aerial_perspective": true
+    }
+  },
+  "postprocessing": {
+    "bloom": {
+      "enabled": true,
+      "strength": 0.25,
+      "radius": 8.0,
+      "threshold": 0.75,
+      "smooth_width": 0.15,
+      "tint_hex": "#f2e2b8"
+    },
+    "ao": {
+      "type": "painted contact shadow under figure/beast/rocks",
+      "radius": 0.3,
+      "intensity": 0.4,
+      "samples": "N/A painted"
+    },
+    "ssr": {
+      "enabled": false,
+      "max_distance": 0.0,
+      "thickness": 0.0
+    },
+    "dof": {
+      "enabled": false,
+      "focus_distance_m": 0.0,
+      "focal_length_mm": 0.0,
+      "aperture": 0.0,
+      "max_blur": 0.0
+    },
+    "motion_blur": {
+      "enabled": false,
+      "shutter_angle_deg": 0.0,
+      "intensity": 0.0
+    },
+    "aberration": {
+      "chromatic": 0.0,
+      "vignetting": 0.12,
+      "film_grain": 0.08
+    }
+  },
+  "material": [
+    {
+      "name": "deep indigo-teal silk robe (woman, frame_01/02)",
+      "brdf": "diffuse fabric, matte",
+      "base_color_hex": "#1c3a52",
+      "metallic": 0.0,
+      "roughness": 0.85,
+      "clearcoat": 0.0,
+      "sheen": 0.2,
+      "sss": 0.05,
+      "transmission": 0.0,
+      "ior": 1.45
+    },
+    {
+      "name": "pale translucent gauze veil (woman, frame_05/06)",
+      "brdf": "high-transmission silk organza",
+      "base_color_hex": "#dcebef",
+      "metallic": 0.0,
+      "roughness": 0.6,
+      "clearcoat": 0.0,
+      "sheen": 0.35,
+      "sss": 0.25,
+      "transmission": 0.55,
+      "ior": 1.35
+    },
+    {
+      "name": "white horse coat (frame_01/02)",
+      "brdf": "soft diffuse short fur",
+      "base_color_hex": "#e8ecec",
+      "metallic": 0.0,
+      "roughness": 0.9,
+      "clearcoat": 0.0,
+      "sheen": 0.15,
+      "sss": 0.1,
+      "transmission": 0.0,
+      "ior": 1.4
+    },
+    {
+      "name": "dark blue leopard pelt (frame_03/04)",
+      "brdf": "short fur, matte",
+      "base_color_hex": "#14283d",
+      "metallic": 0.0,
+      "roughness": 0.85,
+      "clearcoat": 0.05,
+      "sheen": 0.1,
+      "sss": 0.05,
+      "transmission": 0.0,
+      "ior": 1.45
+    },
+    {
+      "name": "mineral pigment on paper substrate",
+      "brdf": "matte painted surface",
+      "base_color_hex": "#2a5d63",
+      "metallic": 0.0,
+      "roughness": 0.95,
+      "clearcoat": 0.0,
+      "sheen": 0.0,
+      "sss": 0.0,
+      "transmission": 0.0,
+      "ior": 1.5
+    }
+  ],
+  "water": {
+    "enabled": false,
+    "wave_technique": "none; lower edge reads as misted rock water-edge but is atmospheric wash, not a simulated water plane",
+    "amplitude_m": 0.0,
+    "frequency_hz": 0.0,
+    "speed_ms": 0.0,
+    "color_shallow_hex": "#9fc0bd",
+    "color_deep_hex": "#2a5d63",
+    "depth_absorption": 0.0,
+    "fresnel_bias": 0.0,
+    "caustics": false,
+    "caustics_intensity": 0.0,
+    "foam_coverage": 0.0,
+    "sun_glint": false
+  },
+  "particles": [
+    {
+      "name": "falling ginkgo leaves",
+      "count": 6,
+      "rendering_mode": "flat painted sprite",
+      "motion_type": "slow drift-down sway",
+      "velocity_range": [0.1, 0.3],
+      "lifespan_s": 4.0,
+      "size": 0.04,
+      "blending": "normal",
+      "color_gradient": ["#d8a83a", "#e8c86a"],
+      "trail_length": 0.0
+    },
+    {
+      "name": "floating luminous spores / petal motes",
+      "count": 40,
+      "rendering_mode": "soft additive dot",
+      "motion_type": "gentle upward buoyant drift in wind",
+      "velocity_range": [0.05, 0.2],
+      "lifespan_s": 3.0,
+      "size": 0.012,
+      "blending": "additive glow",
+      "color_gradient": ["#f2e2b8", "#fff6d8"],
+      "trail_length": 0.05
+    }
+  ],
+  "camera_composition": {
+    "projection": "orthographic flat illustration plane (no perspective distortion)",
+    "fov_deg": 0.0,
+    "focal_length_mm": 50,
+    "aspect_ratio": "3:2",
+    "motion": {
+      "type": "extremely slow push-in / parallax between 3-shot sequence",
+      "speed": 0.05,
+      "easing": "linear gentle drift",
+      "shake_amplitude": 0.0
+    },
+    "composition": {
+      "type": "figure-and-beast diagonal grouping with large canopy negative space",
+      "horizon_position": "lower third",
+      "negative_space_ratio": 0.45,
+      "depth_layers": 4,
+      "symmetry_axis": "asymmetric diagonal"
+    }
+  },
+  "chinese_aesthetic_six_laws": {
+    "qiyun_shengdong": {
+      "score": 9,
+      "evidence": "frame_01/02 woman's long black hair flows and merges seamlessly into the white horse mane; frame_05/06 veil and hair stream in one continuous wind gesture across the frame — breath/qi made visible."
+    },
+    "gufa_yongbi": {
+      "score": 9,
+      "evidence": "frame_01/02 precise gongbi outline on horse muzzle, mane strands and ginkgo leaf veins; frame_03/04 leopard spots and branch twigs drawn with controlled iron-wire lines; frame_05/06 fine contour on veil folds."
+    },
+    "yingwu_xiangxing": {
+      "score": 8,
+      "evidence": "frame_01/02 accurate equine anatomy and fan-shaped ginkgo leaf; frame_03/04 leopard feline musculature and paw form; plants rendered with botanically legible silhouettes."
+    },
+    "suilei_fucai": {
+      "score": 9,
+      "evidence": "frame_01/02 layered mineral teal wash on robe, cinnabar-orange coral branches as sparse accent; frame_05/06 amber light painted as flat warm block against deep indigo shadow — color assigned by category in classic heavy-color (zhongcai) manner."
+    },
+    "jingying_weizhi": {
+      "score": 8,
+      "evidence": "frame_01/02 figure-beast group occupies lower diagonal, canopy leaves frame upper right; frame_03/04 leopard and figure anchored left-third, misty mountain void to right; deliberate blank/negative space (liubai) balances dense foliage."
+    },
+    "chuanyi_moxie": {
+      "score": 7,
+      "evidence": "inherits Song-dynasty gongbi bird-and-beast tradition and shan-shui atmospheric mist; modern digital brushwork and anime-proportioned faces (frame_05/06) update the lineage rather than copy a specific master."
+    }
+  },
+  "effect_to_library_mapping": [
+    {"effect": "layered ink-wash atmospheric mist", "library": "unreal exponential height fog + painted depth haze", "parameters": {"density": 0.35, "color_hex": "#9fc0bd"}},
+    {"effect": "canopy crepuscular god rays", "library": "unreal exponential height fog + volumetric material", "parameters": {"color_hex": "#e8913f", "density": 0.25}},
+    {"effect": "soft glow on spores and amber light", "library": "unreal bloom", "parameters": {"threshold": 0.75, "strength": 0.25, "tint_hex": "#f2e2b8"}},
+    {"effect": "floating particle motes", "library": "unreal niagara GPU sprites additive", "parameters": {"count": 40, "size": 0.012}},
+    {"effect": "painted contact shadow", "library": "hand-painted AO layer", "parameters": {"intensity": 0.4}}
+  ],
+  "color_system": {
+    "primary_hex": "#1f4d52",
+    "secondary_hex": "#dce8e6",
+    "accent_hex": "#c85a2a",
+    "wufang_zhengse_distribution": {
+      "qing": "#1f4d52",
+      "chi": "#c85a2a",
+      "huang": "#d8a83a",
+      "hei": "#0e222b",
+      "bai": "#eef3f0"
+    },
+    "saturation": 0.6,
+    "contrast": 1.15,
+    "color_temperature_k": 5200
+  },
+  "motion": {
+    "camera_motion_type": "slow parallax push-in across three vignettes (woman+horse / woman+leopard / close-up veil)",
+    "duration_estimate_seconds": 9.0,
+    "transition_type": "soft cross-dissolve between vignettes",
+    "easing": "gentle linear drift"
+  },
+  "midjourney_prompt": {
+    "medium": "Chinese gongbi meticulous heavy-color painting, mineral pigments on silk, fine iron-wire outline brushwork, flat layered ink-wash washes",
+    "art_movement": "traditional Chinese guofeng illustration meets contemporary surreal fairyland (guofeng xianjing)",
+    "artist_reference": "modern gongbi revival blended with moody shan-shui atmosphere",
+    "subject": "a solitary young woman in flowing deep indigo-teal hanfu seated barefoot on mossy rocks beside a pale white horse, her long black hair merging and flowing into the horse's white mane, surrounded by large fan-shaped ginkgo leaves and sparse cinnabar-orange coral-like branches, meticulous gongbi linework, meticulous gongbi detail, mineral pigment texture, fairy-tale beast-and-human harmony",
+    "style_constraints": "gongbi meticulous painting, fine controlled outline strokes, flat layered mineral color washes, rice-paper grain, elegant melancholy, no photographic realism, no Western chiaroscuro, no 3D render look",
+    "lighting": "soft diffused canopy skylight, cool green ambient bounce, faint warm amber light leaking through dark treetops, gentle painted atmospheric mist",
+    "camera": "flat orthographic illustration plane, figure-beast diagonal composition, lower-third horizon, generous canopy negative space, 3:2 framing",
+    "material_texture": "matte mineral pigment on silk, translucent pale-blue gauze, soft horse fur, matte dark leopard pelt, waxy leaf surface",
+    "palette": {
+      "primary": "#1f4d52",
+      "secondary": "#dce8e6",
+      "accent": "#c85a2a",
+      "dark": "#0e222b",
+      "highlight": "#f2e2b8"
+    },
+    "mood": "serene, ancient, solitary, dreamlike, ethereal beast-and-human kinship",
+    "full_prompt": "Chinese gongbi meticulous heavy-color painting of a solitary young woman in flowing deep indigo-teal hanfu seated barefoot on mossy rocks beside a pale white horse, her long black hair flowing and merging into the horse's white mane, surrounded by large fan-shaped ginkgo leaves and sparse cinnabar-orange coral-like branches, meticulous gongbi linework, meticulous gongbi detail, mineral pigment texture, flat layered ink-wash washes, fine iron-wire outline brushwork, fairy-tale beast-and-human harmony, serene ancient dreamlike mood, soft diffused canopy skylight with cool green ambient bounce and faint warm amber light through dark treetops, gentle painted atmospheric mist, matte mineral pigment on silk, translucent pale gauze, palette of deep teal #1f4d52, pale mist #dce8e6, cinnabar orange #c85a2a, ink dark #0e222b, warm highlight #f2e2b8, elegant guofeng fairyland, no photographic realism --ar 3:2 --stylize 400 --v 8.2",
+    "recommended_params": {
+      "ar": "3:2",
+      "stylize": 400,
+      "weird": 0,
+      "style_raw": false,
+      "hd_or_sd": "hd"
+    }
+  }
+}

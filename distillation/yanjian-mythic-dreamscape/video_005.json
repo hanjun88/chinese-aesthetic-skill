@@ -1,0 +1,334 @@
+{
+  "video_id": "7658980481836621499",
+  "video_title": "当电影感配色遇上中国古诗词",
+  "keyframes_analyzed": 6,
+  "rendering_pipeline": {
+    "render_path": "path-traced CGI composite + film emulation grade",
+    "antialiasing": "TAA temporal anti-aliasing, 4x supersampling equivalent",
+    "tone_mapping": "ACES filmic tone mapping with lifted blacks and rolled-off highlights",
+    "exposure_ev": -0.3,
+    "color_grading": {
+      "lift": {"shadows": "#1a1a22", "description": "slightly lifted cool gray shadows, crushed in B&W source frames, opened in graded frames"},
+      "gamma": {"mids": "#8a7a5a", "description": "warm mid-tone bias in golden scene, cool green bias in lotus scene"},
+      "gain": {"highlights": "#e8c060", "description": "golden highlight rolloff in cloud-sea scene"},
+      "contrast": 1.15,
+      "saturation": 1.25,
+      "temperature_k": 4200
+    }
+  },
+  "light_shadow": {
+    "key_light": {
+      "type": "diffuse skylight + low-angle sun (golden scene); overcast hemispheric (lotus scene); cool moon key (pavilion scene)",
+      "elevation_deg": 12,
+      "azimuth_deg": 180,
+      "intensity": 2.5,
+      "color_temp_k": 3200,
+      "color_hex": "#e8b85c"
+    },
+    "fill_ratio": 0.6,
+    "ambient_type": "volumetric sky dome, heavy mist bounce",
+    "ambient_intensity": 0.7,
+    "ibl_intensity": 0.8,
+    "shadows": {
+      "type": "soft contact shadow, penumbra wide",
+      "map_resolution": 2048,
+      "bias": 0.0015,
+      "radius": 8
+    }
+  },
+  "volumetric_effects": {
+    "god_rays": {
+      "enabled": false,
+      "technique": "none visible — light is fully diffused by mist",
+      "light_elevation_deg": 0,
+      "density": 0,
+      "weight": 0,
+      "decay": 0,
+      "exposure": 0,
+      "medium": "none",
+      "phase_function": "none",
+      "color_hex": "#000000"
+    },
+    "fog": {
+      "type": "height-exponential aerial perspective, dense low-lying cloud sea",
+      "density": 0.18,
+      "near": 2,
+      "far": 1200,
+      "color_hex": "#c8c4b8",
+      "aerial_perspective": "strong — distant peaks fade into cloud deck, atmospheric haze increases with depth; graded scenes tint fog warm gold (#d4a04a) or jade green (#b8d4c8)"
+    }
+  },
+  "postprocessing": {
+    "bloom": {
+      "enabled": true,
+      "strength": 0.25,
+      "radius": 6,
+      "threshold": 0.85,
+      "smooth_width": 0.15,
+      "tint_hex": "#f0d090"
+    },
+    "ao": {
+      "type": "screen-space ambient occlusion + baked contact AO on rocks and pavilion",
+      "radius": 0.4,
+      "intensity": 0.6,
+      "samples": 16
+    },
+    "ssr": {
+      "enabled": true,
+      "max_distance": 8,
+      "thickness": 0.5
+    },
+    "dof": {
+      "enabled": false,
+      "focus_distance_m": 0,
+      "focal_length_mm": 0,
+      "aperture": 0,
+      "max_blur": 0
+    },
+    "motion_blur": {
+      "enabled": true,
+      "shutter_angle_deg": 180,
+      "intensity": 0.3
+    },
+    "aberration": {
+      "chromatic": 0.1,
+      "vignetting": 0.25,
+      "film_grain": 0.12
+    }
+  },
+  "material": [
+    {
+      "name": "flowing silk-cotton hanfu robe",
+      "brdf": "cloth, sheen-fabric",
+      "base_color_hex": "#8b4a2a",
+      "metallic": 0.0,
+      "roughness": 0.75,
+      "clearcoat": 0.0,
+      "sheen": 0.6,
+      "sss": 0.15,
+      "transmission": 0.0,
+      "ior": 1.45
+    },
+    {
+      "name": "weathered granite rock steps and cliff",
+      "brdf": "rough stone",
+      "base_color_hex": "#6a5a48",
+      "metallic": 0.0,
+      "roughness": 0.92,
+      "clearcoat": 0.0,
+      "sheen": 0.0,
+      "sss": 0.0,
+      "transmission": 0.0,
+      "ior": 1.5
+    },
+    {
+      "name": "lotus leaf and willow foliage",
+      "brdf": "waxy leaf, subsurface scattering",
+      "base_color_hex": "#3a6a4a",
+      "metallic": 0.0,
+      "roughness": 0.45,
+      "clearcoat": 0.2,
+      "sheen": 0.1,
+      "sss": 0.35,
+      "transmission": 0.05,
+      "ior": 1.4
+    },
+    {
+      "name": "pink lotus petals",
+      "brdf": "translucent petal, strong SSS",
+      "base_color_hex": "#d4889a",
+      "metallic": 0.0,
+      "roughness": 0.6,
+      "clearcoat": 0.0,
+      "sheen": 0.4,
+      "sss": 0.5,
+      "transmission": 0.1,
+      "ior": 1.38
+    },
+    {
+      "name": "dark lacquered wood pavilion structure",
+      "brdf": "varnished wood, semi-matte",
+      "base_color_hex": "#2a2226",
+      "metallic": 0.0,
+      "roughness": 0.55,
+      "clearcoat": 0.3,
+      "sheen": 0.0,
+      "sss": 0.0,
+      "transmission": 0.0,
+      "ior": 1.5
+    },
+    {
+      "name": "misty water surface",
+      "brdf": "calm dielectric, micro-ripple normal",
+      "base_color_hex": "#a8c8b8",
+      "metallic": 0.0,
+      "roughness": 0.15,
+      "clearcoat": 0.0,
+      "sheen": 0.0,
+      "sss": 0.0,
+      "transmission": 0.6,
+      "ior": 1.333
+    }
+  ],
+  "water": {
+    "enabled": true,
+    "wave_technique": "gerstner waves, very low amplitude, near-still lake",
+    "amplitude_m": 0.03,
+    "frequency_hz": 0.2,
+    "speed_ms": 0.1,
+    "color_shallow_hex": "#c8dcd0",
+    "color_deep_hex": "#6a8a7a",
+    "depth_absorption": 0.3,
+    "fresnel_bias": 0.05,
+    "caustics": false,
+    "caustics_intensity": 0.0,
+    "foam_coverage": 0.0,
+    "sun_glint": false
+  },
+  "particles": [
+    {
+      "name": "drifting mist/spray particles above lotus pond",
+      "count": 200,
+      "rendering_mode": "soft billboard sprite, additive low-alpha",
+      "motion_type": "slow horizontal drift",
+      "velocity_range": [0.05, 0.15],
+      "lifespan_s": 8,
+      "size": 2.5,
+      "blending": "screen",
+      "color_gradient": ["#d4e8dc", "#b8d4c8"],
+      "trail_length": 0
+    },
+    {
+      "name": "floating robe fabric wisps (wind-blown hem)",
+      "count": 12,
+      "rendering_mode": "cloth sim, no particle",
+      "motion_type": "swaying with breeze",
+      "velocity_range": [0.2, 0.4],
+      "lifespan_s": 0,
+      "size": 0,
+      "blending": "opaque",
+      "color_gradient": ["#8b4a2a"],
+      "trail_length": 0
+    }
+  ],
+  "camera_composition": {
+    "projection": "perspective",
+    "fov_deg": 40,
+    "focal_length_mm": 50,
+    "aspect_ratio": "16:9",
+    "motion": {
+      "type": "slow dolly-in / locked-off with gentle parallax",
+      "speed": 0.3,
+      "easing": "ease-in-out",
+      "shake_amplitude": 0.0
+    },
+    "composition": {
+      "type": "rule-of-thirds with framed negative space; solitary figure placed on right/left third, vast misty void occupies 60-70% of frame",
+      "horizon_position": "upper third in mountain scenes (cloud sea fills lower 2/3), middle in lotus scene, lower third in moon pavilion",
+      "negative_space_ratio": 0.65,
+      "depth_layers": 4,
+      "symmetry_axis": "asymmetric — figure offset, natural frame elements (pine branch top-left, willow branches top, pavilion eaves top-right) balance the composition"
+    }
+  },
+  "chinese_aesthetic_six_laws": {
+    "qiyun_shengdong": {
+      "score": 9,
+      "evidence": "Frame 2: robed scholar's hem catches wind and trails gold against the cloud sea, the entire scene breathes through volumetric mist; Frame 4: willow branches and lotus pond exhale cool green air — spirit resonance is the dominant quality."
+    },
+    "gufa_yongbi": {
+      "score": 7,
+      "evidence": "Frame 1: pine branch silhouette at top edge and jagged peak ridgelines read like forceful ink outlines (like Ma Yuan's one-corner composition); Frame 6: pavilion dougong brackets and eave line have strong structural bone — though as CGI the brushwork feel is inherited, not literal."
+    },
+    "yingwu_xiangxing": {
+      "score": 8,
+      "evidence": "Frame 3-4: lotus leaves, willow fronds, distant single boat are rendered with recognizable natural form; Frame 1-2: granite steps and karst peaks have credible sculptural volume — form follows observed nature rather than pure abstraction."
+    },
+    "suilei_fucai": {
+      "score": 10,
+      "evidence": "This is the video's explicit thesis: Frame 1 (B&W) → Frame 2 (graded to amber-gold cloud sea); Frame 3 (B&W) → Frame 4/5 (graded to jade-green lotus with pink blossoms); Frame 6 carries swatches of indigo (#1a2a6b), cinnabar (#6b1a1a) and rice-white (#e8e8e8) for the moon scene — color is applied by poetic category per scene."
+    },
+    "jingying_weizhi": {
+      "score": 9,
+      "evidence": "Frame 1-2: scholar on right third, pine branch frames top-left, peaks emerge from cloud sea at golden ratio intersections; Frame 3-4: figure on left third, lotus mass anchors bottom-right, willow arcs from top; Frame 6: moon placed upper-left, pavilion eaves upper-right, figure on right third — balanced void-filled planning."
+    },
+    "chuanyi_moxie": {
+      "score": 8,
+      "evidence": "The whole video is a pastiche of canonical Chinese poetic imagery: Huangshan cloud-sea (Frame 1-2), Jiangnan lotus-pond parting (Frame 3-5, echoing 采莲曲), moon-over-water longing (Frame 6, echoing 望月怀远/静夜思) — it consciously transmits classical painting and poetic motifs into cinematic language."
+    }
+  },
+  "effect_to_library_mapping": [
+    {
+      "effect": "golden cloud-sea grade",
+      "library": "DaVinci Lift-Gamma-Gain / Node-based film grade",
+      "parameters": {"lift": "#2a1f14", "gamma": "#8a6a30", "gain": "#f0c060", "temp_shift": "+700K", "tint_shift": "+10 magenta"}
+    },
+    {
+      "effect": "jade-green lotus grade",
+      "library": "DaVinci HSL qualifier + power window",
+      "parameters": {"hue_shift_greens": "+8", "saturation_greens": "+20", "lifter_shadows_to_green": "#1a2a20", "lotus_pink_separated": "#d4889a"}
+    },
+    {
+      "effect": "volumetric cloud sea",
+      "library": "Unreal Engine / Houdini volumetric volume rendering",
+      "parameters": {"density": 0.18, "scattering": 0.3, "phase_g": 0.6, "scatter_color": "#d4a04a"}
+    },
+    {
+      "effect": "moonlit pavilion cool grade",
+      "library": "DaVinci offset + log wheel",
+      "parameters": {"offset": "#4a5a7a", "lift": "#2a3040", "gain": "#c8d8e8", "saturation": 0.7}
+    },
+    {
+      "effect": "silk robe cloth simulation",
+      "library": "Marvelous Designer / nCloth",
+      "parameters": {"drag": 0.3, "wind": 0.4, "stretch": 0.1, "gravity": -0.05}
+    }
+  ],
+  "color_system": {
+    "primary_hex": "#d4a04a",
+    "secondary_hex": "#3a6a4a",
+    "accent_hex": "#d4889a",
+    "wufang_zhengse_distribution": {
+      "qing": "#3a6a4a",
+      "chi": "#6b1a1a",
+      "huang": "#d4a04a",
+      "hei": "#1a1a22",
+      "bai": "#e8e4d8"
+    },
+    "saturation": 0.65,
+    "contrast": 1.15,
+    "color_temperature_k": 4200
+  },
+  "motion": {
+    "camera_motion_type": "slow locked-off wide shot with gentle dolly-in, cut between three scenes",
+    "duration_estimate_seconds": 12,
+    "transition_type": "hard cut between B&W source and graded reveal; subtle cross-dissolve between frame 4 and 5 (lotus loop)",
+    "easing": "ease-in-out"
+  },
+  "midjourney_prompt": {
+    "medium": "cinematic matte painting, 35mm film still, wuxia film frame",
+    "art_movement": "Chinese shan-shui ink landscape meets cinematic chiaroscuro, one-corner composition (Ma Yuan)",
+    "artist_reference": "Roger Deakins lighting, Guo Xi monumental landscape, Wong Kar-wai / Kar Wai wuxia color grading",
+    "subject": "a solitary ancient Chinese scholar in flowing wide-sleeved hanfu robes, seen from behind, standing on weathered granite cliff steps, gazing out over an infinite sea of golden-amber clouds with jagged karst peaks piercing through the mist, twisted pine branch framing the upper left corner, wind lifting the robe hem, vast misty negative space, shan-shui landscape, wuxia atmosphere, poetic solitude, Chinese classical poetry mood",
+    "style_constraints": "cinematic color grading, film still, matte painting, atmospheric perspective, volumetric mist, golden-hour chiaroscuro, wuxia aesthetic, Chinese shan-shui, ink-painting negative space, muted cinematic palette, soft diffused light, epic lonely figure",
+    "lighting": "low golden-hour sun at 12-degree elevation, warm amber key light 3200K, soft volumetric fog filling the cloud sea, gentle rim light on the scholar's shoulder, lifted shadows, no hard shadows, bloom on cloud highlights",
+    "camera": "50mm lens, rule of thirds, figure on right third, 40-degree FOV, vast negative space occupying 65 percent of frame, layered depth from foreground rock to distant peaks, eye-level locked-off shot",
+    "material_texture": "flowing silk-cotton robe with wind-swept hem, rough granite steps, waxy pine needles, billowing soft volumetric cloud, atmospheric haze",
+    "palette": {
+      "primary": "#d4a04a",
+      "secondary": "#6a4a20",
+      "accent": "#8b4a2a",
+      "highlight": "#f0c060",
+      "shadow": "#2a2018",
+      "mist": "#e8d4a0"
+    },
+    "mood": "melancholic grandeur, poetic solitude, ethereal, transcendent, the weight of classical Chinese poetry, quiet awe",
+    "full_prompt": "a solitary ancient Chinese scholar in flowing wide-sleeved hanfu robes seen from behind, standing on weathered granite cliff steps, gazing out over an infinite sea of golden-amber clouds with jagged karst peaks piercing the mist, twisted pine branch framing the upper left, wind lifting the robe hem, vast misty negative space, shan-shui landscape, wuxia atmosphere, poetic solitude, Chinese classical poetry mood, cinematic matte painting, 35mm film still, wuxia film frame, Chinese shan-shui ink landscape meets cinematic chiaroscuro, one-corner Ma Yuan composition, Roger Deakins lighting, Guo Xi monumental landscape, Wong Kar-wai color grading, golden-hour chiaroscuro, volumetric mist, atmospheric perspective, muted cinematic palette, soft diffused light, epic lonely figure, low warm amber sun at 12-degree elevation, 3200K key light, soft rim light on shoulder, lifted shadows, gentle bloom on cloud highlights, 50mm lens, rule of thirds, figure on right third, 65 percent negative space, layered depth, flowing silk-cotton robe, rough granite, waxy pine needles, billowing cloud, melancholic grandeur, poetic solitude, ethereal, transcendent --ar 9:16 --stylize 400 --weird 0 --v 8.2 --hd",
+    "recommended_params": {
+      "ar": "9:16",
+      "stylize": 400,
+      "weird": 0,
+      "style_raw": false,
+      "hd_or_sd": "hd"
+    }
+  }
+}
