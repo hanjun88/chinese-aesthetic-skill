@@ -1,1 +1,27 @@
-{}
+{
+  "SRC-DC-PLAN-TARGETS": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/compiler/plan-emitter.ts",
+    "quote": "default operation targets of the plan emitter: depth layers 4, horizon 0.55, occlusion 0.25, specular sharpness 15, contrast 0.4, shadow temperature 0.45, accent luminance 0.5"
+  },
+  "SRC-DC-PLAN-DERIVATION": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/compiler/plan-emitter.ts",
+    "quote": "plan emitter derives operator targets from graph energies and relation magnitudes with fixed offsets and gains, and attaches fixed secondary parameters; the source records no rationale for them"
+  },
+  "SRC-DC-PLAN-VOID-TARGET": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/compiler/plan-emitter.ts",
+    "quote": "目标负空间比例：由当前 voidEnergy 推导，向时代先验区间靠拢"
+  },
+  "SRC-DC-PLAN-GRAPH-FALLBACKS": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/compiler/plan-emitter.ts",
+    "quote": "plan emitter readings when the graph lacks a node or relation: void 0.3, subject 0.5, boundary 0.8, light 0.4, material 0.5, relation magnitude 0.5; the source records no rationale"
+  },
+  "SRC-DC-PLAN-CONFLICT-TOLERANCE": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/compiler/conflict-resolver.ts",
+    "quote": "计算每个提议值的区间（±15% 容差，最小绝对容差 0.05）"
+  }
+}
