@@ -135,7 +135,7 @@
       "title": "Structural signal: void_ratio >= 0.50",
       "kind": "PARAMETER_BAND",
       "role": "composition",
-      "confidence": 0.75,
+      "confidence": 0.7,
       "audience": [
         "engine"
       ],
