@@ -41,21 +41,15 @@
         "params": {
           "negative_space_lift": 0.15,
           "negative_space_min": {
-            "$band": {
-              "parameter": "scene.composition.negativeSpaceRatio",
-              "edge": "min"
-            }
+            "$ref": "CAS-OP-BREATHING-FIELD/payload/params/negative_space_min"
           },
           "negative_space_max": {
-            "$band": {
-              "parameter": "scene.composition.negativeSpaceRatio",
-              "edge": "max"
-            }
+            "$ref": "CAS-OP-BREATHING-FIELD/payload/params/negative_space_max"
           },
           "aggregation_base": 0.6,
           "transition_softness": 0.35
         },
-        "rationale": "Target negative space = measured VOID energy + negative_space_lift, kept inside the effective void_ratio band of the context (ADR-0001 rule 6: operator clamps take their bounds from the period band; replaces the fixed clamp of the original emitter). aggregation_base is added to the SOLID_VOID magnitude; transition_softness is a fixed secondary parameter. Lift, base and softness are migrated unchanged."
+        "rationale": "Target negative space = measured VOID energy + negative_space_lift, kept inside the effective void_ratio band of the context, defined once in CAS-OP-BREATHING-FIELD ($ref; ADR-0001 rule 6: operator clamps take their bounds from the period band; replaces the fixed clamp of the original emitter). aggregation_base is added to the SOLID_VOID magnitude; transition_softness is a fixed secondary parameter. Lift, base and softness are migrated unchanged."
       }
     },
     {
@@ -124,11 +118,13 @@
       "payload": {
         "subject": "PLAN_OP_LAYER_DEPTH_RECESSION",
         "params": {
-          "target_depth_layers": 4,
+          "target_depth_layers": {
+            "$ref": "CAS-OP-LAYER-DEPTH/payload/params/target_layers"
+          },
           "recession_rate": 0.15,
           "haze_start": 0.4
         },
-        "rationale": "Period-independent plan defaults of the layering operator (depth layers, recession_rate and haze_start are fixed values), as in the original emitter. The operator's own per-period layer table is a separate decision (CAS-OP-LAYER-DEPTH) and is not merged here. Migrated unchanged; the source records no rationale for the values."
+        "rationale": "Plan emission of the layering operator: the target depth layers are the operator's canonical per-period layer count, defined once in CAS-OP-LAYER-DEPTH ($ref; the original emitter's period-independent 4 contradicted the operator's own SONG 5 / MING 3 and is deleted). recession_rate and haze_start are fixed values, migrated unchanged; the source records no rationale for them."
       }
     },
     {

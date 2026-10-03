@@ -55,23 +55,34 @@
     },
     {
       "rule_id": "CAS-OP-POISSON-CLUSTER",
-      "title": "OP_PARTITION_POISSON_CLUSTER: activation, gain and symmetry clamp",
+      "title": "OP_PARTITION_POISSON_CLUSTER: activation, gain and axial-symmetry bounds",
       "kind": "OPERATION_POLICY",
       "role": "composition",
       "confidence": 0.6,
       "sources": [
         "SRC-DC-DESIGN-OPERATIONS",
-        "SRC-DC-OP-POISSON-CLUSTER"
+        "SRC-DC-OP-POISSON-CLUSTER",
+        "SRC-ADR-0001"
       ],
       "payload": {
         "subject": "OP_PARTITION_POISSON_CLUSTER",
         "params": {
           "dense_sparse_contrast_magnitude": 0.4,
           "symmetry_reduction_gain": 0.15,
-          "symmetry_min": 0.3,
-          "symmetry_max": 0.95
+          "symmetry_min": {
+            "$band": {
+              "parameter": "scene.composition.axialSymmetry",
+              "edge": "min"
+            }
+          },
+          "symmetry_max": {
+            "$band": {
+              "parameter": "scene.composition.axialSymmetry",
+              "edge": "max"
+            }
+          }
         },
-        "rationale": "Active while the DENSE_SPARSE magnitude is below dense_sparse_contrast_magnitude; lowers axial symmetry by (1 - magnitude) * symmetry_reduction_gain, clamped to [symmetry_min, symmetry_max]."
+        "rationale": "Active while the DENSE_SPARSE magnitude is below dense_sparse_contrast_magnitude; lowers axial symmetry by (1 - magnitude) * symmetry_reduction_gain. The result stays inside the effective axial-symmetry band of the context (ADR-0001 rule 6: operator clamps take their bounds from the period band; the original fixed clamp [0.3, 0.95] had no evidence and contradicted the TANG and MING period bands)."
       }
     },
     {
@@ -259,28 +270,39 @@
       "confidence": 0.65,
       "sources": [
         "SRC-DC-DESIGN-OPERATIONS",
-        "SRC-DC-OP-MATERIAL-CONTRAST"
+        "SRC-DC-OP-MATERIAL-CONTRAST",
+        "SRC-ADR-0001"
       ],
       "payload": {
         "subject": "OP_ORCHESTRATE_MATERIAL_CONTRAST",
         "params": {
           "roughness_low_target": {
-            "$by_period": {
-              "TANG": 0.25,
-              "SONG": 0.35,
-              "MING": 0.4
+            "$clamp": {
+              "value": {
+                "$by_period": {
+                  "TANG": 0.25,
+                  "SONG": 0.35,
+                  "MING": 0.4
+                }
+              },
+              "parameter": "scene.material.roughness"
             }
           },
           "roughness_high_target": {
-            "$by_period": {
-              "TANG": 0.65,
-              "SONG": 0.6,
-              "MING": 0.55
+            "$clamp": {
+              "value": {
+                "$by_period": {
+                  "TANG": 0.65,
+                  "SONG": 0.6,
+                  "MING": 0.55
+                }
+              },
+              "parameter": "scene.material.roughness"
             }
           },
           "spread_satisfied_fraction": 0.8
         },
-        "rationale": "Needs two materials; dominant -> roughness_low_target, secondary -> roughness_high_target. TANG 0.25/0.65 (金石低糙，木石高糙，对比强烈), SONG 0.35/0.6 (清润，适度对比), MING 0.4/0.55 (简雅，温润接近). Skipped when the current spread already reaches spread_satisfied_fraction of the target spread."
+        "rationale": "Needs two materials; dominant -> roughness_low_target, secondary -> roughness_high_target. The authored ladder is TANG 0.25/0.65 (金石低糙，木石高糙，对比强烈), SONG 0.35/0.6 (清润，适度对比), MING 0.4/0.55 (简雅，温润接近); each authored target is clamped into the effective roughness band of the context (ADR-0001 rule 6: repair targets = clamp(authored, effective band)), so no target contradicts the period band. Skipped when the current spread already reaches spread_satisfied_fraction of the target spread."
       }
     },
     {
@@ -368,7 +390,9 @@
         "subject": "OP_FILTER_MIST_SCATTER",
         "params": {
           "hard_light_energy_min": 0.6,
-          "hard_light_softness_max": 0.5,
+          "hard_light_softness_max": {
+            "$ref": "CA-RULE-02-YUNRUN/payload/condition/value"
+          },
           "scatter_gain": 0.25,
           "softness_min": 0.3,
           "softness_max": 0.9,
@@ -380,7 +404,7 @@
             "$ref": "CAS-OP-ATMOSPHERIC-VOID/payload/params/ambient_max"
           }
         },
-        "rationale": "Active for hard light (LIGHT energy >= hard_light_energy_min and softness < hard_light_softness_max); scatter = energy * (1 - softness) * scatter_gain raises softness (clamped to softness_min/max) and ambient by scatter * ambient_scatter_fraction (ambient clamp shared via $ref)."
+        "rationale": "Active for hard light (LIGHT energy >= hard_light_energy_min and softness below the hard-light limit); the limit is the softness threshold CA-RULE-02-YUNRUN already defines for 'hard light' ($ref: one definition). scatter = energy * (1 - softness) * scatter_gain raises softness (clamped to softness_min/max) and ambient by scatter * ambient_scatter_fraction (ambient clamp shared via $ref)."
       }
     },
     {
