@@ -11,3 +11,6 @@ package-lock.json
 
 # 打包备份（scripts/pack-skill.cjs --install 原子替换时的旧版本）
 *.bak-*
+
+# 跨仓 CI 检出的 design-compiler（见 .github/workflows/ci.yml）；忽略后不会让 emit-sheet 误判为 dirty
+.cross-repo/
