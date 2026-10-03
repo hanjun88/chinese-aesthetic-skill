@@ -111,12 +111,12 @@ npm run evidence    # 重新运行并生成下表
 | Suite | Command | Passed | Failed |
 |---|---|---:|---:|
 | Engine integration tests | `node tests/engines.test.js` | 112 | 0 |
-| Rules registry tests | `node --test tests/rules/*.test.js` | 24 | 0 |
+| Rules registry tests | `node --test tests/rules/*.test.js` | 38 | 0 |
 | Docs generator tests | `node --test tests/docs/*.test.js` | 64 | 0 |
 
 | Gate | Command | Result |
 |---|---|---|
-| Registry lint | `node scripts/lint-rules.mjs` | PASS — 46 rules, 16 sources, 208 valid + 8 excluded contexts |
+| Registry lint | `node scripts/lint-rules.mjs` | PASS — 105 rules, 61 sources, 208 valid + 8 excluded contexts |
 <!-- evidence:end -->
 
 ## 目录结构
