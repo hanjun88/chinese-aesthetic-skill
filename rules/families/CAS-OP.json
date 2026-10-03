@@ -1,0 +1,30 @@
+{
+  "family": "CAS-OP",
+  "description": "Design-operator activation magnitudes and parameter clamps.",
+  "rules": [
+    {
+      "rule_id": "CAS-OP-LAYER-DEPTH",
+      "title": "OP_LAYER_DEPTH_RECESSION: canonical depth layers per period",
+      "kind": "OPERATION_POLICY",
+      "role": "spatial",
+      "confidence": 0.65,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS"
+      ],
+      "payload": {
+        "subject": "OP_LAYER_DEPTH_RECESSION",
+        "params": {
+          "target_layers": {
+            "$by_period": {
+              "TANG": 4,
+              "SONG": 5,
+              "MING": 3
+            }
+          },
+          "near_far_present_magnitude": 0.5
+        },
+        "rationale": "TANG 4 (雄浑巨构，多层进深) / SONG 5 (山水意境，深远层次) / MING 3 (简雅秩序，适度进深); NEAR_FAR magnitude >= 0.5 means depth recession is already present."
+      }
+    }
+  ]
+}

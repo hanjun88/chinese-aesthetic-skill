@@ -1,0 +1,413 @@
+{
+  "family": "CAS-VS",
+  "description": "Void / solid (留白): the canonical definition of void_ratio and every threshold expressed in it. See docs/decisions/ADR-0001-negative-space.md.",
+  "rules": [
+    {
+      "rule_id": "CAS-VS-PR-001",
+      "title": "void_ratio is a ratio",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 1,
+      "sources": [
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "PHYSICAL_RANGE",
+        "min": 0,
+        "max": 1,
+        "unit": "ratio",
+        "rationale": "void_ratio is the designed-void share of the frame; a share cannot leave [0, 1]. /composition/negativeSpaceRatio in the Core IR means void_ratio (design-level), its pixel estimator is a lower bound."
+      }
+    },
+    {
+      "rule_id": "CAS-VS-HF-001",
+      "title": "Hard floor: bright-tone landscape void >= 60%",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.9,
+      "applies_to": {
+        "scene_type": [
+          "LANDSCAPE"
+        ],
+        "lighting": [
+          "DAYLIGHT"
+        ]
+      },
+      "sources": [
+        "SRC-GUIDE-VOID-SOLID-METRICS",
+        "SRC-GUIDE-VOID-SOLID-P0"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "HARD_FLOOR",
+        "min": 0.6,
+        "max": 1,
+        "unit": "ratio",
+        "rationale": "留白面积比 >= 60%（硬阈值，亮调可推到60-70%）: P0 for bright-tone cinematic empty shots / landscape. Dark-tone scenes substitute 20-40% dark solids and are outside this floor."
+      }
+    },
+    {
+      "rule_id": "CAS-VS-PB-TANG",
+      "title": "TANG void_ratio band",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "TANG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR",
+        "SRC-DC-GOLDEN-MATRIX"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "PERIOD_BAND",
+        "min": 0.15,
+        "max": 0.4,
+        "unit": "ratio",
+        "rationale": "唐代雄浑巨构，建筑主体占据画面，留白比例较低. Band spans the documented prior and the sealed TANG golden cells (0.15, 0.20, 0.28)."
+      }
+    },
+    {
+      "rule_id": "CAS-VS-PB-SONG",
+      "title": "SONG void_ratio band",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.85,
+      "applies_to": {
+        "period": [
+          "SONG"
+        ]
+      },
+      "sources": [
+        "SRC-GUIDE-VOID-SOLID-SONG",
+        "SRC-DC-PERIOD-PRIOR",
+        "SRC-DC-GOLDEN-MATRIX"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "PERIOD_BAND",
+        "min": 0.35,
+        "max": 0.8,
+        "unit": "ratio",
+        "rationale": "宋代计白当黑，留白比例高. Union of the prior (0.35-0.65), the sealed SONG golden cell (0.68) and the documented 宋画山水 sky/water share 60-80%; upper bound 0.80 per ADR-0001 rule 4."
+      }
+    },
+    {
+      "rule_id": "CAS-VS-PB-MING",
+      "title": "MING void_ratio band",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "MING"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR",
+        "SRC-DC-GOLDEN-MATRIX"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "PERIOD_BAND",
+        "min": 0.25,
+        "max": 0.5,
+        "unit": "ratio",
+        "rationale": "明代简雅，留白适中，不极端. Band spans the documented prior and the sealed MING golden cells (0.32, 0.30)."
+      }
+    },
+    {
+      "rule_id": "CAS-VS-SS-001",
+      "title": "Structural signal: void_ratio >= 0.50",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.75,
+      "audience": [
+        "engine"
+      ],
+      "sources": [
+        "SRC-HIST-STRUCTURAL-V1"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "STRUCTURAL_SIGNAL",
+        "min": 0.5,
+        "max": 1,
+        "unit": "ratio",
+        "rationale": "Structural-orientalism test of the chineseness engine (+15 points). A scoring signal, never a compliance floor."
+      }
+    },
+    {
+      "rule_id": "CAS-VS-SS-002",
+      "title": "Best tier: void_ratio >= 0.70 (大虚小实 7:3)",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.85,
+      "audience": [
+        "engine"
+      ],
+      "sources": [
+        "SRC-GUIDE-VOID-SOLID-73"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "STRUCTURAL_SIGNAL",
+        "min": 0.7,
+        "max": 1,
+        "unit": "ratio",
+        "rationale": "实体与留白的黄金比例是 3:7: the chineseness engine rewards void_ratio >= 0.70 as the best tier."
+      }
+    },
+    {
+      "rule_id": "CAS-VS-SS-003",
+      "title": "Too-full line: void_ratio < 0.40",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.7,
+      "audience": [
+        "engine"
+      ],
+      "sources": [
+        "SRC-HIST-STRUCTURAL-V1"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "STRUCTURAL_SIGNAL",
+        "min": 0.4,
+        "max": 1,
+        "unit": "ratio",
+        "rationale": "Below 0.40 the chineseness engine reports the composition as too full (no points); 0.40-0.60 earns partial credit."
+      }
+    },
+    {
+      "rule_id": "CAS-VS-DT-PALACE",
+      "title": "Palace scene default void_ratio",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.7,
+      "applies_to": {
+        "scene_type": [
+          "PALACE"
+        ]
+      },
+      "sources": [
+        "SRC-HIST-SCENE-PRESETS",
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "DESIGN_DEFAULT",
+        "min": {
+          "$band": {
+            "parameter": "scene.composition.negativeSpaceRatio",
+            "edge": "min"
+          }
+        },
+        "max": {
+          "$band": {
+            "parameter": "scene.composition.negativeSpaceRatio",
+            "edge": "max"
+          }
+        },
+        "target": {
+          "$clamp": {
+            "value": 0.4,
+            "parameter": "scene.composition.negativeSpaceRatio"
+          }
+        },
+        "unit": "ratio",
+        "rationale": "Generation default for scene type PALACE: authored void_ratio 0.4, clamped into the period / hard bands of the context (ADR-0001 rule 5)."
+      }
+    },
+    {
+      "rule_id": "CAS-VS-DT-TEMPLE",
+      "title": "Temple scene default void_ratio",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.7,
+      "applies_to": {
+        "scene_type": [
+          "TEMPLE"
+        ]
+      },
+      "sources": [
+        "SRC-HIST-SCENE-PRESETS",
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "DESIGN_DEFAULT",
+        "min": {
+          "$band": {
+            "parameter": "scene.composition.negativeSpaceRatio",
+            "edge": "min"
+          }
+        },
+        "max": {
+          "$band": {
+            "parameter": "scene.composition.negativeSpaceRatio",
+            "edge": "max"
+          }
+        },
+        "target": {
+          "$clamp": {
+            "value": 0.5,
+            "parameter": "scene.composition.negativeSpaceRatio"
+          }
+        },
+        "unit": "ratio",
+        "rationale": "Generation default for scene type TEMPLE: authored void_ratio 0.5, clamped into the period / hard bands of the context (ADR-0001 rule 5)."
+      }
+    },
+    {
+      "rule_id": "CAS-VS-DT-RESIDENCE",
+      "title": "Residence scene default void_ratio",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.7,
+      "applies_to": {
+        "scene_type": [
+          "RESIDENCE"
+        ]
+      },
+      "sources": [
+        "SRC-HIST-SCENE-PRESETS",
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "DESIGN_DEFAULT",
+        "min": {
+          "$band": {
+            "parameter": "scene.composition.negativeSpaceRatio",
+            "edge": "min"
+          }
+        },
+        "max": {
+          "$band": {
+            "parameter": "scene.composition.negativeSpaceRatio",
+            "edge": "max"
+          }
+        },
+        "target": {
+          "$clamp": {
+            "value": 0.55,
+            "parameter": "scene.composition.negativeSpaceRatio"
+          }
+        },
+        "unit": "ratio",
+        "rationale": "Generation default for scene type RESIDENCE: authored void_ratio 0.55, clamped into the period / hard bands of the context (ADR-0001 rule 5)."
+      }
+    },
+    {
+      "rule_id": "CAS-VS-DT-LANDSCAPE",
+      "title": "Landscape scene default void_ratio",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.7,
+      "applies_to": {
+        "scene_type": [
+          "LANDSCAPE"
+        ]
+      },
+      "sources": [
+        "SRC-HIST-SCENE-PRESETS",
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "DESIGN_DEFAULT",
+        "min": {
+          "$band": {
+            "parameter": "scene.composition.negativeSpaceRatio",
+            "edge": "min"
+          }
+        },
+        "max": {
+          "$band": {
+            "parameter": "scene.composition.negativeSpaceRatio",
+            "edge": "max"
+          }
+        },
+        "target": {
+          "$clamp": {
+            "value": 0.7,
+            "parameter": "scene.composition.negativeSpaceRatio"
+          }
+        },
+        "unit": "ratio",
+        "rationale": "Generation default for scene type LANDSCAPE: authored void_ratio 0.7, clamped into the period / hard bands of the context (ADR-0001 rule 5)."
+      }
+    },
+    {
+      "rule_id": "CAS-VS-DT-GATE-ACT0",
+      "title": "ACT0 cloud-sea single gate default void_ratio",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.7,
+      "applies_to": {
+        "scene_type": [
+          "GATE_ACT0"
+        ]
+      },
+      "sources": [
+        "SRC-HIST-SCENE-PRESETS",
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "parameter": "scene.composition.negativeSpaceRatio",
+        "ir_pointer": "/composition/negativeSpaceRatio",
+        "metric": "void_ratio",
+        "semantics": "DESIGN_DEFAULT",
+        "min": {
+          "$band": {
+            "parameter": "scene.composition.negativeSpaceRatio",
+            "edge": "min"
+          }
+        },
+        "max": {
+          "$band": {
+            "parameter": "scene.composition.negativeSpaceRatio",
+            "edge": "max"
+          }
+        },
+        "target": {
+          "$clamp": {
+            "value": 0.65,
+            "parameter": "scene.composition.negativeSpaceRatio"
+          }
+        },
+        "unit": "ratio",
+        "rationale": "Generation default for scene type GATE_ACT0: authored void_ratio 0.65, clamped into the period / hard bands of the context (ADR-0001 rule 5)."
+      }
+    }
+  ]
+}

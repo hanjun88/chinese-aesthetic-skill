@@ -17,7 +17,16 @@
     "gate3": "node scripts/validate.cjs --gate 3",
     "validate": "node scripts/validate.cjs --input"
   },
-  "keywords": ["chinese-aesthetic", "eastern-aesthetic", "design-engine", "decision-engine", "heartmirror", "three.js", "spatial-order", "void-solid"],
+  "keywords": [
+    "chinese-aesthetic",
+    "eastern-aesthetic",
+    "design-engine",
+    "decision-engine",
+    "heartmirror",
+    "three.js",
+    "spatial-order",
+    "void-solid"
+  ],
   "author": "HEARTMIRROR Team",
   "license": "MIT",
   "repository": {
@@ -25,7 +34,7 @@
     "url": "https://github.com/hanjun88/chinese-aesthetic-skill.git"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.10.0"
   },
   "dependencies": {},
   "comment_dependencies": "lib/ 引擎层零运行时依赖（纯 ESM，零 import）。下列 React 系依赖仅供 src/ 的 Vite UI demo 使用，运行时不需要。",

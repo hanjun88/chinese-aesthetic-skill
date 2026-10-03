@@ -1,0 +1,36 @@
+{
+  "roles": ["composition", "spatial", "lighting", "material", "color", "evaluation", "governance"],
+  "required_roles": ["composition", "spatial", "lighting", "material", "color", "evaluation", "governance"],
+  "periods": {
+    "TANG": { "name": "唐", "description": "雄浑巨构、金碧辉煌、中轴对称、金石包浆" },
+    "SONG": { "name": "宋", "description": "虚实相生、计白当黑、烟雨清润、深远气韵" },
+    "MING": { "name": "明", "description": "简雅秩序、文房主次、木器包浆、适度尺度" }
+  },
+  "materials": {
+    "BRONZE": { "name": "青铜/鎏金", "engine_ref": "lib/material-engine.js#MATERIAL_LIBRARY.metal" },
+    "GLAZE": { "name": "琉璃/釉", "engine_ref": null },
+    "WOOD": { "name": "木", "engine_ref": "lib/material-engine.js#MATERIAL_LIBRARY.wood" },
+    "STONE": { "name": "石", "engine_ref": "lib/material-engine.js#MATERIAL_LIBRARY.stone" }
+  },
+  "lighting": {
+    "DAYLIGHT": { "name": "日光（亮调）", "engine_ref": "lib/light-engine.js#TIME_PRESETS.morning" },
+    "CANDLELIGHT": { "name": "烛光（暖低色温）", "engine_ref": null },
+    "DIM": { "name": "暗调", "engine_ref": "lib/light-engine.js#TIME_PRESETS.dusk" }
+  },
+  "scene_types": {
+    "OBJECT_STUDY": { "name": "器物/构件研究", "preset": null },
+    "LANDSCAPE": { "name": "山水", "preset": "landscape" },
+    "PALACE": { "name": "宫殿", "preset": "palace" },
+    "TEMPLE": { "name": "寺庙", "preset": "temple" },
+    "RESIDENCE": { "name": "民居", "preset": "residence" },
+    "GATE_ACT0": { "name": "ACT0 云海单门", "preset": "gate-act0" }
+  },
+  "excluded_contexts": [
+    {
+      "period": ["TANG", "MING"],
+      "scene_type": ["LANDSCAPE"],
+      "lighting": ["DAYLIGHT"],
+      "reason": "Hard floor CAS-VS-HF-001 (void_ratio >= 0.60, bright-tone landscape) and the TANG / MING period bands CAS-VS-PB-TANG (<= 0.40) / CAS-VS-PB-MING (<= 0.50) are disjoint. No evidence in the skill resolves the contradiction, so no sheet is emitted instead of choosing a winner (ADR-0001 rule 5)."
+    }
+  ]
+}

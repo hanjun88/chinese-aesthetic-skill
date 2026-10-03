@@ -1,0 +1,44 @@
+{
+  "family": "CAS-GOV",
+  "description": "Conflict priority, compliance scoring weights and graph interpretation parameters.",
+  "rules": [
+    {
+      "rule_id": "CAS-GOV-001",
+      "title": "Conflict priority between operation categories",
+      "kind": "PRIORITY_ORDER",
+      "role": "governance",
+      "confidence": 0.7,
+      "sources": [
+        "SRC-DC-CONFLICT-PRIORITY"
+      ],
+      "payload": {
+        "order": [
+          "composition",
+          "spatial",
+          "lighting",
+          "material"
+        ],
+        "rationale": "When design operators compete for one parameter the higher category wins: composition > spatial > lighting > material."
+      }
+    },
+    {
+      "rule_id": "CAS-GOV-002",
+      "title": "Compliance score category weights",
+      "kind": "SCORING_WEIGHTS",
+      "role": "evaluation",
+      "confidence": 0.7,
+      "sources": [
+        "SRC-DC-SCORING-WEIGHTS"
+      ],
+      "payload": {
+        "weights": {
+          "composition": 0.35,
+          "lighting": 0.25,
+          "color": 0.2,
+          "materials": 0.2
+        },
+        "rationale": "Relative weight of each rule category in the grammar compliance score; sums to 1."
+      }
+    }
+  ]
+}
