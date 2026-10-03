@@ -1,1 +1,82 @@
-{}
+{
+  "SRC-DC-OP-BREATHING-FIELD": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_ENCLOSE_BREATHING_FIELD: 当 SOLID_VOID 边张力不足、负空间包络破碎时，重构视口包络，聚合离散负空间为连通呼吸场。"
+  },
+  "SRC-DC-OP-GUEST-HOST": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_ALIGN_GUEST_HOST_TENSION: 当 HOST_GUEST 显著性比不足时，缩放次要图元视度，向心重定向从属物象朝向矢量。"
+  },
+  "SRC-DC-OP-POISSON-CLUSTER": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_PARTITION_POISSON_CLUSTER: 当局部方差呈现均质分布（DENSE_SPARSE 边强度低）时，依据泊松圆盘采样生成疏密两极对比分区。"
+  },
+  "SRC-DC-OP-AXIAL-ORDER": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_CALIBRATE_AXIAL_ORDER: 时代为 TANG 且中轴对称度不足时，将对称度低的主体构件沿主轴镜像校准（雄浑巨构 requires strong central-axis symmetry）。"
+  },
+  "SRC-DC-OP-LAYER-DEPTH": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_LAYER_DEPTH_RECESSION 范式法典：不同时代的进深层数偏好（雄浑巨构，多层进深 / 山水意境，深远层次 / 简雅秩序，适度进深）。"
+  },
+  "SRC-DC-OP-ATMOSPHERIC-VOID": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_INJECT_ATMOSPHERIC_VOID: 当景深边缘硬切（BOUNDARY 节点能量过高），缺少空间呼吸带时，在前中景交界处生成基于深度梯度的介质消光带。"
+  },
+  "SRC-DC-OP-HORIZON": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_SHIFT_HORIZON_PROPORTION 范式法典：视平线偏好（虫眼仰角，凸显雄浑巨构 / 俯瞰苍茫，山水意境 / 适度仰视，秩序庄严）。"
+  },
+  "SRC-DC-OP-OCCLUSION-FRAME": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_FRAME_SECONDARY_OCCLUSION: 当边缘穿帮（构图无含蓄收敛感，OPEN_CLOSE 边强度低）时，调取前景配景建立边框局部裁切。"
+  },
+  "SRC-DC-OP-TIME-PATINA": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_APPLY_TIME_PATINA: 当材质均质平整（MATERIAL 节点能量低，微表面高频方差接近 0）时，叠加物理风化/磨损层，向 Roughness 注入分形噪点。"
+  },
+  "SRC-DC-OP-SPECULAR-DAMPEN": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_DAMPEN_SPECULAR_HARSHNESS: 当观测高光过渡极陡（MATERIAL-HEAVY_LIGHT 边强度高），触碰塑料质感边缘时，钳制高光反射能量锐度。"
+  },
+  "SRC-DC-OP-MATERIAL-CONTRAST": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_ORCHESTRATE_MATERIAL_CONTRAST 范式法典：材质粗糙度阶梯偏好（金石低糙，木石高糙，对比强烈 / 清润，适度对比 / 简雅，温润接近）。"
+  },
+  "SRC-DC-OP-SURFACE-ENTROPY": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_WEATHER_SURFACE_ENTROPY: 当人工痕迹过重（TIME 节点能量低，缺乏自然风化熵）时，在法线贴图高频带引入微小凹凸与侵蚀扰动。"
+  },
+  "SRC-DC-OP-SKY-LUMINANCE": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_HARMONIZE_SKY_LUMINANCE: 当人工光源过多、光源方向多向冲突（LIGHT 节点多入射方向）时，统一消减补光能量，将天光确立为唯一主源。"
+  },
+  "SRC-DC-OP-SHADOW-CHROMA": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_COOL_SHADOW_CHROMATICITY: 当阴影区域死黑或无环境色彩反应（HIGH_LOW 边强度低）时，在几何背光面注入环境色漫反射（天青/冷黛）。"
+  },
+  "SRC-DC-OP-MIST-SCATTER": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_FILTER_MIST_SCATTER: 当光束过硬过利（LIGHT 节点能量高 + SOFTNESS 低），缺少东方烟雨意境时，沿主光照矢量路径激活丁达尔体积散射。"
+  },
+  "SRC-DC-OP-ACCENT-LUMINANCE": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
+    "quote": "OP_RESTRICT_ACCENT_LUMINANCE: 当点缀光源（如烛火）面积失控（ACCENT 色占比过高）时，强制点缀高光区域连通面积占比 ≤ 3%。"
+  }
+}

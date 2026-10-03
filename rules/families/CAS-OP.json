@@ -1,7 +1,106 @@
 {
   "family": "CAS-OP",
-  "description": "Design-operator activation magnitudes and parameter clamps.",
+  "description": "Design-operator activation magnitudes, gains and parameter clamps: one OPERATION_POLICY per operator (subject = operator id, role = operator category).",
   "rules": [
+    {
+      "rule_id": "CAS-OP-BREATHING-FIELD",
+      "title": "OP_ENCLOSE_BREATHING_FIELD: activation, gain and negative-space bounds",
+      "kind": "OPERATION_POLICY",
+      "role": "composition",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-BREATHING-FIELD",
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "subject": "OP_ENCLOSE_BREATHING_FIELD",
+        "params": {
+          "solid_void_enclosed_magnitude": 0.5,
+          "enclosure_gain": 0.3,
+          "negative_space_min": {
+            "$band": {
+              "parameter": "scene.composition.negativeSpaceRatio",
+              "edge": "min"
+            }
+          },
+          "negative_space_max": {
+            "$band": {
+              "parameter": "scene.composition.negativeSpaceRatio",
+              "edge": "max"
+            }
+          }
+        },
+        "rationale": "Active while the SOLID_VOID magnitude is below solid_void_enclosed_magnitude; raises negative space by (1 - magnitude) * enclosure_gain. The result is bounded by the effective band of negative space of the context (ADR-0001: negative_space_min/max are band edges, not local numbers); a raising operator never lowers the ratio."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-GUEST-HOST",
+      "title": "OP_ALIGN_GUEST_HOST_TENSION: target host/guest ratio and centering strength",
+      "kind": "OPERATION_POLICY",
+      "role": "composition",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-GUEST-HOST"
+      ],
+      "payload": {
+        "subject": "OP_ALIGN_GUEST_HOST_TENSION",
+        "params": {
+          "target_ratio": 2.5,
+          "centering_strength": 0.5
+        },
+        "rationale": "Active while the HOST_GUEST dominance ratio is below target_ratio; the focal point is pulled toward the frame centre by centering_factor = (target_ratio - ratio) / target_ratio, applied with centering_strength."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-POISSON-CLUSTER",
+      "title": "OP_PARTITION_POISSON_CLUSTER: activation, gain and symmetry clamp",
+      "kind": "OPERATION_POLICY",
+      "role": "composition",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-POISSON-CLUSTER"
+      ],
+      "payload": {
+        "subject": "OP_PARTITION_POISSON_CLUSTER",
+        "params": {
+          "dense_sparse_contrast_magnitude": 0.4,
+          "symmetry_reduction_gain": 0.15,
+          "symmetry_min": 0.3,
+          "symmetry_max": 0.95
+        },
+        "rationale": "Active while the DENSE_SPARSE magnitude is below dense_sparse_contrast_magnitude; lowers axial symmetry by (1 - magnitude) * symmetry_reduction_gain, clamped to [symmetry_min, symmetry_max]."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-AXIAL-ORDER",
+      "title": "OP_CALIBRATE_AXIAL_ORDER: period gate and axial symmetry target",
+      "kind": "OPERATION_POLICY",
+      "role": "composition",
+      "confidence": 0.65,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-AXIAL-ORDER"
+      ],
+      "payload": {
+        "subject": "OP_CALIBRATE_AXIAL_ORDER",
+        "params": {
+          "axial_symmetry_target": 0.85
+        },
+        "flags": {
+          "applies_to_period": {
+            "$by_period": {
+              "TANG": true,
+              "SONG": false,
+              "MING": false
+            }
+          }
+        },
+        "rationale": "Period-specific: only the 雄浑巨构 TANG paradigm requires strong central-axis symmetry (flag applies_to_period). Where enabled and axial symmetry is below axial_symmetry_target, it is calibrated up to the target."
+      }
+    },
     {
       "rule_id": "CAS-OP-LAYER-DEPTH",
       "title": "OP_LAYER_DEPTH_RECESSION: canonical depth layers per period",
@@ -9,7 +108,8 @@
       "role": "spatial",
       "confidence": 0.65,
       "sources": [
-        "SRC-DC-DESIGN-OPERATIONS"
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-LAYER-DEPTH"
       ],
       "payload": {
         "subject": "OP_LAYER_DEPTH_RECESSION",
@@ -24,6 +124,289 @@
           "near_far_present_magnitude": 0.5
         },
         "rationale": "TANG 4 (雄浑巨构，多层进深) / SONG 5 (山水意境，深远层次) / MING 3 (简雅秩序，适度进深); NEAR_FAR magnitude >= 0.5 means depth recession is already present."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-ATMOSPHERIC-VOID",
+      "title": "OP_INJECT_ATMOSPHERIC_VOID: activation, gain and ambient clamp",
+      "kind": "OPERATION_POLICY",
+      "role": "spatial",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-ATMOSPHERIC-VOID"
+      ],
+      "payload": {
+        "subject": "OP_INJECT_ATMOSPHERIC_VOID",
+        "params": {
+          "boundary_energy_min": 0.1,
+          "ambient_gain": 0.2,
+          "ambient_min": 0.1,
+          "ambient_max": 0.5
+        },
+        "rationale": "Active when the BOUNDARY node energy reaches boundary_energy_min (hard depth edges); raises the ambient ratio by energy * ambient_gain, clamped to [ambient_min, ambient_max]. The ambient clamp is defined here once and shared by the cool-shadow and mist-scatter operators ($ref)."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-HORIZON",
+      "title": "OP_SHIFT_HORIZON_PROPORTION: mediocre horizon band and period pitch target",
+      "kind": "OPERATION_POLICY",
+      "role": "spatial",
+      "confidence": 0.65,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-HORIZON"
+      ],
+      "payload": {
+        "subject": "OP_SHIFT_HORIZON_PROPORTION",
+        "params": {
+          "target_angle": {
+            "$by_period": {
+              "TANG": -15,
+              "SONG": 10,
+              "MING": -5
+            }
+          },
+          "mediocre_angle_band": 5
+        },
+        "rationale": "Active when the camera pitch lies within the mediocre band (|angle| <= mediocre_angle_band degrees); sets the period canonical pitch target_angle: TANG -15 (虫眼仰角，凸显雄浑巨构), SONG 10 (俯瞰苍茫，山水意境), MING -5 (适度仰视，秩序庄严)."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-OCCLUSION-FRAME",
+      "title": "OP_FRAME_SECONDARY_OCCLUSION: activation, gain and negative-space bounds",
+      "kind": "OPERATION_POLICY",
+      "role": "spatial",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-OCCLUSION-FRAME",
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "subject": "OP_FRAME_SECONDARY_OCCLUSION",
+        "params": {
+          "open_close_contained_magnitude": 0.5,
+          "framing_gain": 0.3,
+          "negative_space_compression": 0.5,
+          "negative_space_min": {
+            "$band": {
+              "parameter": "scene.composition.negativeSpaceRatio",
+              "edge": "min"
+            }
+          },
+          "negative_space_max": {
+            "$band": {
+              "parameter": "scene.composition.negativeSpaceRatio",
+              "edge": "max"
+            }
+          }
+        },
+        "rationale": "Active while the OPEN_CLOSE magnitude is below open_close_contained_magnitude; lowers negative space by (1 - magnitude) * framing_gain * negative_space_compression. The result is bounded by the effective band of negative space of the context (ADR-0001: negative_space_min/max are band edges, not local numbers); a lowering operator never raises the ratio."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-TIME-PATINA",
+      "title": "OP_APPLY_TIME_PATINA: activation, gains and roughness / wear clamps",
+      "kind": "OPERATION_POLICY",
+      "role": "material",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-TIME-PATINA"
+      ],
+      "payload": {
+        "subject": "OP_APPLY_TIME_PATINA",
+        "params": {
+          "material_energy_varied": 0.4,
+          "patina_gain": 0.3,
+          "roughness_gain": 0.3,
+          "roughness_min": 0.05,
+          "roughness_max": 0.95,
+          "wear_gain": 0.4,
+          "wear_min": 0.05,
+          "wear_max": 0.9
+        },
+        "rationale": "Active while the MATERIAL energy is below material_energy_varied; patina = (1 - energy) * patina_gain adds patina * roughness_gain to roughness (clamped to roughness_min/max) and patina * wear_gain to wear (clamped to wear_min/max) of the dominant material. The wear clamp is shared with the surface-entropy operator ($ref)."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-SPECULAR-DAMPEN",
+      "title": "OP_DAMPEN_SPECULAR_HARSHNESS: activation, gain and softness clamp",
+      "kind": "OPERATION_POLICY",
+      "role": "material",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-SPECULAR-DAMPEN"
+      ],
+      "payload": {
+        "subject": "OP_DAMPEN_SPECULAR_HARSHNESS",
+        "params": {
+          "heavy_light_harsh_magnitude": 0.3,
+          "dampen_gain": 0.3,
+          "softness_min": 0.3,
+          "softness_max": 0.95
+        },
+        "rationale": "Active when the HEAVY_LIGHT magnitude reaches heavy_light_harsh_magnitude; raises key light softness by magnitude * dampen_gain, clamped to [softness_min, softness_max]."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-MATERIAL-CONTRAST",
+      "title": "OP_ORCHESTRATE_MATERIAL_CONTRAST: period roughness ladder",
+      "kind": "OPERATION_POLICY",
+      "role": "material",
+      "confidence": 0.65,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-MATERIAL-CONTRAST"
+      ],
+      "payload": {
+        "subject": "OP_ORCHESTRATE_MATERIAL_CONTRAST",
+        "params": {
+          "roughness_low_target": {
+            "$by_period": {
+              "TANG": 0.25,
+              "SONG": 0.35,
+              "MING": 0.4
+            }
+          },
+          "roughness_high_target": {
+            "$by_period": {
+              "TANG": 0.65,
+              "SONG": 0.6,
+              "MING": 0.55
+            }
+          },
+          "spread_satisfied_fraction": 0.8
+        },
+        "rationale": "Needs two materials; dominant -> roughness_low_target, secondary -> roughness_high_target. TANG 0.25/0.65 (金石低糙，木石高糙，对比强烈), SONG 0.35/0.6 (清润，适度对比), MING 0.4/0.55 (简雅，温润接近). Skipped when the current spread already reaches spread_satisfied_fraction of the target spread."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-SURFACE-ENTROPY",
+      "title": "OP_WEATHER_SURFACE_ENTROPY: activation, gain and wear clamp",
+      "kind": "OPERATION_POLICY",
+      "role": "material",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-SURFACE-ENTROPY"
+      ],
+      "payload": {
+        "subject": "OP_WEATHER_SURFACE_ENTROPY",
+        "params": {
+          "time_energy_weathered": 0.3,
+          "entropy_gain": 0.25,
+          "wear_min": {
+            "$ref": "CAS-OP-TIME-PATINA/payload/params/wear_min"
+          },
+          "wear_max": {
+            "$ref": "CAS-OP-TIME-PATINA/payload/params/wear_max"
+          }
+        },
+        "rationale": "Active while the TIME energy is below time_energy_weathered; raises wear of the dominant material by (1 - energy) * entropy_gain, clamped to the wear clamp defined once in the time-patina operator ($ref)."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-SKY-LUMINANCE",
+      "title": "OP_HARMONIZE_SKY_LUMINANCE: conflict threshold, gain and intensity clamp",
+      "kind": "OPERATION_POLICY",
+      "role": "lighting",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-SKY-LUMINANCE"
+      ],
+      "payload": {
+        "subject": "OP_HARMONIZE_SKY_LUMINANCE",
+        "params": {
+          "light_energy_conflict": 0.7,
+          "harmonize_gain": 0.3,
+          "intensity_min": 0.4,
+          "intensity_max": 1.4
+        },
+        "rationale": "Active when the LIGHT energy reaches light_energy_conflict while a rim light is present; removes the rim light and lowers key intensity by (energy - light_energy_conflict) * harmonize_gain, clamped to [intensity_min, intensity_max]. The intensity clamp is defined here once and shared with the accent-luminance operator ($ref)."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-SHADOW-CHROMA",
+      "title": "OP_COOL_SHADOW_CHROMATICITY: activation, gain and ambient clamp",
+      "kind": "OPERATION_POLICY",
+      "role": "lighting",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-SHADOW-CHROMA"
+      ],
+      "payload": {
+        "subject": "OP_COOL_SHADOW_CHROMATICITY",
+        "params": {
+          "high_low_differentiated_magnitude": 0.3,
+          "shadow_gain": 0.15,
+          "ambient_min": {
+            "$ref": "CAS-OP-ATMOSPHERIC-VOID/payload/params/ambient_min"
+          },
+          "ambient_max": {
+            "$ref": "CAS-OP-ATMOSPHERIC-VOID/payload/params/ambient_max"
+          }
+        },
+        "rationale": "Active while the HIGH_LOW magnitude is below high_low_differentiated_magnitude; raises the ambient ratio by (1 - magnitude) * shadow_gain, clamped to the ambient clamp defined once in the atmospheric-void operator ($ref)."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-MIST-SCATTER",
+      "title": "OP_FILTER_MIST_SCATTER: hard-light condition, gains and softness clamp",
+      "kind": "OPERATION_POLICY",
+      "role": "lighting",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-MIST-SCATTER"
+      ],
+      "payload": {
+        "subject": "OP_FILTER_MIST_SCATTER",
+        "params": {
+          "hard_light_energy_min": 0.6,
+          "hard_light_softness_max": 0.5,
+          "scatter_gain": 0.25,
+          "softness_min": 0.3,
+          "softness_max": 0.9,
+          "ambient_scatter_fraction": 0.3,
+          "ambient_min": {
+            "$ref": "CAS-OP-ATMOSPHERIC-VOID/payload/params/ambient_min"
+          },
+          "ambient_max": {
+            "$ref": "CAS-OP-ATMOSPHERIC-VOID/payload/params/ambient_max"
+          }
+        },
+        "rationale": "Active for hard light (LIGHT energy >= hard_light_energy_min and softness < hard_light_softness_max); scatter = energy * (1 - softness) * scatter_gain raises softness (clamped to softness_min/max) and ambient by scatter * ambient_scatter_fraction (ambient clamp shared via $ref)."
+      }
+    },
+    {
+      "rule_id": "CAS-OP-ACCENT-LUMINANCE",
+      "title": "OP_RESTRICT_ACCENT_LUMINANCE: accent limit, proxy scale and intensity clamp",
+      "kind": "OPERATION_POLICY",
+      "role": "lighting",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-DESIGN-OPERATIONS",
+        "SRC-DC-OP-ACCENT-LUMINANCE"
+      ],
+      "payload": {
+        "subject": "OP_RESTRICT_ACCENT_LUMINANCE",
+        "params": {
+          "accent_area_limit": 0.03,
+          "accent_proxy_scale": 10,
+          "intensity_reduction_gain": 0.3,
+          "intensity_min": {
+            "$ref": "CAS-OP-SKY-LUMINANCE/payload/params/intensity_min"
+          },
+          "intensity_max": {
+            "$ref": "CAS-OP-SKY-LUMINANCE/payload/params/intensity_max"
+          }
+        },
+        "rationale": "Accent area share must stay <= accent_area_limit. Strength proxy = max(0, colour temperature bias) * key intensity, compared with accent_area_limit * accent_proxy_scale; the excess lowers intensity by reduction * intensity_reduction_gain, clamped to the intensity clamp defined once in the sky-luminance operator ($ref)."
       }
     }
   ]
