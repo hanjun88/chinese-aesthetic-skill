@@ -1,0 +1,5 @@
+{
+  "family": "CAS-PS",
+  "description": "Proportion and spatial decisions (canonical ratios, scale levels, human-scale areas) read by lib/proportion-engine.js and lib/spatial-engine.js.",
+  "rules": []
+}

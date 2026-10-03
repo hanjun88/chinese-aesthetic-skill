@@ -15,6 +15,12 @@ import SRC_CAS_GOV from './sources/CAS-GOV.json' with { type: 'json' };
 import SRC_CAS_MT from './sources/CAS-MT.json' with { type: 'json' };
 import SRC_CAS_LT from './sources/CAS-LT.json' with { type: 'json' };
 import SRC_CAS_PG from './sources/CAS-PG.json' with { type: 'json' };
+import SRC_CAS_CH from './sources/CAS-CH.json' with { type: 'json' };
+import SRC_CAS_CL from './sources/CAS-CL.json' with { type: 'json' };
+import SRC_CAS_PS from './sources/CAS-PS.json' with { type: 'json' };
+import SRC_CAS_IN from './sources/CAS-IN.json' with { type: 'json' };
+import SRC_CAS_VM from './sources/CAS-VM.json' with { type: 'json' };
+import SRC_CAS_AA from './sources/CAS-AA.json' with { type: 'json' };
 import CAS_VS from './families/CAS-VS.json' with { type: 'json' };
 import CAS_PB from './families/CAS-PB.json' with { type: 'json' };
 import CA_RULE from './families/CA-RULE.json' with { type: 'json' };
@@ -27,6 +33,12 @@ import CAS_GOV from './families/CAS-GOV.json' with { type: 'json' };
 import CAS_MT from './families/CAS-MT.json' with { type: 'json' };
 import CAS_LT from './families/CAS-LT.json' with { type: 'json' };
 import CAS_PG from './families/CAS-PG.json' with { type: 'json' };
+import CAS_CH from './families/CAS-CH.json' with { type: 'json' };
+import CAS_CL from './families/CAS-CL.json' with { type: 'json' };
+import CAS_PS from './families/CAS-PS.json' with { type: 'json' };
+import CAS_IN from './families/CAS-IN.json' with { type: 'json' };
+import CAS_VM from './families/CAS-VM.json' with { type: 'json' };
+import CAS_AA from './families/CAS-AA.json' with { type: 'json' };
 
 export default {
   registry_version: '1.0.0',
@@ -49,6 +61,12 @@ export default {
     'CAS-MT': SRC_CAS_MT,
     'CAS-LT': SRC_CAS_LT,
     'CAS-PG': SRC_CAS_PG,
+    'CAS-CH': SRC_CAS_CH,
+    'CAS-CL': SRC_CAS_CL,
+    'CAS-PS': SRC_CAS_PS,
+    'CAS-IN': SRC_CAS_IN,
+    'CAS-VM': SRC_CAS_VM,
+    'CAS-AA': SRC_CAS_AA,
   },
   families: {
     'CAS-VS': CAS_VS,
@@ -63,5 +81,11 @@ export default {
     'CAS-MT': CAS_MT,
     'CAS-LT': CAS_LT,
     'CAS-PG': CAS_PG,
+    'CAS-CH': CAS_CH,
+    'CAS-CL': CAS_CL,
+    'CAS-PS': CAS_PS,
+    'CAS-IN': CAS_IN,
+    'CAS-VM': CAS_VM,
+    'CAS-AA': CAS_AA,
   },
 };

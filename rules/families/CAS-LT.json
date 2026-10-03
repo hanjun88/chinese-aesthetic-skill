@@ -1,5 +1,5 @@
 {
   "family": "CAS-LT",
-  "description": "Lighting decisions (key light defaults per lighting type).",
+  "description": "Lighting decisions (angle, contrast, colour-temperature limits) read by lib/light-engine.js.",
   "rules": []
 }

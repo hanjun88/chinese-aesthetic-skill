@@ -1,0 +1,5 @@
+{
+  "family": "CAS-CL",
+  "description": "Colour decisions (saturation grades, area ratios, palette rules) read by lib/color-engine.js.",
+  "rules": []
+}

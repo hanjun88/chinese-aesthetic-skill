@@ -1,0 +1,5 @@
+{
+  "family": "CAS-CH",
+  "description": "Chineseness scoring rubric (dimension checks, point tiers, grade lines) read by lib/chineseness.js.",
+  "rules": []
+}
