@@ -45,7 +45,7 @@ function scopeFiles() {
 
 // threshold-shaped statements in prose / YAML (not code identifiers)
 const THRESHOLD = [
-  /(?:≥|≤|>=|<=|＞|＜|>|<)\s*\d+(?:\.\d+)?\s*%?/,
+  /(?:≥|≤|>=|<=|＞|＜|>|<)\s*(?!(?:0|1)(?![\d.]))\d+(?:\.\d+)?\s*%?/,
   /\d+(?:\.\d+)?\s*%\s*(?:以上|以下|起|止|硬阈值)/,
   /(?:阈值|门槛|下限|上限|至少|不低于|不超过|不少于)[^\n|]{0,12}\d+(?:\.\d+)?/,
   /\b(?:min|max|threshold|floor|ceiling)\w*\s*[:=]\s*-?\d+(?:\.\d+)?/i,
