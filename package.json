@@ -34,7 +34,7 @@
     "url": "https://github.com/hanjun88/chinese-aesthetic-skill.git"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "^18.20.0 || >=20.10.0"
   },
   "dependencies": {},
   "comment_dependencies": "lib/ 引擎层零运行时依赖（纯 ESM，只 import 本仓库的 rules/ 登记簿 JSON）。下列 React 系依赖仅供 src/ 的 Vite UI demo 使用，运行时不需要。",

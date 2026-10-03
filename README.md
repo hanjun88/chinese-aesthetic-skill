@@ -19,6 +19,8 @@ finesse-brief（需求规格）
 
 ## 安装
 
+**运行要求**：Node.js 18.20 及之后的 18 线，或 20.10 及之后（精确范围见 `package.json` 的 `engines`）。引擎经 JSON import attributes（`with { type: 'json' }`）读取 `rules/` 登记簿，这两条线上更早的版本无法加载 `lib/`。
+
 ```bash
 # 方式一：Impeccable / CLI
 npx skills add git+https://github.com/hanjun88/chinese-aesthetic-skill.git
@@ -113,7 +115,7 @@ npm run evidence    # 重新运行并生成下表
 |---|---|---:|---:|
 | Engine integration tests | `node tests/engines.test.js` | 112 | 0 |
 | Rules registry tests | `node --test tests/rules/*.test.js` | 43 | 0 |
-| Docs generator tests | `node --test tests/docs/*.test.js` | 61 | 0 |
+| Docs generator tests | `node --test tests/docs/*.test.js` | 70 | 0 |
 
 | Gate | Command | Result |
 |---|---|---|

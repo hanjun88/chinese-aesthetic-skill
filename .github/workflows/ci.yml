@@ -15,7 +15,12 @@ concurrency:
 
 jobs:
   build-and-test:
+    name: build-and-test (node ${{ matrix.node }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22]
     steps:
       - uses: actions/checkout@v4
 
@@ -25,7 +30,7 @@ jobs:
       # found".
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ matrix.node }}
 
       # `npm ci` cannot be used here for the same reason.
       - name: Install dependencies
@@ -34,11 +39,43 @@ jobs:
       - name: Type check (tsc --noEmit)
         run: npm run lint
 
-      - name: Engine tests
+      # engines + rules (registry, derivation, emitter, conflicts) + docs tests + registry / docs / conflict lints
+      - name: Engine, rules and docs tests, registry lint
         run: npm test
+
+      # The README rule table and test-evidence table are generated: a stale one (or a hand-edited one) fails here.
+      - name: Generated README blocks are current
+        run: npm run docs:check
 
       - name: Build
         run: npm run build
+
+      - name: Sheet generation is deterministic (two emissions of every valid context are byte-identical)
+        run: |
+          node scripts/emit-sheet.mjs --all --out-dir "$RUNNER_TEMP/sheets-a"
+          node scripts/emit-sheet.mjs --all --out-dir "$RUNNER_TEMP/sheets-b"
+          diff -r "$RUNNER_TEMP/sheets-a" "$RUNNER_TEMP/sheets-b"
+
+  # package.json `engines` declares the floor of both supported lines (^18.20.0 || >=20.10.0): the registry is read
+  # through JSON import attributes (`with { type: 'json' }`), which older releases of those lines cannot parse. The
+  # engines, the registry, the emitter and their tests have no dependencies, so the floor is exercised without an
+  # install (the type check and the UI build need a current toolchain and run above).
+  engines-floor:
+    name: engines floor (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18.20.4, 20.10.0]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Engine, rules and docs tests, registry lint
+        run: npm test
 
   security:
     name: Security Scan
