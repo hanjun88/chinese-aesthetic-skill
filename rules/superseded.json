@@ -1,0 +1,6 @@
+[
+  { "literal": "留白≥30%", "superseded_by": "CAS-VS-HF-001", "adr": "ADR-0001", "why": "v1 floor, superseded by the 60% bright-landscape hard floor the same day (8f30a14)" },
+  { "literal": "留白 ≥ 30%", "superseded_by": "CAS-VS-HF-001", "adr": "ADR-0001", "why": "v1 floor" },
+  { "literal": "留白>=30%", "superseded_by": "CAS-VS-HF-001", "adr": "ADR-0001", "why": "v1 floor" },
+  { "literal": "74 passed", "superseded_by": "generated evidence block", "adr": "docs/closure/README.md", "why": "hand-written test count; the suite is larger and counts are generated" }
+]

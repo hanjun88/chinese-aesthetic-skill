@@ -1,0 +1,469 @@
+{
+  "family": "CAS-PB",
+  "description": "Period (TANG / SONG / MING) prior bands for every scene parameter except void_ratio (see CAS-VS). Bands constrain the parameter-solving space of the design operators; they are priors, not absolutes.",
+  "rules": [
+    {
+      "rule_id": "CAS-PB-TANG-AXIALSYMMETRY",
+      "title": "TANG axial_symmetry period band",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "TANG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.composition.axialSymmetry",
+        "ir_pointer": "/composition/symmetry",
+        "metric": "axial_symmetry",
+        "semantics": "PERIOD_BAND",
+        "min": 0.7,
+        "max": 1.0,
+        "unit": "ratio",
+        "rationale": "唐代建筑严格中轴对称，秩序感极强"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-TANG-FOCALOFFSET",
+      "title": "TANG focal_offset period band",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "TANG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.composition.focalOffset",
+        "metric": "focal_offset",
+        "semantics": "PERIOD_BAND",
+        "min": 0.0,
+        "max": 0.15,
+        "unit": "ratio",
+        "rationale": "唐代中轴对称构图，焦点偏移极小"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-TANG-ROUGHNESS",
+      "title": "TANG roughness period band",
+      "kind": "PARAMETER_BAND",
+      "role": "material",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "TANG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.material.roughness",
+        "ir_pointer": "/materials/0/roughness",
+        "metric": "roughness",
+        "semantics": "PERIOD_BAND",
+        "min": 0.3,
+        "max": 0.6,
+        "unit": "ratio",
+        "rationale": "唐代金石材质，表面相对光滑但有包浆"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-TANG-PATINALEVEL",
+      "title": "TANG patina_level period band",
+      "kind": "PARAMETER_BAND",
+      "role": "material",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "TANG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.material.patinaLevel",
+        "metric": "patina_level",
+        "semantics": "PERIOD_BAND",
+        "min": 0.4,
+        "max": 0.8,
+        "unit": "ratio",
+        "rationale": "唐代金石包浆厚重，岁月感强"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-TANG-ACCENTLUMINANCE",
+      "title": "TANG accent_luminance period band",
+      "kind": "PARAMETER_BAND",
+      "role": "lighting",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "TANG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.lighting.accentLuminance",
+        "metric": "accent_luminance",
+        "semantics": "PERIOD_BAND",
+        "min": 0.5,
+        "max": 0.9,
+        "unit": "ratio",
+        "rationale": "唐代金碧辉煌，强调色亮度突出"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-TANG-SKYLUMINANCE",
+      "title": "TANG sky_luminance period band",
+      "kind": "PARAMETER_BAND",
+      "role": "lighting",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "TANG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.lighting.skyLuminance",
+        "metric": "sky_luminance",
+        "semantics": "PERIOD_BAND",
+        "min": 0.4,
+        "max": 0.75,
+        "unit": "ratio",
+        "rationale": "唐代天空明亮，整体光照充足"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-SONG-AXIALSYMMETRY",
+      "title": "SONG axial_symmetry period band",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "SONG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.composition.axialSymmetry",
+        "ir_pointer": "/composition/symmetry",
+        "metric": "axial_symmetry",
+        "semantics": "PERIOD_BAND",
+        "min": 0.3,
+        "max": 0.7,
+        "unit": "ratio",
+        "rationale": "宋代山水非严格对称，追求自然错落"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-SONG-DEPTHLAYERS",
+      "title": "SONG depth_layers period band",
+      "kind": "PARAMETER_BAND",
+      "role": "spatial",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "SONG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.spatial.depthLayers",
+        "ir_pointer": "/composition/depthLayerCount",
+        "metric": "depth_layers",
+        "semantics": "PERIOD_BAND",
+        "min": 3,
+        "max": 6,
+        "unit": "count",
+        "rationale": "宋代深远气韵，层次丰富，三远法（高远/深远/平远）"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-SONG-ATMOSPHERICDENSITY",
+      "title": "SONG atmospheric_density period band",
+      "kind": "PARAMETER_BAND",
+      "role": "spatial",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "SONG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.spatial.atmosphericDensity",
+        "metric": "atmospheric_density",
+        "semantics": "PERIOD_BAND",
+        "min": 0.3,
+        "max": 0.7,
+        "unit": "ratio",
+        "rationale": "宋代烟雨清润，雾气密度高，大气透视明显"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-SONG-ROUGHNESS",
+      "title": "SONG roughness period band",
+      "kind": "PARAMETER_BAND",
+      "role": "material",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "SONG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.material.roughness",
+        "ir_pointer": "/materials/0/roughness",
+        "metric": "roughness",
+        "semantics": "PERIOD_BAND",
+        "min": 0.4,
+        "max": 0.8,
+        "unit": "ratio",
+        "rationale": "宋代材质温润自然，粗糙度较高"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-SONG-SURFACEENTROPY",
+      "title": "SONG surface_entropy period band",
+      "kind": "PARAMETER_BAND",
+      "role": "material",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "SONG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.material.surfaceEntropy",
+        "metric": "surface_entropy",
+        "semantics": "PERIOD_BAND",
+        "min": 0.3,
+        "max": 0.65,
+        "unit": "ratio",
+        "rationale": "宋代自然质感，表面变化丰富但不杂乱"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-SONG-MISTDENSITY",
+      "title": "SONG mist_density period band",
+      "kind": "PARAMETER_BAND",
+      "role": "lighting",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "SONG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.lighting.mistDensity",
+        "metric": "mist_density",
+        "semantics": "PERIOD_BAND",
+        "min": 0.25,
+        "max": 0.65,
+        "unit": "ratio",
+        "rationale": "宋代烟雨朦胧，雾气散射明显"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-SONG-SHADOWTEMPERATURE",
+      "title": "SONG shadow_temperature period band",
+      "kind": "PARAMETER_BAND",
+      "role": "lighting",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "SONG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.lighting.shadowTemperature",
+        "metric": "shadow_temperature",
+        "semantics": "PERIOD_BAND",
+        "min": 0.3,
+        "max": 0.6,
+        "unit": "ratio",
+        "rationale": "宋代阴影偏冷，青绿色调"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-MING-AXIALSYMMETRY",
+      "title": "MING axial_symmetry period band",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "MING"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.composition.axialSymmetry",
+        "ir_pointer": "/composition/symmetry",
+        "metric": "axial_symmetry",
+        "semantics": "PERIOD_BAND",
+        "min": 0.5,
+        "max": 0.8,
+        "unit": "ratio",
+        "rationale": "明代文房秩序，轴向对称中等偏高"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-MING-CLUSTERDENSITY",
+      "title": "MING cluster_density period band",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "MING"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.composition.clusterDensity",
+        "metric": "cluster_density",
+        "semantics": "PERIOD_BAND",
+        "min": 0.3,
+        "max": 0.6,
+        "unit": "ratio",
+        "rationale": "明代布局疏密得当，不过密不过疏"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-MING-ROUGHNESS",
+      "title": "MING roughness period band",
+      "kind": "PARAMETER_BAND",
+      "role": "material",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "MING"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.material.roughness",
+        "ir_pointer": "/materials/0/roughness",
+        "metric": "roughness",
+        "semantics": "PERIOD_BAND",
+        "min": 0.4,
+        "max": 0.7,
+        "unit": "ratio",
+        "rationale": "明代木器材质，温暖质感，粗糙度中等偏高"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-MING-PATINALEVEL",
+      "title": "MING patina_level period band",
+      "kind": "PARAMETER_BAND",
+      "role": "material",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "MING"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.material.patinaLevel",
+        "metric": "patina_level",
+        "semantics": "PERIOD_BAND",
+        "min": 0.3,
+        "max": 0.65,
+        "unit": "ratio",
+        "rationale": "明代木器包浆自然，岁月感适中"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-MING-CONTRASTRATIO",
+      "title": "MING contrast_ratio period band",
+      "kind": "PARAMETER_BAND",
+      "role": "material",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "MING"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.material.contrastRatio",
+        "metric": "contrast_ratio",
+        "semantics": "PERIOD_BAND",
+        "min": 0.25,
+        "max": 0.55,
+        "unit": "ratio",
+        "rationale": "明代材质对比温和，不强烈"
+      }
+    },
+    {
+      "rule_id": "CAS-PB-MING-ACCENTLUMINANCE",
+      "title": "MING accent_luminance period band",
+      "kind": "PARAMETER_BAND",
+      "role": "lighting",
+      "confidence": 0.65,
+      "applies_to": {
+        "period": [
+          "MING"
+        ]
+      },
+      "sources": [
+        "SRC-DC-PERIOD-PRIOR"
+      ],
+      "payload": {
+        "parameter": "scene.lighting.accentLuminance",
+        "metric": "accent_luminance",
+        "semantics": "PERIOD_BAND",
+        "min": 0.3,
+        "max": 0.6,
+        "unit": "ratio",
+        "rationale": "明代强调色适度，不刺眼"
+      }
+    }
+  ]
+}

@@ -9,8 +9,12 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0 --port 3000",
     "lint": "tsc --noEmit",
-    "test": "node tests/engines.test.js",
+    "test": "node tests/engines.test.js && npm run test:rules && npm run lint:rules && npm run lint:conflicts",
     "test:engines": "node tests/engines.test.js",
+    "test:rules": "node --test tests/rules/*.test.js",
+    "lint:rules": "node scripts/lint-rules.mjs",
+    "lint:conflicts": "node scripts/lint-conflicts.mjs",
+    "emit:sheet": "node scripts/emit-sheet.mjs",
     "test:gates": "node scripts/validate.cjs",
     "gate1": "node scripts/validate.cjs --gate 1",
     "gate2": "node scripts/validate.cjs --gate 2",
@@ -28,7 +32,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {},
-  "comment_dependencies": "lib/ 引擎层零运行时依赖（纯 ESM，零 import）。下列 React 系依赖仅供 src/ 的 Vite UI demo 使用，运行时不需要。",
+  "comment_dependencies": "lib/ 引擎层零运行时依赖（纯 ESM，只 import 本仓库的 rules/ 登记簿 JSON）。下列 React 系依赖仅供 src/ 的 Vite UI demo 使用，运行时不需要。",
   "devDependencies": {
     "lucide-react": "^1.47.0",
     "motion": "^13.4.0",

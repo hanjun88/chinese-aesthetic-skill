@@ -1,0 +1,64 @@
+{
+  "family": "CAS-GOV",
+  "description": "Conflict priority, compliance scoring weights and graph interpretation parameters.",
+  "rules": [
+    {
+      "rule_id": "CAS-GOV-001",
+      "title": "Conflict priority between operation categories",
+      "kind": "PRIORITY_ORDER",
+      "role": "governance",
+      "confidence": 0.7,
+      "sources": [
+        "SRC-DC-CONFLICT-PRIORITY"
+      ],
+      "payload": {
+        "order": [
+          "composition",
+          "spatial",
+          "lighting",
+          "material"
+        ],
+        "rationale": "When design operators compete for one parameter the higher category wins: composition > spatial > lighting > material."
+      }
+    },
+    {
+      "rule_id": "CAS-GOV-002",
+      "title": "Compliance score category weights",
+      "kind": "SCORING_WEIGHTS",
+      "role": "evaluation",
+      "confidence": 0.7,
+      "sources": [
+        "SRC-DC-SCORING-WEIGHTS"
+      ],
+      "payload": {
+        "weights": {
+          "composition": 0.35,
+          "lighting": 0.25,
+          "color": 0.2,
+          "materials": 0.2
+        },
+        "rationale": "Relative weight of each rule category in the grammar compliance score; sums to 1."
+      }
+    },
+    {
+      "rule_id": "CAS-GOV-003",
+      "title": "SOLID_VOID relation: interpretation parameters of the interlock magnitude",
+      "kind": "OPERATION_POLICY",
+      "role": "governance",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-GRAPH-SOLID-VOID"
+      ],
+      "payload": {
+        "subject": "GRAPH_SOLID_VOID",
+        "params": {
+          "optimal_ratio": 0.4,
+          "ratio_spread": 0.3,
+          "component_limit": 10,
+          "integrity_weight": 0.5
+        },
+        "rationale": "Interlock magnitude = ratio_fit * ((1 - integrity_weight) + void_integrity * integrity_weight). ratio_fit: triangular fit of the measured negative-space share, peak at optimal_ratio, zero at optimal_ratio +/- ratio_spread. void_integrity = largest void share * max(0, 1 - components / component_limit). The share is the pixel estimator (lower bound of void_ratio, ADR-0001 sec. 1): optimal_ratio is NOT a void_ratio target; period bands live in CAS-VS."
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "SRC-DC-GRAPH-SOLID-VOID": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/graph/derivers/solid-void.ts",
+    "quote": "虚实咬合度：负空间比例的“适中度”（0.3-0.5 为最佳咬合区间）；三角形函数在最优比例处达到峰值 1，向两端递减；咬合度 = 比例适中度 × 虚空完整性"
+  }
+}
