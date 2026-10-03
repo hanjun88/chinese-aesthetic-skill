@@ -1,0 +1,32 @@
+{
+  "main": {
+    "disposition": "DEFAULT_BASE",
+    "reason": "Default branch and the skill's own trunk. The skill is the single source of truth for aesthetic knowledge; the closure PR lands here."
+  },
+  "claude/great-franklin-1b8wp2": {
+    "disposition": "INTEGRATION_BRANCH",
+    "reason": "Closure work branch (main + rule registry + sheet generator + conformance). Source of the closure PR."
+  },
+  "feat/frontend-playbook-v2": {
+    "disposition": "DEPRECATED_PARALLEL",
+    "reason": "PR #3: adds an execution-layer (plan-to-dom, ecosystem plan-to-{figma,threejs,react}, rendered-feedback), a frontend implementation layer, moves react into runtime dependencies, and ships its own copy of 'Contract A' (sheet-to-cangjie.ts + a local AestheticConstraintSheet type). Out of the skill's role and a parallel contract. Its dimension-registry idea is re-derived from the rule registry; nothing is merged as-is.",
+    "action": "Comment on PR #3 as superseded by the closure PR and close it; branch stays on the remote (not deleted)."
+  },
+  "feat/heartmirror-phase-ab-task2": {
+    "disposition": "DEPRECATED_PARALLEL",
+    "reason": "Third parallel adapter (AestheticToCompilerAdapter + EnhancedSceneIRGenerator) living in the skill repo. The only adapter is the compiler-side sheet adapter.",
+    "action": "Branch stays on the remote (not deleted)."
+  },
+  "ci/add-code-review": { "disposition": "CONTAINED_IN_DEFAULT", "reason": "0 commits ahead of main; its CI content already landed on main." },
+  "feature/add-code-review-workflow": { "disposition": "CONTAINED_IN_DEFAULT", "reason": "0 commits ahead of main." },
+  "chore/automation-review": {
+    "disposition": "SUPERSEDED_BY_CLOSURE_CI",
+    "reason": "PR #1: reproducible-environment + automated code-review scaffolding for the pre-closure layout; superseded by the closure CI.",
+    "action": "Comment on PR #1 as superseded and close it."
+  },
+  "chore/drive-sync-20260918": {
+    "disposition": "NOT_CARRIED_DOCS_ONLY",
+    "reason": "PR #2: Google Drive reference sync (2 docs files). Unrelated to the closure; left for the owner.",
+    "action": "No action; PR stays open."
+  }
+}
