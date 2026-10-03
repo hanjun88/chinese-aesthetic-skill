@@ -70,6 +70,20 @@ export function lint() {
     }
   }
 
+  // --- payload hygiene: no empty keys, only known derivation operators ------------------------------
+  const OPS = new Set(['$by_period', '$by_material', '$by_lighting', '$by_scene_type', '$band', '$clamp', '$ref', '$min', '$max']);
+  const walk = (v, rule, path) => {
+    if (Array.isArray(v)) v.forEach((x, i) => walk(x, rule, `${path}[${i}]`));
+    else if (v !== null && typeof v === 'object') {
+      for (const [k, x] of Object.entries(v)) {
+        if (k === '') bad(`${rule}: empty key at ${path}`);
+        if (k.startsWith('$') && !OPS.has(k)) bad(`${rule}: unknown derivation operator ${k} at ${path}`);
+        walk(x, rule, `${path}.${k}`);
+      }
+    }
+  };
+  for (const r of REGISTRY.rules) walk(r.payload, r.rule_id, 'payload');
+
   // --- every context --------------------------------------------------------------------------
   const { valid, excluded } = enumerateContexts();
   stats.contexts_valid = valid.length;

@@ -14,6 +14,7 @@ import SRC_CAS_EV from './sources/CAS-EV.json' with { type: 'json' };
 import SRC_CAS_GOV from './sources/CAS-GOV.json' with { type: 'json' };
 import SRC_CAS_MT from './sources/CAS-MT.json' with { type: 'json' };
 import SRC_CAS_LT from './sources/CAS-LT.json' with { type: 'json' };
+import SRC_CAS_PG from './sources/CAS-PG.json' with { type: 'json' };
 import CAS_VS from './families/CAS-VS.json' with { type: 'json' };
 import CAS_PB from './families/CAS-PB.json' with { type: 'json' };
 import CA_RULE from './families/CA-RULE.json' with { type: 'json' };
@@ -25,6 +26,7 @@ import CAS_EV from './families/CAS-EV.json' with { type: 'json' };
 import CAS_GOV from './families/CAS-GOV.json' with { type: 'json' };
 import CAS_MT from './families/CAS-MT.json' with { type: 'json' };
 import CAS_LT from './families/CAS-LT.json' with { type: 'json' };
+import CAS_PG from './families/CAS-PG.json' with { type: 'json' };
 
 export default {
   registry_version: '1.0.0',
@@ -46,6 +48,7 @@ export default {
     'CAS-GOV': SRC_CAS_GOV,
     'CAS-MT': SRC_CAS_MT,
     'CAS-LT': SRC_CAS_LT,
+    'CAS-PG': SRC_CAS_PG,
   },
   families: {
     'CAS-VS': CAS_VS,
@@ -59,5 +62,6 @@ export default {
     'CAS-GOV': CAS_GOV,
     'CAS-MT': CAS_MT,
     'CAS-LT': CAS_LT,
+    'CAS-PG': CAS_PG,
   },
 };

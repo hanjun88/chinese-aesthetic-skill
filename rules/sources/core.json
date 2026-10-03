@@ -66,5 +66,15 @@
     "kind": "expert-judgment",
     "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/operations/design-operations.ts",
     "quote": "migrated from design-compiler: design operator parameters and activation thresholds"
+  },
+  "SRC-DC-PERIOD-GRAMMAR": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/grammar/period-grammar-compiler.ts",
+    "quote": "migrated from design-compiler PERIOD_PRINCIPLES: each period's mother-grammar principles with a written rationale"
+  },
+  "SRC-DC-OPERATION-SELECTOR": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/compiler/operation-selector.ts",
+    "quote": "migrated from design-compiler PRINCIPLE_TO_OPERATIONS / RELATION_TO_OPERATIONS: explicit principle and relation to design-operator activation tables"
   }
 }
