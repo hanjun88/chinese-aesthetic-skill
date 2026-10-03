@@ -17,12 +17,12 @@
 | AC-1.1 | CA-PB-003 验收通过 | 找到审美验收报告且包含 PASS | 报告未找到 → BLOCKED_ENV；报告不含 PASS → FAIL | ACCEPTANCE_NOT_FOUND (BLOCKED_ENV) / ACCEPTANCE_NOT_PASS (FAIL) |
 | AC-1.2 | CA-PB-001 约束就绪 | 找到约束包且 status 为 PASS 或 TEMPLATE | 约束包未找到 → BLOCKED_ENV；status 非 PASS/TEMPLATE → FAIL | CONSTRAINT_NOT_FOUND (BLOCKED_ENV) / CONSTRAINT_NOT_READY (FAIL) |
 
-### AC-2: 编译契约版本（对应 SC-2 / Step 2）
+### AC-2: 交接契约钉扎（对应 SC-2 / Step 2）
 
 | ID | 检查项 | PASS 条件 | FAIL 条件 | 错误码 |
 |---|---|---|---|---|
-| AC-2.1 | scene.json schema 可定位 | 在 design-compiler 中找到 types.ts 或 schema 定义文件 | 未找到 → BLOCKED_ENV | SCHEMA_NOT_FOUND (BLOCKED_ENV) |
-| AC-2.2 | manifest schema 已确认 | SceneAssetManifest 类型定义存在于 schema 文件中 | 未找到 → BLOCKED_ENV | MANIFEST_SCHEMA_NOT_FOUND (BLOCKED_ENV) |
+| AC-2.1 | 钉扎与契约锁可读取 | 本仓库 `contract/dc-contract.pin.json` 与 design-compiler 的 `contracts/aesthetic-constraint-sheet/contract.lock.json` 均存在且含 contract_hash | 任一缺失或无 contract_hash → BLOCKED_ENV | CONTRACT_PIN_NOT_FOUND (BLOCKED_ENV) |
+| AC-2.2 | 钉扎与契约锁一致 | 两者的 schema_version 与 contract_hash 相同 | 不一致 → FAIL | CONTRACT_PIN_MISMATCH (FAIL) |
 
 ### AC-3: 资产清单完整性（对应 SC-3 / Step 3）
 
@@ -42,7 +42,7 @@
 | AC-4.4 | 深度图位深 16-bit | depth.webp 的 pix_fmt 含 16 或 bits_per_raw_sample >= 16 | 位深不足 16-bit → FAIL | DEPTH_BIT_DEPTH_INSUFFICIENT (FAIL) |
 | AC-4.5 | 技术规格汇总 | 所有图像通过规格检查 | 任一失败 → FAIL | TECH_SPEC_FAILURE (FAIL) |
 
-### AC-5: scene.json 契约验证（对应 SC-5 / Step 5）
+### AC-5: scene.json（资产包描述）验证（对应 SC-5 / Step 5）
 
 | ID | 检查项 | PASS 条件 | FAIL 条件 | 错误码 |
 |---|---|---|---|---|
@@ -115,9 +115,9 @@
 
 ## 判定规则（Verdict Rules）
 
-- **PASS**：资产通过审美验收、编译契约明确、必需资产齐全、技术规格符合、scene.json/manifest 合规、运行时层级明确、职责边界清晰、资产成功交接、证据完整归档
-- **FAIL**：资产缺失、技术规格不符、schema 违规、SHA-256/byteSize 不匹配、职责混写、交接不完整
-- **BLOCKED_ENV**：输入缺失、工具缺失、编译契约不明确、运行时能力不确认、ffprobe/sha256sum 执行失败、资产复制失败——不得标记 PASS
+- **PASS**：资产通过审美验收、交接契约钉扎一致、必需资产齐全、技术规格符合、scene.json/manifest 合规、运行时层级明确、职责边界清晰、资产成功交接、证据完整归档
+- **FAIL**：资产缺失、技术规格不符、契约钉扎不一致、资产包描述违规、SHA-256/byteSize 不匹配、职责混写、交接不完整
+- **BLOCKED_ENV**：输入缺失、工具缺失、契约钉扎缺失、运行时能力不确认、ffprobe/sha256sum 执行失败、资产复制失败——不得标记 PASS
 - **NOT_RUN**：资产未生成或交接未执行
 
 **绝不因任何前序步骤为 FAIL / BLOCKED_ENV / NOT_RUN 而发出 PASS。**
@@ -135,8 +135,8 @@
 | CONSTRAINT_NOT_FOUND | BLOCKED_ENV | Step 1 |
 | CONSTRAINT_NOT_READY | FAIL | Step 1 |
 | CONSTRAINT_PARSE_ERROR | BLOCKED_ENV | Step 1 |
-| SCHEMA_NOT_FOUND | BLOCKED_ENV | Step 2 |
-| MANIFEST_SCHEMA_NOT_FOUND | BLOCKED_ENV | Step 2 |
+| CONTRACT_PIN_NOT_FOUND | BLOCKED_ENV | Step 2 |
+| CONTRACT_PIN_MISMATCH | FAIL | Step 2 |
 | ASSET_SCAN_FAILED | BLOCKED_ENV | Step 3 |
 | ASSET_COUNT_ERROR | BLOCKED_ENV | Step 3 |
 | MISSING_REQUIRED_ASSETS | FAIL | Step 3 |
@@ -181,7 +181,7 @@
 - 禁止未通过审美验收（CA-PB-003）就交接资产
 - 禁止在 chinese-aesthetic-skill 中实现编译逻辑（webpack/rollup/compiler/shader）
 - 禁止在 design-compiler 中定义美学规范（HeartMirror/色彩六角色/宋式温润）
-- 禁止通过复制代码制造隐式耦合
+- 禁止通过复制代码制造隐式耦合；禁止在本仓库保留 AestheticConstraintSheet 的 schema 或类型副本；禁止绑定 design-compiler 的内部契约（SceneCompilationIR）
 - 禁止在 scene.json 中包含运行时专有状态（交互状态、临时矩阵）
 - 禁止编译失败时在 design-compiler 中静默修复（必须返回 chinese-aesthetic-skill 修改）
 - 禁止假设运行时能力（必须明确降级层级 WebGL2/WebGL1/Static/Neutral）

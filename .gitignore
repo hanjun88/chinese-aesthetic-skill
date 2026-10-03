@@ -14,3 +14,5 @@ package-lock.json
 
 # 跨仓 CI 检出的 design-compiler（见 .github/workflows/ci.yml）；忽略后不会让 emit-sheet 误判为 dirty
 .cross-repo/
+# 测试证据摘要（scripts/evidence.mjs 生成；入库的是 README 中的证据表）
+evidence/

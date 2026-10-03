@@ -54,7 +54,13 @@ const AESTHETIC_DOCS = (rel) => ['README.md', 'SKILL.md', 'skill.yaml', 'docs/de
 const MARK = /(?:<!--\s*rule:([A-Z0-9-]+)\s*-->|#\s*rule:([A-Z0-9-]+))/;
 const TEST_COUNT = /\b\d+\s*(?:项\s*)?(?:tests?\b|passed\b|通过|个测试|项测试|项引擎测试)/i;
 
+/**
+ * The numbers a rule carries: its payload, its confidence and the numbers its title states
+ * ("Hard floor: ... void >= 60%", "... (大虚小实 7:3)"). The generated rules table renders all three next to the
+ * rule's marker (scripts/render-rules-docs.mjs), so they are the rule's own numbers, not foreign ones.
+ */
 function numbersOfRule(ruleId) {
+  const rule = getRule(ruleId);
   const set = new Set();
   const take = (n) => { set.add(n); set.add(Math.round(n * 100 * 1e6) / 1e6); set.add(Math.round(n * 1e6) / 1e6); };
   const walkVal = (v) => {
@@ -62,10 +68,14 @@ function numbersOfRule(ruleId) {
     else if (Array.isArray(v)) v.forEach(walkVal);
     else if (v && typeof v === 'object') Object.values(v).forEach(walkVal);
   };
-  walkVal(getRule(ruleId).payload);
+  walkVal(rule.payload);
+  walkVal(rule.confidence);
+  for (const m of rule.title.matchAll(/\d+(?:\.\d+)?/g)) take(Number(m[0]));
   return set;
 }
-const numbersIn = (line) => [...line.replace(MARK, '').matchAll(/(?<![\w.])(\d+(?:\.\d+)?)\s*%?/g)].map((m) => Number(m[1]));
+// A registered rule id cited in the text ("CAS-VS-SS-003", "CA-RULE-01-XUSHI") is an identifier; its digit groups are not numbers.
+const RULE_IDS = new RegExp(`(?<![A-Z0-9-])(?:${[...REGISTRY.rules.map((r) => r.rule_id), REGISTRY.context_rule.rule_id].sort((a, b) => b.length - a.length).join('|')})(?![A-Z0-9-])`, 'g');
+const numbersIn = (line) => [...line.replace(MARK, '').replace(RULE_IDS, ' ').matchAll(/(?<![\w.])(\d+(?:\.\d+)?)\s*%?/g)].map((m) => Number(m[1]));
 
 export function lintDocs() {
   const problems = [];

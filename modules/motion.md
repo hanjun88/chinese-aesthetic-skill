@@ -2,78 +2,42 @@
 
 对应规则：guidelines/motion.md | 优先级：P1
 
-## 核心算法
+> Implementation: `lib/video-motion-engine.js`（相机运动、剪辑节奏、情绪曲线；`MOTION_THRESHOLDS` / `CHINESE_VIDEO_PARAMS`）· `lib/interaction-engine.js`（交互动效的缓动与时长参数）· thresholds: 运动判据（时长、缓动、stagger、线性动画占比等）尚未登记（以 `guidelines/motion.md` 与引擎内判据为准）· rationale: `guidelines/motion.md`
+>
+> 本模块不内嵌算法、代码与参数配置：运动判据与预设在引擎里，规则原文在 guidelines。以下只保留原则要点与素材库实证（观察值，不是阈值）。
 
-### 东方运动原型检测
+## 原则要点
 
-```javascript
-/**
- * 检测动画是否符合东方运动原型（缓起缓收、气韵连贯）
- * @param {Object} animation - { duration, easing, delay, stagger }
- * @returns {Object} { prototype, score, violations }
- */
-function detectEasternMotionPrototype(animation) {
-  const EASTERN_EASINGS = ['power2', 'power3', 'sine.inOut', 'expo.out'];
-  const violations = [];
-  let score = 0;
+- **东方运动原型是缓起缓收、气韵连贯**：缓动用 power2 / power3 / sine.inOut / expo.out 一类；时长偏中长，避免急促；stagger 错落有致。
+- **避免机械感**：非循环动画不用 linear 缓动（循环动画的恒速驱动例外），也不用弹跳；线性动画在全部动画里占比过高要警告。
+- **镜头运动的东方性倾向**（由高到低）：前推航拍（drone_forward）> 推进（push_in）> 上摇（tilt_up）> 静止（static）> 跟随（tracking）> 横移（pan_right）。
 
-  // 缓动函数检测
-  const easingLower = (animation.easing || '').toLowerCase();
-  const isEasternEasing = EASTERN_EASINGS.some(e => easingLower.includes(e));
-  if (isEasternEasing) score += 30;
-  else violations.push({ severity: 'P1', message: `缓动函数 ${animation.easing} 非东方原型，推荐 power2/power3/sine.inOut` });
+| 镜头 | 名称 | 典型用法 |
+|---|---|---|
+| drone_forward | 前推航拍 | 云海推进/城市穿越 |
+| push_in | 推进 | 主体逼近/细节揭示 |
+| tilt_up | 上摇 | 崇高感/建筑揭示 |
+| static | 静止 | 静观/留白 |
+| tracking | 跟随 | 人物跟随 |
+| pan_right | 横移 | 横向展开 |
 
-  // 时长检测（东方运动偏好中长时长，避免急促）
-  const duration = animation.duration || 0;
-  if (duration >= 400 && duration <= 3000) score += 25;
-  else if (duration < 400) violations.push({ severity: 'P2', message: `时长 ${duration}ms 过短，东方运动偏好≥400ms` });
+## 素材库实证（Distillation Evidence）
 
-  // stagger检测（错落有致）
-  if (animation.stagger && animation.stagger >= 20 && animation.stagger <= 200) score += 25;
+> 数据来源：`../distillation/` ai-linggan（15视频）+ xiaoai（11视频），关联索引见 `evidence-index.md`。
+> 以下是**观察值**（来源与样本量见各行），不是阈值；观察不等于推荐，运动判据见 guidelines 与引擎。
 
-  // 线性运动扣分（机械感）
-  if (easingLower.includes('linear') && !animation.isLoop) {
-    score -= 15;
-    violations.push({ severity: 'P2', message: '非循环动画使用linear缓动，有机械感' });
-  }
+### 镜头运动观察（ai-linggan 15视频）
 
-  return {
-    prototype: isEasternEasing ? 'eastern_organic' : 'western_mechanical',
-    score: Math.max(0, score),
-    violations
-  };
-}
-```
-
-### 镜头运动分类
-
-```javascript
-const CAMERA_MOTIONS = {
-  drone_forward: { name: '前推航拍', easternScore: 85, typical: '云海推进/城市穿越' },
-  push_in: { name: '推进', easternScore: 80, typical: '主体逼近/细节揭示' },
-  static: { name: '静止', easternScore: 70, typical: '静观/留白' },
-  tracking: { name: '跟随', easternScore: 65, typical: '人物跟随' },
-  tilt_up: { name: '上摇', easternScore: 75, typical: '崇高感/建筑揭示' },
-  pan_right: { name: '横移', easternScore: 60, typical: '横向展开' }
-};
-```
-
-## 实证参数表（已验证推荐值）
-
-> 数据来源：`../distillation/` ai-linggan（15视频）+ xiaoai（11视频），关联索引见 `evidence-index.md`
-
-### 镜头运动参数（ai-linggan 15视频）
-
-| 参数 | 推荐值 | 实证依据 |
+| 参数 | 观察值 | 实证依据 |
 |---|---|---|
 | 主导镜头 | drone_forward | 15/15覆盖，10/15为主导，平均占比36% |
 | 次要镜头 | push_in | 14/15覆盖，4/15为主导，平均占比30% |
 | 平均镜头时长 | 3.41秒 | 慢节奏长镜头，范围2-5秒 |
 | 转场偏好 | 硬切cut | 74.6%，其次叠化dissolve 18.6% |
 
-### 前端动效参数（xiaoai 11视频，77段motion）
+### 前端动效观察（xiaoai 11视频，77段motion）
 
-| 参数 | 推荐值 | 实证依据 | 样本量 |
+| 参数 | 观察值 | 实证依据 | 样本量 |
 |---|---|---|---|
 | 全局duration中位数 | 900ms | 76段样本 | 76 |
 | autoplay段duration | 1200ms | 中位数 | 46 |
@@ -86,92 +50,4 @@ const CAMERA_MOTIONS = {
 | 颜色morph easing | sine.inOut | 3段高度一致 | 3 |
 | 循环easing | linear | 恒速驱动 | 13 |
 
-### hover交互参数（xiaoai 实证）
-
-| 参数 | 值 | 说明 |
-|---|---|---|
-| hover进入时长 | ~430ms | enter |
-| hover退出时长 | ~700ms | exit慢1.5倍 |
-| rotateY tilt | 0→20deg | 卡片翻转 |
-| rotateX tilt | 0→12deg | 卡片俯仰 |
-| translateZ | +30px | 浮起感 |
-| scale hover | 1.0→1.2 | 放大反馈 |
-
-### 惯性参数（xiaoai 实证）
-
-| 参数 | 值 | 适用 |
-|---|---|---|
-| drag damping | 0.95/frame | 球体旋转 |
-| wheel inertia | 0.94 | 滚轮画廊 |
-| strip lerp | 0.1 | 图片条 |
-| idle恢复阈值 | velocity<0.001 | – |
-| settle时间 | 500ms | 停止后稳定 |
-
-## Three.js 代码示例
-
-```javascript
-// 东方风格缓动配置（基于xiaoai实证）
-const EASTERN_MOTION_CONFIG = {
-  duration: 900,
-  easing: 'power2.out',
-  stagger: 60,
-  hover: { enter: 430, exit: 700, rotateY: 20, rotateX: 12, translateZ: 30 },
-  inertia: { damping: 0.95, lerp: 0.1, settleMs: 500 }
-};
-
-// GSAP时间线示例
-function createEasternTimeline(elements) {
-  return gsap.timeline()
-    .from(elements, {
-      duration: 0.9,
-      y: 40,
-      opacity: 0,
-      ease: 'power3.out',
-      stagger: 0.06
-    });
-}
-
-// 惯性拖拽（基于xiaoai实证）
-class InertiaDrag {
-  constructor(target) {
-    this.target = target;
-    this.velocity = 0;
-    this.damping = 0.95;
-    this.isDragging = false;
-  }
-  update(delta) {
-    if (!this.isDragging) {
-      this.velocity *= this.damping;
-      this.target.rotation.y += this.velocity * delta;
-      if (Math.abs(this.velocity) < 0.001) this.velocity = 0;
-    }
-  }
-}
-```
-
-## 校验函数（供 validate.js 调用）
-
-```javascript
-function checkMotion(design) {
-  const violations = [];
-  const animations = design.animations || [];
-
-  for (const anim of animations) {
-    const proto = detectEasternMotionPrototype(anim);
-    violations.push(...proto.violations);
-
-    // 时长校验
-    if (anim.duration && anim.duration < 200 && !anim.isMicro) {
-      violations.push({ severity: 'P2', message: `动画时长 ${anim.duration}ms 过短，建议≥400ms` });
-    }
-  }
-
-  // 线性动画比例
-  const linearCount = animations.filter(a => (a.easing || '').toLowerCase().includes('linear') && !a.isLoop).length;
-  if (animations.length > 0 && linearCount / animations.length > 0.3) {
-    violations.push({ severity: 'P1', message: `线性动画占比 ${(linearCount/animations.length*100).toFixed(0)}% > 30%，有机械感` });
-  }
-
-  return violations;
-}
-```
+> hover 进入/退出节奏、倾斜与浮起、惯性（damping / lerp / settle）的 xiaoai 观察值见 `interaction.md`，这里不重复。
