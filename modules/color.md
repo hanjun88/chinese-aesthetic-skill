@@ -2,140 +2,40 @@
 
 对应规则：guidelines/color.md | 优先级：P0
 
-## 核心算法
+> Implementation: `lib/color-engine.js`（五方正色色板、君臣佐使配色生成、`validateColorScheme` 校验）· `lib/utils/color.js`（色彩转换与饱和度判据）· thresholds: 饱和度、点缀色面积、五方正色距离等判据尚未登记（以 `guidelines/color.md` 与引擎内判据为准；rules registry family `CAS-AP` 为反俗套判据预留，目前为空）· rationale: `guidelines/color.md`
+>
+> 本模块不内嵌算法、代码与配色比例表：实现在引擎里，阈值在 guidelines（待登记），已验证配色方案在 guidelines 与引擎预设。以下只保留原则要点与素材库实证（观察值，不是阈值）。
 
-### 五方正色距离计算
+## 原则要点
 
-```javascript
-/**
- * 计算颜色与最近的五方正色的色差（简化版ΔE）
- * @param {string} hex - 十六进制颜色
- * @returns {Object} { nearestColor, distance, inRange }
- */
-function calculateFiveColorDistance(hex) {
-  const rgb = hexToRgb(hex);
-  const FIVE_COLORS = {
-    qing:  { name: '青', r: [20, 80],  g: [60, 130], b: [30, 80] },
-    chi:   { name: '赤', r: [100, 180], g: [20, 60],  b: [0, 40] },
-    huang: { name: '黄', r: [160, 220], g: [130, 180], b: [50, 100] },
-    bai:   { name: '白', r: [220, 255], g: [220, 255], b: [210, 245] },
-    hei:   { name: '黑', r: [10, 50],   g: [10, 50],   b: [20, 60] }
-  };
+- **用传统色，不用现代 HSL 直觉**：五方正色（青、赤、黄、白、黑）为基色，衍生色需过 `validateColorScheme`。深色低明度可放行高饱和（暗朱砂等传统深色本身是纯色通道），明亮色收紧。
+- **五方正色距离**：以主色与最近正色的色差判定偏离；偏离过大按 P1 处理（判据见 guidelines 与引擎）。
+- **禁忌色与替代**：
 
-  let nearest = null;
-  let minDist = Infinity;
+| 禁忌色 | 名称 | 替代 |
+|---|---|---|
+| #FF0000 | 正红 | #8B2500（暗朱砂） |
+| #FFD700 | 亮金 | #B8860B ~ #DAA520（哑金） |
+| #00FF00 | 霓虹绿 | 禁止 |
+| #FF00FF | 紫外光 | 禁止 |
+| #00FFFF | 霓虹青 | 禁止 |
 
-  for (const [key, color] of Object.entries(FIVE_COLORS)) {
-    const centerR = (color.r[0] + color.r[1]) / 2;
-    const centerG = (color.g[0] + color.g[1]) / 2;
-    const centerB = (color.b[0] + color.b[1]) / 2;
-    const dist = Math.sqrt(
-      Math.pow(rgb.r - centerR, 2) +
-      Math.pow(rgb.g - centerG, 2) +
-      Math.pow(rgb.b - centerB, 2)
-    );
-    if (dist < minDist) {
-      minDist = dist;
-      nearest = { key, ...color };
-    }
-  }
-
-  // 检查是否在范围内
-  const inRange = rgb.r >= nearest.r[0] && rgb.r <= nearest.r[1] &&
-                  rgb.g >= nearest.g[0] && rgb.g <= nearest.g[1] &&
-                  rgb.b >= nearest.b[0] && rgb.b <= nearest.b[1];
-
-  return { nearestColor: nearest.name, distance: minDist, inRange };
-}
-```
-
-### 饱和度检测
-
-```javascript
-function checkSaturation(hex, maxSaturation = 0.60) {
-  const rgb = hexToRgb(hex);
-  const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-  return {
-    saturation: hsl.s,
-    pass: hsl.s <= maxSaturation,
-    violation: hsl.s > maxSaturation ? `饱和度 ${(hsl.s*100).toFixed(0)}% > ${(maxSaturation*100).toFixed(0)}%` : null
-  };
-}
-```
-
-### 禁忌色检测
-
-```javascript
-const FORBIDDEN_COLORS = {
-  '#FF0000': { name: '正红', replacement: '#8B2500（暗朱砂）' },
-  '#FFD700': { name: '亮金', replacement: '#B8860B~#DAA520（哑金）' },
-  '#00FF00': { name: '霓虹绿', replacement: '禁止' },
-  '#FF00FF': { name: '紫外光', replacement: '禁止' },
-  '#00FFFF': { name: '霓虹青', replacement: '禁止' }
-};
-
-function checkForbiddenColors(hex) {
-  const upper = hex.toUpperCase();
-  if (FORBIDDEN_COLORS[upper]) {
-    return { forbidden: true, ...FORBIDDEN_COLORS[upper] };
-  }
-  // 检测高饱和高明度（霓虹色特征）
-  const hsl = rgbToHsl(...Object.values(hexToRgb(hex)));
-  if (hsl.s > 0.8 && hsl.l > 0.5) {
-    return { forbidden: true, name: '疑似霓虹色', replacement: '降低饱和度至≤50%' };
-  }
-  return { forbidden: false };
-}
-```
-
-## 已验证配色方案
-
-| 方案 | 主色 | 辅色 | 点缀 | 适用场景 |
-|---|---|---|---|---|
-| 宋韵清雅 | 月白 #E8E4D9 (60%) | 黛青 #2C3E50 (25%) | 古金 #B8860B (5%) | ACT0云海+单门 |
-| 宫墙朱门 | 暗朱砂 #8B2500 (50%) | 墨灰 #2C2C2C (30%) | 哑金 #DAA520 (10%) | 宫殿/红墙 |
-| 青绿山水 | 石青 #0D47A1+石绿 #1B5E20 (50%) | 月白 #E8E4D9 (40%) | 赭黄 #C4A35A (5%) | 山水/自然 |
-| 国色单色 | 石绿 #558B2F (85%) | 深色人物 (10%) | - (5%) | 人物肖像 |
-| 红金绿 | 暗朱砂 #8B2500 (50%) | 石绿 #2E7D32 (30%) | 哑金 #B8860B (10%) | 华丽/国画 |
-| 紫金东方 | 深紫 #4A148C (60%) | 哑金 #DAA520 (15%) | - | 品牌/商业 |
-
-## 校验函数
-
-```javascript
-function checkColor(design) {
-  const violations = [];
-  for (const color of design.colors || []) {
-    const sat = checkSaturation(color);
-    if (!sat.pass) violations.push({ severity: 'P0', message: sat.violation, color });
-
-    const forbidden = checkForbiddenColors(color);
-    if (forbidden.forbidden) violations.push({ severity: 'P0', message: `禁止使用${forbidden.name} ${color}，应用${forbidden.replacement}`, color });
-
-    const fiveColor = calculateFiveColorDistance(color);
-    if (!fiveColor.inRange && fiveColor.distance > 50) {
-      violations.push({ severity: 'P1', message: `颜色 ${color} 偏离五方正色（最近：${fiveColor.nearestColor}，距离：${fiveColor.distance.toFixed(0)}）` });
-    }
-  }
-  if ((design.colors || []).length > 3) {
-    violations.push({ severity: 'P1', message: `主色数量 ${design.colors.length} > 3，建议≤2主色+1点缀` });
-  }
-  return violations;
-}
-```
-
----
+  高饱和且高明度的颜色按"疑似霓虹色"处理：降低饱和度（判据见引擎）。
+- **主色宜少、主次分明**（君臣佐使：主、辅、点缀各司其职），其余为中性/材质色；点缀色面积要小。
+- **已验证配色方案**（宋韵清雅 · ACT0 云海+单门，宫墙朱门 · 宫殿/红墙，青绿山水 · 山水/自然，国色单色 · 人物肖像，红金绿 · 华丽/国画，紫金东方 · 品牌/商业）的色值与比例见 `guidelines/color.md`「已验证配色方案」与 `colorEngine.listPresets()`，不在本模块重复。
 
 ## 素材库实证（Distillation Evidence）
 
-> 数据来源：`../distillation/` 4批素材，关联索引见 `evidence-index.md`
+> 数据来源：`../distillation/` 4批素材，关联索引见 `evidence-index.md`。
+> 以下是**观察值**（来源与样本量见各行），不是阈值；色彩判据见 `guidelines/color.md` 与引擎。
 
-### 实证参数表（已验证推荐值）
+### 实证观察表
 
-| 参数 | 推荐值 | 实证来源 | 样本量 |
+| 参数 | 观察值 | 实证来源 | 样本量 |
 |---|---|---|---|
-| 主色数量 | ≤2主色+1点缀 | ai-linggan, xiaoai | 26视频 |
-| 点缀色面积比 | ≤15% | xiaoai | 11视频 |
-| 饱和度上限 | ≤0.46（均值0.406） | ai-linggan | 15视频 |
+| 主色数量 | 两种主色加一处点缀 | ai-linggan, xiaoai | 26视频 |
+| 点缀色面积比 | 记录的最大值 0.15（`max_accent_area_ratio`，`extracted/xiaoai-20260925/color.constraints.json`） | xiaoai | 11视频 |
+| 饱和度 | 均值0.406，范围0.32–0.46（`extracted/ai-linggan-20260925/color-evidence.json`） | ai-linggan | 15视频 |
 | 对比度范围 | 8.2–12.5（均值9.89） | ai-linggan | 15视频 |
 | 色温倾向 | 冷调主导（冷9/暖6） | ai-linggan | 15视频 |
 
@@ -160,7 +60,7 @@ function checkColor(design) {
 - 唯一暗色例外：视频04黑洞（`#000000`+金色辉光bloom 1.8）
 - 0个页面级渐变（渐变仅用于粒子尾迹和接触阴影）
 
-### 可复用配色方案（从素材蒸馏）
+### 可复用配色画像（从素材蒸馏）
 
 **方案A：青灰仙境（ai-linggan主导）**
 ```json
@@ -180,7 +80,7 @@ function checkColor(design) {
 {
   "primary": "#1A1A1A",
   "secondary": "#888888",
-  "accent": "<15% area, low-saturation pastel>",
+  "accent": "small-area, low-saturation pastel",
   "background": "#FFFFFF",
   "text": "#1A1A1A",
   "color_temp_k": 6500,
