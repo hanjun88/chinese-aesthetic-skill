@@ -123,13 +123,16 @@ jobs:
         env:
           SKILL_DIR: ${{ github.workspace }}
           SKILL_BINDING_STRICT: "1"
-        run: >-
-          npx jest
-          tests/skill-bridge/sheet-validator.test.ts
-          tests/skill-bridge/e2e-core-chain.test.ts
-          tests/skill-bridge/e2e-scene-chain.test.ts
-          tests/skill-bridge/adversarial.test.ts
-          tests/skill-bridge/rollback.test.ts
+        run: |
+          # jest silently ignores a path that does not exist: make a missing suite a failure, not a skip
+          SUITES="sheet-validator e2e-core-chain e2e-scene-chain requirements-coverage adversarial rollback"
+          ARGS=""
+          for s in $SUITES; do
+            f="tests/skill-bridge/$s.test.ts"
+            test -f "$f" || { echo "::error::$f does not exist at the pinned design-compiler ref"; exit 1; }
+            ARGS="$ARGS $f"
+          done
+          npx jest $ARGS
 
   security:
     name: Security Scan
