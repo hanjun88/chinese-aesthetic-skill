@@ -23,7 +23,7 @@
  *
  * Message text that restates a threshold is a second copy of it: build the text from the rule's value.
  *
- *   node scripts/lint-engine-thresholds.mjs [--json]
+ *   node scripts/lint-engine-thresholds.mjs [--json] [--only lib/a.js,lib/b.js]
  */
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve } from 'node:path';
@@ -72,12 +72,13 @@ function sourceExists(ref) {
   return null;
 }
 
-export function lint(root = ROOT) {
+export function lint(root = ROOT, only = null) {
   const violations = [];
   const justified = {};
   let sites = 0;
   for (const file of walk(join(root, 'lib'))) {
     const rel = relative(root, file);
+    if (only && !only.includes(rel)) continue;
     const lines = readFileSync(file, 'utf8').split('\n');
     let inBlock = false;
     let region = null; // { source } while inside a ssot-catalog region
@@ -119,7 +120,8 @@ export function lint(root = ROOT) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const r = lint();
+  const onlyArg = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1].split(',') : null;
+  const r = lint(ROOT, onlyArg);
   if (process.argv.includes('--json')) console.log(JSON.stringify(r, null, 2));
   else {
     console.log(`engine threshold lint: ${r.sites} threshold-shaped sites in lib/, ${Object.values(r.justified).reduce((a, b) => a + b, 0)} justified ${JSON.stringify(r.justified)}, ${r.violations.length} violation(s)`);
