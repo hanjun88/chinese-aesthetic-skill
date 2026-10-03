@@ -118,5 +118,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     for (const p of r.problems) console.error(`  - ${p}`);
     console.log(r.ok ? 'PASS' : 'FAIL');
   }
-  process.exit(r.ok ? 0 : 1);
+  process.exitCode = r.ok ? 0 : 1; // not process.exit(): piped stdout (--json) must flush
 }

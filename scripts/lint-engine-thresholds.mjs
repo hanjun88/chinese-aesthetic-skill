@@ -129,5 +129,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     if (r.violations.length > 400) console.log(`  ... ${r.violations.length - 400} more`);
     console.log(r.violations.length ? 'FAIL' : 'PASS');
   }
-  process.exit(r.violations.length ? 1 : 0);
+  process.exitCode = r.violations.length ? 1 : 0; // not process.exit(): piped stdout (--json) must flush
 }
