@@ -1,0 +1,283 @@
+{
+  "family": "CAS-AP",
+  "description": "Anti-pattern decision thresholds (anti-cliche / anti-AI artefacts). CAS-AP-GATE-* are the sheet-audience thresholds of design-compiler's five anti-pattern gates (ANTI-01..05; ANTI-06 is an evidence-integrity check and carries no aesthetic number). CAS-AP-CLICHE-* are the engine-only thresholds and scores of lib/cliche-detector.js: they never reach a sheet.",
+  "rules": [
+    {
+      "rule_id": "CAS-AP-GATE-DEAD-VOID",
+      "title": "Dead void gate (ANTI-03): a large void that has no function (no texture, no atmospheric gradient, no tonal variation)",
+      "kind": "ANTI_PATTERN_THRESHOLD",
+      "role": "composition",
+      "confidence": 0.65,
+      "sources": [
+        "SRC-AP-DC-DEAD-VOID",
+        "SRC-AP-GUIDE-VOID-FUNCTION-PURPOSE",
+        "SRC-AP-GUIDE-VOID-FUNCTION-P0",
+        "SRC-AP-GUIDE-VOID-FUNCTION-METRIC",
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "subject": "dead-void",
+        "params": {
+          "candidate_void_ratio_above": 0.5,
+          "dominant_void_region_ratio_above": 0.4,
+          "laplacian_variance_below": 1,
+          "block_luminance_gradient_below": 0.5,
+          "luminance_std_below": 2,
+          "confidence_reject": 0.9,
+          "confidence_flag_no_depth": 0.5,
+          "confidence_flag": 0.65,
+          "confidence_allow": 0.8
+        },
+        "rationale": "Dead void (假留白死黑/死白) = a LARGE void with NO function: pixel void share and largest void region above their cut-offs AND texture, atmospheric gradient and tonal spread below theirs (留白必须有功能; 留白区域无功能 is P0 in void-solid.md). candidate_void_ratio_above is a dead-void CANDIDATE test on the pixel estimator, not a void_ratio band and not the structural signal (ADR-0001). No depth evidence caps the verdict at FLAG (UNMEASURED != FAIL). confidence_* = verdict confidence reported by the gate."
+      }
+    },
+    {
+      "rule_id": "CAS-AP-GATE-TOXIC-SATURATION",
+      "title": "Toxic saturation gate (ANTI-05): fluorescent colour pollution judged on pixel proxies, relaxed for the high-saturation paradigm",
+      "kind": "ANTI_PATTERN_THRESHOLD",
+      "role": "color",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-AP-DC-TOXIC-SATURATION",
+        "SRC-AP-DC-TOXIC-HSV-INTENT",
+        "SRC-AP-DC-TOXIC-TANG-WAIVER",
+        "SRC-AP-GUIDE-COLOR-TABOO-HUES"
+      ],
+      "payload": {
+        "subject": "toxic-saturation",
+        "params": {
+          "dominant_color_ratio_above": 0.7,
+          "contrast_ratio_above": 0.8,
+          "luminance_std_below": 15,
+          "temperature_bias_abs_above": 0.5,
+          "confidence_reject": 0.8,
+          "confidence_flag": 0.6,
+          "confidence_allow_paradigm": 0.7,
+          "confidence_allow": 0.8
+        },
+        "lists": {
+          "high_saturation_paradigms": ["TANG"]
+        },
+        "rationale": "No HSV statistics exist in the evidence set, so fluorescent colour pollution is judged on proxies: dominant-colour share, contrast and colour-temperature bias above, luminance spread below their cut-offs (DC proxies, not guideline numbers; color.md only bans neon / fluorescent hues). Paradigms in high_saturation_paradigms (唐三彩) are exempt from REJECT and the low-variation FLAG clause; confidence_allow_paradigm sits in an unreachable branch. confidence_* = reported verdict confidence."
+      }
+    },
+    {
+      "rule_id": "CAS-AP-GATE-UNPHYSICAL-GLOW",
+      "title": "Unphysical glow gate (ANTI-02): homogeneous surface with sharp, significant specular highlights (plastic highlight)",
+      "kind": "ANTI_PATTERN_THRESHOLD",
+      "role": "lighting",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-AP-DC-UNPHYSICAL-GLOW",
+        "SRC-AP-GUIDE-TABOO-PLASTIC-METRIC"
+      ],
+      "payload": {
+        "subject": "unphysical-glow",
+        "params": {
+          "micro_surface_variance_below": 0.01,
+          "specular_sharpness_above": 0.8,
+          "specular_highlight_ratio_above": 0.02,
+          "surface_variation_below": 0.05,
+          "confidence_reject": 0.85,
+          "confidence_flag": 0.65,
+          "confidence_allow": 0.8
+        },
+        "rationale": "Plastic highlight / non-physical self-illumination needs BOTH a homogeneous surface (micro-surface variance below its cut-off) AND sharp, significant specular highlights (sharpness and pixel share above theirs); one condition alone is no anti-pattern (matte materials are homogeneous). The cut-offs are DC measurements on material evidence; taboo.md only prescribes roughness + highlight detection. confidence_* = reported verdict confidence."
+      }
+    },
+    {
+      "rule_id": "CAS-AP-GATE-SYMBOLIC-STACKING",
+      "title": "Symbolic stacking gate (ANTI-01): many weakly connected nodes without host-guest rule or convergence",
+      "kind": "ANTI_PATTERN_THRESHOLD",
+      "role": "composition",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-AP-DC-SYMBOLIC-STACKING",
+        "SRC-AP-GUIDE-SPATIAL-NO-STACKING"
+      ],
+      "payload": {
+        "subject": "symbolic-stacking",
+        "params": {
+          "many_nodes_min": 8,
+          "low_average_degree_below": 1.8,
+          "convergence_in_degree_min": 2,
+          "isolated_nodes_min": 2,
+          "reject_severe_signals_min": 3,
+          "flag_severe_signals_min": 2,
+          "confidence_reject": 0.85,
+          "confidence_flag": 0.65,
+          "confidence_allow": 0.8
+        },
+        "rationale": "Symbolic stacking (符号化机械堆砌) is a graph-topology verdict, never an object count. Signals: many nodes, low average degree, no HOST_GUEST edge, no convergence (max in-degree below convergence_in_degree_min). REJECT needs reject_severe_signals_min signals AND isolated_nodes_min isolated nodes; FLAG needs flag_severe_signals_min signals. many_nodes_min is the value the DC gate executed; its header comment said 4, the code said 8 and wins. confidence_* = reported verdict confidence."
+      }
+    },
+    {
+      "rule_id": "CAS-AP-GATE-CONFLICTED-HIERARCHY",
+      "title": "Conflicted hierarchy gate (ANTI-04): competing subjects of near-equal energy without host-guest subordination",
+      "kind": "ANTI_PATTERN_THRESHOLD",
+      "role": "composition",
+      "confidence": 0.65,
+      "sources": [
+        "SRC-AP-DC-CONFLICTED-HIERARCHY"
+      ],
+      "payload": {
+        "subject": "conflicted-hierarchy",
+        "params": {
+          "close_energy_diff_ratio_below": 0.15,
+          "confidence_reject": 0.85,
+          "confidence_flag": 0.6,
+          "confidence_allow_no_subject": 0.5,
+          "confidence_allow": 0.85
+        },
+        "rationale": "Conflicted hierarchy (主从混乱 / 多主冲突, against 宾主揖让): two or more SUBJECT nodes whose relative energy difference (max-min)/max is below close_energy_diff_ratio_below and with no HOST_GUEST edge between subjects => REJECT; multiple subjects with only one of the two signals => FLAG. A single subject, or clearly graded subjects, is never in conflict. confidence_* = reported verdict confidence."
+      }
+    },
+    {
+      "rule_id": "CAS-AP-CLICHE-GUIDELINE-THRESHOLDS",
+      "title": "Cliche detector: hard-fail thresholds stated verbatim by the guidelines",
+      "kind": "ANTI_PATTERN_THRESHOLD",
+      "role": "evaluation",
+      "confidence": 0.85,
+      "audience": ["engine"],
+      "sources": [
+        "SRC-AP-GUIDE-TABOO-PATTERN-COVERAGE",
+        "SRC-AP-GUIDE-TABOO-FRONT-PERSON",
+        "SRC-AP-GUIDE-TABOO-BUILDING-DETAIL",
+        "SRC-AP-GUIDE-COLOR-SATURATION-CAP",
+        "SRC-AP-GUIDE-MATERIAL-PLASTIC"
+      ],
+      "payload": {
+        "subject": "cliche-guideline-thresholds",
+        "params": {
+          "guochao_pattern_coverage_above": 0.2,
+          "guzhuang_front_face_area_above": 0.1,
+          "fanggu_building_detail_above": 0.3,
+          "ai_saturation_above": 0.6,
+          "ai_plastic_roughness_below": 0.3,
+          "ai_plastic_metalness_below": 0.1
+        },
+        "rationale": "Thresholds of the four cliche types that taboo.md / color.md / material.md state verbatim: traditional-pattern coverage, frontal-face person area, building detail without block silhouette, mean saturation hard cap, plastic roughness / metalness. Engine-only. taboo.md judges AI国风 by saturation AND material smoothness; the engine applies the saturation cap on its own (kept as shipped)."
+      }
+    },
+    {
+      "rule_id": "CAS-AP-CLICHE-ENGINE-THRESHOLDS",
+      "title": "Cliche detector: cut-offs and neutral defaults authored in the engine itself",
+      "kind": "ANTI_PATTERN_THRESHOLD",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "audience": ["engine"],
+      "sources": [
+        "SRC-AP-ENGINE-CLICHE-V1"
+      ],
+      "payload": {
+        "subject": "cliche-engine-thresholds",
+        "params": {
+          "guzhuang_person_area_above": 0.15,
+          "guzhuang_ornate_detail_above": 0.4,
+          "flat_lighting_ratio_below": 2,
+          "brightness_ratio_default": 1.5,
+          "ai_main_elements_above": 5,
+          "ai_plastic_roughness_default": 0.5,
+          "ai_plastic_metalness_default": 0,
+          "ai_hit_count_min": 3
+        },
+        "rationale": "Cut-offs no guideline states: oversized person, ornate-costume detail, flat light (明暗比 below flat_lighting_ratio_below; a missing ratio counts as brightness_ratio_default), too many main elements, PBR defaults for missing material fields, and the number of AI-look hits that decides detection. light-shadow.md uses 3:1 and recommends >= 5:1 where the engine flags below 2:1 (not reconciled). Engine-only."
+      }
+    },
+    {
+      "rule_id": "CAS-AP-CLICHE-SCORING-GUOCHAO",
+      "title": "Cliche detector scoring: 国潮贴图感",
+      "kind": "ANTI_PATTERN_THRESHOLD",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "audience": ["engine"],
+      "sources": [
+        "SRC-AP-ENGINE-CLICHE-V1"
+      ],
+      "payload": {
+        "subject": "cliche-guochao-scoring",
+        "params": {
+          "score_pattern_overuse": 0.35,
+          "score_brush_title": 0.15,
+          "score_red_gold_clash": 0.3,
+          "score_pure_color": 0.1,
+          "score_pattern_border": 0.2,
+          "detected_score_min": 0.3,
+          "type_weight": 0.3
+        },
+        "rationale": "Score added per violation, the score from which the type counts as detected, and its weight in the overall cliche score (the four type weights sum to 1). Engine-authored, no guideline states them. Engine-only."
+      }
+    },
+    {
+      "rule_id": "CAS-AP-CLICHE-SCORING-GUZHUANG",
+      "title": "Cliche detector scoring: 古装影视感",
+      "kind": "ANTI_PATTERN_THRESHOLD",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "audience": ["engine"],
+      "sources": [
+        "SRC-AP-ENGINE-CLICHE-V1"
+      ],
+      "payload": {
+        "subject": "cliche-guzhuang-scoring",
+        "params": {
+          "score_front_face_closeup": 0.35,
+          "score_person_too_large": 0.2,
+          "score_dramatic_lighting": 0.15,
+          "score_ornate_costume": 0.15,
+          "detected_score_min": 0.3,
+          "type_weight": 0.2
+        },
+        "rationale": "Score added per violation, the score from which the type counts as detected, and its weight in the overall cliche score (the four type weights sum to 1). Engine-authored, no guideline states them. Engine-only."
+      }
+    },
+    {
+      "rule_id": "CAS-AP-CLICHE-SCORING-FANGGU",
+      "title": "Cliche detector scoring: 仿古景区感",
+      "kind": "ANTI_PATTERN_THRESHOLD",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "audience": ["engine"],
+      "sources": [
+        "SRC-AP-ENGINE-CLICHE-V1"
+      ],
+      "payload": {
+        "subject": "cliche-fanggu-scoring",
+        "params": {
+          "score_building_detail_overload": 0.35,
+          "score_flat_lighting": 0.2,
+          "score_complete_building": 0.15,
+          "score_guidebook_layout": 0.15,
+          "detected_score_min": 0.3,
+          "type_weight": 0.2
+        },
+        "rationale": "Score added per violation, the score from which the type counts as detected, and its weight in the overall cliche score (the four type weights sum to 1). Engine-authored, no guideline states them. Engine-only."
+      }
+    },
+    {
+      "rule_id": "CAS-AP-CLICHE-SCORING-AI-GUOFENG",
+      "title": "Cliche detector scoring: AI国风感",
+      "kind": "ANTI_PATTERN_THRESHOLD",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "audience": ["engine"],
+      "sources": [
+        "SRC-AP-ENGINE-CLICHE-V1"
+      ],
+      "payload": {
+        "subject": "cliche-ai-guofeng-scoring",
+        "params": {
+          "score_high_saturation": 0.3,
+          "score_plastic_material": 0.25,
+          "score_flat_lighting": 0.2,
+          "score_bounce_particles": 0.15,
+          "score_element_overload": 0.1,
+          "hit_score_floor": 0.7,
+          "detected_score_min": 0.5,
+          "type_weight": 0.3
+        },
+        "rationale": "Score added per violation, the score floor applied once enough AI-look hits accumulate, the score from which the type counts as detected, and its weight in the overall cliche score (the four type weights sum to 1). Engine-authored, no guideline states them. Engine-only."
+      }
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "SRC-AP-DC-DEAD-VOID": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/anti-pattern/gates/dead-void.ts",
+    "quote": "死白/死黑的特征：大面积负空间 + 极低 Laplacian 方差 + 极低块梯度"
+  },
+  "SRC-AP-DC-TOXIC-SATURATION": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/anti-pattern/gates/toxic-saturation.ts",
+    "quote": "毒性饱和的特征：主色占比极高 + 高对比度 + 低亮度标准差（大面积均匀高饱和）"
+  },
+  "SRC-AP-DC-TOXIC-HSV-INTENT": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/anti-pattern/gates/toxic-saturation.ts",
+    "quote": "HSV 空间中高饱和（S > 0.85）且高明度（V > 0.80）像素连续连通域占比突破总面积阈值（如 > 5%）"
+  },
+  "SRC-AP-DC-TOXIC-TANG-WAIVER": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/anti-pattern/gates/toxic-saturation.ts",
+    "quote": "传统正色（如唐三彩的高饱和）在 paradigm=TANG 时应放宽"
+  },
+  "SRC-AP-DC-UNPHYSICAL-GLOW": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/anti-pattern/gates/unphysical-glow.ts",
+    "quote": "塑料高光的特征：微表面方差极低 + 高光锐度极高 + 高光比例显著"
+  },
+  "SRC-AP-DC-SYMBOLIC-STACKING": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/anti-pattern/gates/symbolic-stacking.ts",
+    "quote": "符号化堆砌的特征：节点多 + 平均度数低 + 无 HOST_GUEST 统御 + 无向心收敛"
+  },
+  "SRC-AP-DC-CONFLICTED-HIERARCHY": {
+    "kind": "expert-judgment",
+    "ref": "external:hanjun88/design-compiler@6465c9ff25aacbb4a4c21dcbd042bd3141e91db7:chinese-aesthetic/anti-pattern/gates/conflicted-hierarchy.ts",
+    "quote": "其节点能量差 < 15%；主从混乱的特征：多个 SUBJECT 节点 + 能量接近 + 无 HOST_GUEST 从属"
+  },
+  "SRC-AP-GUIDE-VOID-FUNCTION-PURPOSE": {
+    "kind": "guideline",
+    "ref": "guidelines/void-solid.md#目的",
+    "quote": "留白不是\"空\"，必须有功能"
+  },
+  "SRC-AP-GUIDE-VOID-FUNCTION-P0": {
+    "kind": "guideline",
+    "ref": "guidelines/void-solid.md#P0 判定条件",
+    "quote": "留白区域无功能（纯色天空/空白水面，无浓度梯度/倒影/色温）"
+  },
+  "SRC-AP-GUIDE-VOID-FUNCTION-METRIC": {
+    "kind": "guideline",
+    "ref": "guidelines/void-solid.md#可测指标",
+    "quote": "留白功能性 | 留白区域有浓度梯度/流动/倒影/色温 | 留白区域像素方差检测"
+  },
+  "SRC-AP-GUIDE-COLOR-TABOO-HUES": {
+    "kind": "guideline",
+    "ref": "guidelines/color.md#可测指标",
+    "quote": "禁忌色 | 无霓虹色/荧光色/紫外光色"
+  },
+  "SRC-AP-GUIDE-TABOO-PLASTIC-METRIC": {
+    "kind": "guideline",
+    "ref": "guidelines/taboo.md#可测指标",
+    "quote": "塑料油润感 | 无光滑塑料皮肤/油画质感 | 粗糙度+高光检测"
+  },
+  "SRC-AP-GUIDE-SPATIAL-NO-STACKING": {
+    "kind": "guideline",
+    "ref": "guidelines/spatial-order.md#目的",
+    "quote": "而非随机散布的元素堆砌"
+  },
+  "SRC-AP-GUIDE-TABOO-PATTERN-COVERAGE": {
+    "kind": "guideline",
+    "ref": "guidelines/taboo.md#四类俗套（HARD FAIL）",
+    "quote": "传统纹样占比 > 20% = FAIL"
+  },
+  "SRC-AP-GUIDE-TABOO-FRONT-PERSON": {
+    "kind": "guideline",
+    "ref": "guidelines/taboo.md#四类俗套（HARD FAIL）",
+    "quote": "人物占画面 > 10% 且正面露脸 = FAIL"
+  },
+  "SRC-AP-GUIDE-TABOO-BUILDING-DETAIL": {
+    "kind": "guideline",
+    "ref": "guidelines/taboo.md#四类俗套（HARD FAIL）",
+    "quote": "建筑细节 > 30% 且无块面剪影感 = FAIL"
+  },
+  "SRC-AP-GUIDE-COLOR-SATURATION-CAP": {
+    "kind": "guideline",
+    "ref": "guidelines/color.md#可测指标",
+    "quote": "全画面饱和度 | S ≤ 50%（硬上限60%） | HSL 中 S 值的像素均值"
+  },
+  "SRC-AP-GUIDE-MATERIAL-PLASTIC": {
+    "kind": "guideline",
+    "ref": "guidelines/material.md#P1 判定条件",
+    "quote": "roughness < 0.3 且 metalness < 0.1（塑料感）"
+  },
+  "SRC-AP-ENGINE-CLICHE-V1": {
+    "kind": "expert-judgment",
+    "ref": "git:29097c962fd858937012901ce98fc6f35304647b:lib/cliche-detector.js",
+    "quote": "engine-authored numbers of the cliche detector as introduced (unchanged since): per-violation score increments, detection cut-offs, type weights, neutral defaults"
+  }
+}

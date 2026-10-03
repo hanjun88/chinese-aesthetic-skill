@@ -38,52 +38,16 @@ integration_points:
     role: 术语对齐
     contract: 本 Skill 术语（界/虚实/举折/出檐等）在其术语库可查
 
-# 调用接口
-api:
-  input_format: JSON
-  input_schema:
-    scene:
-      type: string
-      description: 场景标识，如 "ACT0_gate"
-    colors:
-      type: array
-      items: string
-      description: 当前主色值列表，如 ["#88C3EB"]
-    materials:
-      type: array
-      items: object
-      description: 当前材质配置
-    events:
-      type: array
-      items: string
-      description: 用户交互事件序列，如 ["mouseMove","click","scroll"]
-    dimensions:
-      type: object
-      description: 场景尺寸参数
-  output_format: JSON
-  output_schema:
-    colors:
-      type: array
-      items: string
-      description: 推荐色彩列表
-    layout:
-      type: object
-      description: 布局调整建议
-    materials:
-      type: array
-      items: object
-      description: 推荐材质参数
-    effects:
-      type: array
-      items: string
-      description: 推荐动效/交互效果
-    violations:
-      type: array
-      items: object
-      description: 违反规则的项，含 rule_id, severity(P0/P1), message
-    score:
-      type: number
-      description: 中式美学评分 0-100
+# 机器契约
+# 本 Skill 向 design-compiler 输出 AestheticConstraintSheet：约束、阈值、出处与置信度全部来自规则登记簿 rules/。
+# schema 由 design-compiler 持有（contracts/aesthetic-constraint-sheet/），本仓库只在 contract/dc-contract.pin.json
+# 钉扎其版本与哈希，不保留副本。生成：node scripts/emit-sheet.mjs（--list 列出有效与被排除的设计上下文）。
+contract:
+  name: AestheticConstraintSheet
+  owner: design-compiler
+  pin: contract/dc-contract.pin.json
+  emit: node scripts/emit-sheet.mjs
+  registry: rules/
 
 # 规则模块索引
 rules:

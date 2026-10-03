@@ -1,0 +1,349 @@
+{
+  "family": "CAS-OT",
+  "description": "Default operation targets of the aesthetic plan emitter: per design operator, the fixed targets, graph-derived gains and secondary parameters it emits into the execution plan (subject PLAN_<operator id>), the neutral graph readings used when evidence is absent, and the tolerance of the plan's conflict resolution.",
+  "rules": [
+    {
+      "rule_id": "CAS-OT-GRAPH-FALLBACKS",
+      "title": "Plan emitter: neutral graph readings when a node or relation is absent",
+      "kind": "OPERATION_POLICY",
+      "role": "composition",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-GRAPH-FALLBACKS"
+      ],
+      "payload": {
+        "subject": "PLAN_GRAPH_FALLBACKS",
+        "params": {
+          "void_energy": 0.3,
+          "subject_energy": 0.5,
+          "boundary_energy": 0.8,
+          "light_energy": 0.4,
+          "material_energy": 0.5,
+          "solid_void_magnitude": 0.5,
+          "host_guest_magnitude": 0.5,
+          "dense_sparse_magnitude": 0.5
+        },
+        "rationale": "Readings the plan emitter assumes when the relationship graph has no node of a type (void, subject, boundary, light, material) or no relation of a type (solid-void, host-guest, dense-sparse). Migrated unchanged from design-compiler; the source records no rationale for the values."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-ENCLOSE-BREATHING-FIELD",
+      "title": "Plan emission of OP_ENCLOSE_BREATHING_FIELD: negative-space target and aggregation",
+      "kind": "OPERATION_POLICY",
+      "role": "composition",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-VOID-TARGET",
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_ENCLOSE_BREATHING_FIELD",
+        "params": {
+          "negative_space_lift": 0.15,
+          "negative_space_min": {
+            "$ref": "CAS-OP-BREATHING-FIELD/payload/params/negative_space_min"
+          },
+          "negative_space_max": {
+            "$ref": "CAS-OP-BREATHING-FIELD/payload/params/negative_space_max"
+          },
+          "aggregation_base": 0.6,
+          "transition_softness": 0.35
+        },
+        "rationale": "Target negative space = measured VOID energy + negative_space_lift, kept inside the effective void_ratio band of the context, defined once in CAS-OP-BREATHING-FIELD ($ref; ADR-0001 rule 6: operator clamps take their bounds from the period band; replaces the fixed clamp of the original emitter). aggregation_base is added to the SOLID_VOID magnitude; transition_softness is a fixed secondary parameter. Lift, base and softness are migrated unchanged."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-ALIGN-GUEST-HOST-TENSION",
+      "title": "Plan emission of OP_ALIGN_GUEST_HOST_TENSION: focal offset target",
+      "kind": "OPERATION_POLICY",
+      "role": "composition",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-DERIVATION"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_ALIGN_GUEST_HOST_TENSION",
+        "params": {
+          "focal_offset_base": 0.05,
+          "focal_offset_gain": 0.1
+        },
+        "rationale": "Target focal offset = focal_offset_base + HOST_GUEST magnitude * focal_offset_gain; the host and guest weights follow the SUBJECT energy and its complement (structural, not a decision). Migrated unchanged from the design-compiler plan emitter."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-PARTITION-POISSON-CLUSTER",
+      "title": "Plan emission of OP_PARTITION_POISSON_CLUSTER: minimum distance and iterations",
+      "kind": "OPERATION_POLICY",
+      "role": "composition",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-DERIVATION"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_PARTITION_POISSON_CLUSTER",
+        "params": {
+          "min_distance_base": 0.1,
+          "min_distance_gain": 0.2,
+          "iterations": 50
+        },
+        "rationale": "Cluster density target follows the DENSE_SPARSE magnitude (structural); minimum distance = min_distance_base + (1 - density) * min_distance_gain; iterations is a fixed secondary parameter emitted with the plan. Migrated unchanged from the design-compiler plan emitter."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-CALIBRATE-AXIAL-ORDER",
+      "title": "Plan emission of OP_CALIBRATE_AXIAL_ORDER: axis tolerance",
+      "kind": "OPERATION_POLICY",
+      "role": "composition",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-DERIVATION"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_CALIBRATE_AXIAL_ORDER",
+        "params": {
+          "axis_tolerance": 0.05
+        },
+        "rationale": "The axial symmetry target follows the BOUNDARY energy (structural); axis_tolerance is the fixed tolerance emitted with it. Migrated unchanged from the design-compiler plan emitter."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-LAYER-DEPTH-RECESSION",
+      "title": "Plan emission of OP_LAYER_DEPTH_RECESSION: default depth layers, recession rate and haze start",
+      "kind": "OPERATION_POLICY",
+      "role": "spatial",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-TARGETS"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_LAYER_DEPTH_RECESSION",
+        "params": {
+          "target_depth_layers": {
+            "$ref": "CAS-OP-LAYER-DEPTH/payload/params/target_layers"
+          },
+          "recession_rate": 0.15,
+          "haze_start": 0.4
+        },
+        "rationale": "Plan emission of the layering operator: the target depth layers are the operator's canonical per-period layer count, defined once in CAS-OP-LAYER-DEPTH ($ref; the original emitter's period-independent 4 contradicted the operator's own SONG 5 / MING 3 and is deleted). recession_rate and haze_start are fixed values, migrated unchanged; the source records no rationale for them."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-INJECT-ATMOSPHERIC-VOID",
+      "title": "Plan emission of OP_INJECT_ATMOSPHERIC_VOID: density gain and falloff",
+      "kind": "OPERATION_POLICY",
+      "role": "spatial",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-DERIVATION"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_INJECT_ATMOSPHERIC_VOID",
+        "params": {
+          "density_gain": 0.8,
+          "falloff_exponent": 1.5
+        },
+        "rationale": "Target atmospheric density = VOID energy * density_gain; falloff_exponent is a fixed secondary parameter emitted with it. Migrated unchanged from the design-compiler plan emitter."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-SHIFT-HORIZON-PROPORTION",
+      "title": "Plan emission of OP_SHIFT_HORIZON_PROPORTION: default horizon position",
+      "kind": "OPERATION_POLICY",
+      "role": "spatial",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-TARGETS"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_SHIFT_HORIZON_PROPORTION",
+        "params": {
+          "target_horizon_position": 0.55,
+          "transition_band": 0.1
+        },
+        "rationale": "Period-independent default horizon position of the plan and the transition band emitted with it. Migrated unchanged from the design-compiler plan emitter; the source records no rationale for the values."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-FRAME-SECONDARY-OCCLUSION",
+      "title": "Plan emission of OP_FRAME_SECONDARY_OCCLUSION: default occlusion ratio",
+      "kind": "OPERATION_POLICY",
+      "role": "spatial",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-TARGETS"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_FRAME_SECONDARY_OCCLUSION",
+        "params": {
+          "target_occlusion_ratio": 0.25,
+          "occlusion_softness": 0.4
+        },
+        "rationale": "Period-independent default occlusion ratio of the plan and the softness emitted with it. Migrated unchanged from the design-compiler plan emitter; the source records no rationale for the values."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-APPLY-TIME-PATINA",
+      "title": "Plan emission of OP_APPLY_TIME_PATINA: patina gain and distribution",
+      "kind": "OPERATION_POLICY",
+      "role": "material",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-DERIVATION"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_APPLY_TIME_PATINA",
+        "params": {
+          "patina_gain": 0.7
+        },
+        "enums": {
+          "patina_distribution": "edge-heavy"
+        },
+        "rationale": "Target patina level = MATERIAL energy * patina_gain; patina_distribution is the distribution mode emitted with it. Migrated unchanged from the design-compiler plan emitter."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-DAMPEN-SPECULAR-HARSHNESS",
+      "title": "Plan emission of OP_DAMPEN_SPECULAR_HARSHNESS: default specular sharpness",
+      "kind": "OPERATION_POLICY",
+      "role": "material",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-TARGETS"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_DAMPEN_SPECULAR_HARSHNESS",
+        "params": {
+          "target_specular_sharpness": 15,
+          "dampening_factor": 0.6
+        },
+        "rationale": "Period-independent default specular sharpness of the plan (on the 0-100 runtime scale) and the dampening factor emitted with it. Migrated unchanged from the design-compiler plan emitter; the source records no rationale for the values."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-ORCHESTRATE-MATERIAL-CONTRAST",
+      "title": "Plan emission of OP_ORCHESTRATE_MATERIAL_CONTRAST: default contrast ratio",
+      "kind": "OPERATION_POLICY",
+      "role": "material",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-TARGETS"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_ORCHESTRATE_MATERIAL_CONTRAST",
+        "params": {
+          "target_contrast_ratio": 0.4,
+          "contrast_balance": 0.5
+        },
+        "rationale": "Period-independent default material contrast ratio of the plan and the balance emitted with it. Migrated unchanged from the design-compiler plan emitter; the source records no rationale for the values."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-WEATHER-SURFACE-ENTROPY",
+      "title": "Plan emission of OP_WEATHER_SURFACE_ENTROPY: entropy gain and scale",
+      "kind": "OPERATION_POLICY",
+      "role": "material",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-DERIVATION"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_WEATHER_SURFACE_ENTROPY",
+        "params": {
+          "entropy_gain": 0.6,
+          "entropy_scale": 0.3
+        },
+        "rationale": "Target surface entropy = MATERIAL energy * entropy_gain; entropy_scale is a fixed secondary parameter emitted with it. Migrated unchanged from the design-compiler plan emitter."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-HARMONIZE-SKY-LUMINANCE",
+      "title": "Plan emission of OP_HARMONIZE_SKY_LUMINANCE: luminance gain",
+      "kind": "OPERATION_POLICY",
+      "role": "lighting",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-DERIVATION"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_HARMONIZE_SKY_LUMINANCE",
+        "params": {
+          "luminance_gain": 0.8,
+          "harmonization_factor": 0.5
+        },
+        "rationale": "Target sky luminance = LIGHT energy * luminance_gain; harmonization_factor is a fixed secondary parameter emitted with it. Migrated unchanged from the design-compiler plan emitter."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-COOL-SHADOW-CHROMATICITY",
+      "title": "Plan emission of OP_COOL_SHADOW_CHROMATICITY: default shadow temperature",
+      "kind": "OPERATION_POLICY",
+      "role": "lighting",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-TARGETS"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_COOL_SHADOW_CHROMATICITY",
+        "params": {
+          "target_shadow_temperature": 0.45,
+          "cooling_strength": 0.4
+        },
+        "rationale": "Period-independent default shadow temperature of the plan and the cooling strength emitted with it. Migrated unchanged from the design-compiler plan emitter; the source records no rationale for the values."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-FILTER-MIST-SCATTER",
+      "title": "Plan emission of OP_FILTER_MIST_SCATTER: mist density gain and anisotropy",
+      "kind": "OPERATION_POLICY",
+      "role": "lighting",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-DERIVATION"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_FILTER_MIST_SCATTER",
+        "params": {
+          "density_gain": 0.5,
+          "scatter_anisotropy": 0.7
+        },
+        "rationale": "Target mist density = VOID energy * density_gain; scatter_anisotropy is a fixed secondary parameter emitted with it. Migrated unchanged from the design-compiler plan emitter."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-RESTRICT-ACCENT-LUMINANCE",
+      "title": "Plan emission of OP_RESTRICT_ACCENT_LUMINANCE: default accent luminance",
+      "kind": "OPERATION_POLICY",
+      "role": "lighting",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-TARGETS"
+      ],
+      "payload": {
+        "subject": "PLAN_OP_RESTRICT_ACCENT_LUMINANCE",
+        "params": {
+          "target_accent_luminance": 0.5,
+          "restriction_threshold": 0.7
+        },
+        "rationale": "Period-independent default accent luminance of the plan and the restriction threshold emitted with it. Migrated unchanged from the design-compiler plan emitter; the source records no rationale for the values."
+      }
+    },
+    {
+      "rule_id": "CAS-OT-CONFLICT-TOLERANCE",
+      "title": "Plan conflict resolution: tolerance of the interval-intersection merge",
+      "kind": "OPERATION_POLICY",
+      "role": "governance",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-PLAN-CONFLICT-TOLERANCE"
+      ],
+      "payload": {
+        "subject": "PLAN_CONFLICT_TOLERANCE",
+        "params": {
+          "intersection_relative_tolerance": 0.15,
+          "intersection_absolute_tolerance": 0.05
+        },
+        "rationale": "When operators propose different values for one parameter, each proposal widens to an interval of +- relative tolerance (never less than the absolute tolerance); intersecting intervals merge to their midpoint, otherwise the category priority (CAS-GOV-001) decides. Migrated unchanged from the design-compiler conflict resolver."
+      }
+    }
+  ]
+}

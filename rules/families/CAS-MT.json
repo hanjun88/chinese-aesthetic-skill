@@ -1,0 +1,5 @@
+{
+  "family": "CAS-MT",
+  "description": "Material decisions (PBR defaults, plastic/natural-material limits) read by lib/material-engine.js.",
+  "rules": []
+}

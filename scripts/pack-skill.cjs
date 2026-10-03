@@ -9,16 +9,19 @@
  * 打包契约（对齐 Minis skill 规范）：
  *   - SKILL.md 带 YAML frontmatter（name + description）为唯一入口，skill.yaml 为可选补充元数据
  *   - lib/ 为零依赖运行时（纯 ESM，package.json dependencies 仅用于可选 UI demo）
- *   - 排除：node_modules/ dist/ .git/ 参考图（distillation 中的 jpg/jpeg）
+ *   - rules/（规则登记簿）与 contract/（design-compiler 契约钉扎）是 Skill 的一部分：lib/rules/ 在加载时 import rules/，
+ *     scripts/emit-sheet.mjs 需要 scripts/、lib/、rules/、contract/ 同在；包内自检会真的运行 `emit-sheet.mjs --list`
+ *   - 排除：node_modules/ dist/ .git/ .github/ src/（Vite UI demo）参考图（distillation 中的 jpg/jpeg）
  */
 
 const fs = require('fs');
 const path = require('path');
+const { spawnSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 
-// 需要随包分发的目录
-const INCLUDE_DIRS = ['lib', 'guidelines', 'playbooks', 'terms', 'modules', 'distillation', 'scripts', 'tests', 'docs'];
+// 需要随包分发的目录（rules / contract：登记簿与契约钉扎，lib/rules 与 scripts/emit-sheet.mjs 依赖它们）
+const INCLUDE_DIRS = ['lib', 'rules', 'contract', 'guidelines', 'playbooks', 'terms', 'modules', 'distillation', 'scripts', 'tests', 'docs'];
 // 需要随包分发的单文件
 const INCLUDE_FILES = ['skill.yaml', 'metadata.json', 'package.json', 'README.md', 'LICENSE', 'SKILL.md'];
 // 排除规则（相对路径前缀 / 扩展名）
@@ -68,9 +71,23 @@ function copyInto(files, dest) {
 
 function verify(dest) {
   const errors = [];
-  const must = ['SKILL.md', 'skill.yaml', 'metadata.json', 'package.json', 'lib/index.js'];
+  const must = [
+    'SKILL.md', 'skill.yaml', 'metadata.json', 'package.json', 'lib/index.js',
+    // 规则登记簿、契约钉扎与 sheet 生成器：缺任何一个，引擎本身都无法加载
+    'rules/index.js', 'rules/vocabulary.json', 'contract/dc-contract.pin.json',
+    'lib/rules/registry.js', 'lib/rules/derive.js', 'scripts/emit-sheet.mjs', 'scripts/lib/sheet-emitter.mjs', 'scripts/lib/jcs.mjs',
+  ];
   for (const m of must) {
     if (!fs.existsSync(path.join(dest, m))) errors.push(`缺文件: ${m}`);
+  }
+  // 包内必须不含源码目录与 CI 配置
+  for (const banned of ['src', '.github', 'node_modules']) {
+    if (fs.existsSync(path.join(dest, banned))) errors.push(`包内不应含 ${banned}/`);
+  }
+  // 冒烟：从包内容里真的运行 sheet 生成器（会 import lib/rules → rules/ 并读取 contract/ 钉扎）
+  if (!errors.length) {
+    const r = spawnSync(process.execPath, ['scripts/emit-sheet.mjs', '--list'], { cwd: dest, encoding: 'utf8' });
+    if (r.status !== 0) errors.push(`包内 node scripts/emit-sheet.mjs --list 失败（退出码 ${r.status}）：${(r.stderr || r.stdout || '').trim().split('\n').slice(-3).join(' | ')}`);
   }
   // SKILL.md frontmatter 必须含 name 与 description
   const skillMd = fs.readFileSync(path.join(dest, 'SKILL.md'), 'utf8');

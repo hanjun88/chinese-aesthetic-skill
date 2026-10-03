@@ -1,0 +1,156 @@
+{
+  "family": "CA-RULE",
+  "description": "Classical-treatise grammar rules (虚实相生 / 气韵生动 / 苍润 / 设色 / 静墨) expressed as Core IR repair rules. Thresholds that have a period band are derived from it.",
+  "rules": [
+    {
+      "rule_id": "CA-RULE-01-XUSHI",
+      "title": "虚实相生: restore void when the composition is over-full",
+      "kind": "GRAMMAR_RULE",
+      "role": "composition",
+      "confidence": 0.7,
+      "sources": [
+        "SRC-DC-GRAMMAR-RULES-V1",
+        "SRC-ADR-0001",
+        "SRC-DC-STEP7-WHITEPAPER"
+      ],
+      "payload": {
+        "principle": "虚实相生",
+        "category": "composition",
+        "description": "Trigger is the lower edge of the context's effective void_ratio band; the authored repair target 0.45 is clamped into that band. Also carries the intent of the former ANTI-AI-02 (over-full AI composition), merged by ADR-0001.",
+        "target_path": "/composition/negativeSpaceRatio/value",
+        "condition": {
+          "operator": "<",
+          "value": {
+            "$band": {
+              "parameter": "scene.composition.negativeSpaceRatio",
+              "edge": "min"
+            }
+          }
+        },
+        "mutation": {
+          "op": "replace",
+          "value": {
+            "$clamp": {
+              "value": 0.45,
+              "parameter": "scene.composition.negativeSpaceRatio"
+            }
+          }
+        },
+        "severity": "P1_WARNING",
+        "reason": "恢复东方美学留白呼吸感，避免构图过满"
+      }
+    },
+    {
+      "rule_id": "CA-RULE-02-YUNRUN",
+      "title": "气韵生动: soften the key light edge",
+      "kind": "GRAMMAR_RULE",
+      "role": "lighting",
+      "confidence": 0.7,
+      "sources": [
+        "SRC-DC-GRAMMAR-RULES-V1"
+      ],
+      "payload": {
+        "principle": "气韵生动",
+        "category": "lighting",
+        "target_path": "/lighting/keyLight/softness/value",
+        "condition": {
+          "operator": "<",
+          "value": 0.5
+        },
+        "mutation": {
+          "op": "replace",
+          "value": 0.75
+        },
+        "severity": "P1_WARNING",
+        "reason": "柔化主光边缘，营造氤氲气韵，避免硬光切割"
+      }
+    },
+    {
+      "rule_id": "CA-RULE-03-CANGRUN",
+      "title": "苍润: raise roughness for a weathered, moist texture",
+      "kind": "GRAMMAR_RULE",
+      "role": "material",
+      "confidence": 0.7,
+      "sources": [
+        "SRC-DC-GRAMMAR-RULES-V1"
+      ],
+      "payload": {
+        "principle": "苍润",
+        "category": "materials",
+        "description": "The authored repair target 0.70 is clamped into the period roughness band of the context.",
+        "target_path": "/materials/0/roughness/value",
+        "condition": {
+          "operator": "<",
+          "value": 0.5
+        },
+        "mutation": {
+          "op": "replace",
+          "value": {
+            "$clamp": {
+              "value": 0.7,
+              "parameter": "scene.material.roughness"
+            }
+          }
+        },
+        "severity": "P2_INFO",
+        "reason": "提升材质粗糙感，呈现苍润并济的东方质感"
+      }
+    },
+    {
+      "rule_id": "CA-RULE-04-SHEJI",
+      "title": "设色: pull an over-warm colour temperature bias back",
+      "kind": "GRAMMAR_RULE",
+      "role": "color",
+      "confidence": 0.7,
+      "sources": [
+        "SRC-DC-GRAMMAR-RULES-V1"
+      ],
+      "payload": {
+        "principle": "设色",
+        "category": "color",
+        "target_path": "/color/temperatureBias/value",
+        "condition": {
+          "operator": ">",
+          "value": 0.3
+        },
+        "mutation": {
+          "op": "replace",
+          "value": 0.1
+        },
+        "severity": "P2_INFO",
+        "reason": "压低色温偏移，回归素雅设色，避免过暖失真"
+      }
+    },
+    {
+      "rule_id": "CA-RULE-05-JINGMO",
+      "title": "静墨: break absolute symmetry",
+      "kind": "GRAMMAR_RULE",
+      "role": "composition",
+      "confidence": 0.7,
+      "sources": [
+        "SRC-DC-GRAMMAR-RULES-V1"
+      ],
+      "payload": {
+        "principle": "静墨",
+        "category": "composition",
+        "description": "The authored repair target 0.82 is clamped into the period axial-symmetry band of the context.",
+        "target_path": "/composition/symmetry/value",
+        "condition": {
+          "operator": ">",
+          "value": 0.9
+        },
+        "mutation": {
+          "op": "replace",
+          "value": {
+            "$clamp": {
+              "value": 0.82,
+              "parameter": "scene.composition.axialSymmetry"
+            }
+          }
+        },
+        "severity": "P2_INFO",
+        "reason": "打破绝对对称，引入微妙失衡，营造静中寓动"
+      }
+    }
+  ]
+}

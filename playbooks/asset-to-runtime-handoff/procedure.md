@@ -153,56 +153,48 @@ fi
 - `ACCEPTANCE_NOT_PASS` / `CONSTRAINT_NOT_READY` → FAIL
 - 审美验收和约束提取均通过 → Step 1 PASS
 
-## Step 2: 确认编译契约版本
+## Step 2: 确认交接契约（AestheticConstraintSheet）钉扎
 
-1. 查阅 design-compiler 的 scene.json schema 版本：
+本仓库向 design-compiler 交接的唯一机器契约是 AestheticConstraintSheet：schema 由 design-compiler 持有（`contracts/aesthetic-constraint-sheet/`），本仓库只在 `contract/dc-contract.pin.json` 钉扎其版本与哈希。SceneCompilationIR 是编译器内部的中间表示，不是与本仓库的契约，这里不绑定、不检查。
+
+1. 确认本仓库的钉扎与 design-compiler 的契约锁一致：
 
 ```bash
-# REV-4 修正：F7 — 添加实际 A 轨 schema 路径 chinese-aesthetic/scene-contract/types.ts（P0 阻断修复）
-SCHEMA_FILE=""
-for candidate in \
-  "$COMPILER_REPO/chinese-aesthetic/scene-contract/types.ts" \
-  "$COMPILER_REPO/src/scene-contract/types.ts" \
-  "$COMPILER_REPO/scene-contract/types.ts" \
-  "$COMPILER_REPO/types/scene.ts"; do
-  if [ -f "$candidate" ]; then
-    SCHEMA_FILE="$candidate"
-    break
-  fi
-done
+PIN_FILE="$AESTHETIC_REPO/contract/dc-contract.pin.json"
+LOCK_FILE="$COMPILER_REPO/contracts/aesthetic-constraint-sheet/contract.lock.json"
 
-if [ -z "$SCHEMA_FILE" ]; then
-  echo "SCHEMA_NOT_FOUND: scene.json schema types file not found in design-compiler" >> "$HANDOFF_LOG"
-  echo "SCHEMA_NOT_FOUND"
+PIN_HASH=""
+LOCK_HASH=""
+PIN_VERSION=""
+LOCK_VERSION=""
+if [ -f "$PIN_FILE" ]; then
+  PIN_HASH=$(jq -r '.contract_hash // empty' "$PIN_FILE" 2>"$ERR_FILE")
+  PIN_VERSION=$(jq -r '.schema_version // empty' "$PIN_FILE" 2>>"$ERR_FILE")
+fi
+if [ -f "$LOCK_FILE" ]; then
+  LOCK_HASH=$(jq -r '.contract_hash // empty' "$LOCK_FILE" 2>>"$ERR_FILE")
+  LOCK_VERSION=$(jq -r '.schema_version // empty' "$LOCK_FILE" 2>>"$ERR_FILE")
+fi
+echo "CONTRACT_PIN=$PIN_VERSION $PIN_HASH ($PIN_FILE)" >> "$HANDOFF_LOG"
+echo "CONTRACT_LOCK=$LOCK_VERSION $LOCK_HASH ($LOCK_FILE)" >> "$HANDOFF_LOG"
+
+if [ -z "$PIN_HASH" ] || [ -z "$LOCK_HASH" ]; then
+  echo "CONTRACT_PIN_NOT_FOUND: pin or lock file missing or without contract_hash" >> "$HANDOFF_LOG"
+  echo "CONTRACT_PIN_NOT_FOUND"
   BLOCKED_COUNT=$((BLOCKED_COUNT + 1))
+elif [ "$PIN_HASH" != "$LOCK_HASH" ] || [ "$PIN_VERSION" != "$LOCK_VERSION" ]; then
+  echo "CONTRACT_PIN_MISMATCH: skill pins $PIN_VERSION $PIN_HASH, compiler locks $LOCK_VERSION $LOCK_HASH" >> "$HANDOFF_LOG"
+  echo "CONTRACT_PIN_MISMATCH"
+  FAIL_COUNT=$((FAIL_COUNT + 1))
 else
-  echo "SCHEMA_FILE=$SCHEMA_FILE" >> "$HANDOFF_LOG"
-  SCHEMA_VERSION=$(grep -oE 'schemaVersion["\s:=]+["'\'']?[0-9.]+' "$SCHEMA_FILE" 2>/dev/null | head -1)
-  echo "SCHEMA_VERSION=${SCHEMA_VERSION:-unknown}" >> "$HANDOFF_LOG"
-fi
-```
-
-2. 确认 manifest.json 格式要求和资产命名规范：
-
-```bash
-MANIFEST_SCHEMA_FOUND=0
-if [ -n "$SCHEMA_FILE" ]; then
-  if grep -q "SceneAssetManifest" "$SCHEMA_FILE" 2>/dev/null; then
-    MANIFEST_SCHEMA_FOUND=1
-    echo "MANIFEST_SCHEMA=SceneAssetManifest found in $SCHEMA_FILE" >> "$HANDOFF_LOG"
-  fi
-fi
-
-if [ "$MANIFEST_SCHEMA_FOUND" -eq 0 ]; then
-  echo "MANIFEST_SCHEMA_NOT_FOUND: SceneAssetManifest not found" >> "$HANDOFF_LOG"
-  echo "MANIFEST_SCHEMA_NOT_FOUND"
-  BLOCKED_COUNT=$((BLOCKED_COUNT + 1))
+  echo "CONTRACT_PIN_OK: AestheticConstraintSheet $PIN_VERSION" >> "$HANDOFF_LOG"
 fi
 ```
 
 判定分类：
-- `SCHEMA_NOT_FOUND` / `MANIFEST_SCHEMA_NOT_FOUND` → BLOCKED_ENV
-- 编译契约版本明确 → Step 2 PASS
+- `CONTRACT_PIN_NOT_FOUND` → BLOCKED_ENV
+- `CONTRACT_PIN_MISMATCH` → FAIL（先在本仓库重新钉扎并重新生成约束表，或确认编译器侧的版本）
+- 钉扎与契约锁一致 → Step 2 PASS
 
 ## Step 3: 资产清单完整性检查
 
@@ -401,9 +393,11 @@ fi
 - `TECH_SPEC_FAILURE` / `FORMAT_MISMATCH` / `RESOLUTION_TOO_SMALL` → FAIL
 - 所有图像技术规格符合 → Step 4 PASS
 
-## Step 5: scene.json 契约验证
+## Step 5: scene.json（资产包描述）验证
 
-1. 解析 scene.json 并验证 schema：
+本步骤检查的是本 Playbook 自己定义的资产包描述字段（AC-5），不对应任何编译器 schema。
+
+1. 解析 scene.json：
 
 ```bash
 SCENE_VALIDATION_FILE=$(mktemp -t scene-validation-XXXXXX)
@@ -494,7 +488,7 @@ fi
 判定分类：
 - `PATH_CHECK_ERROR` → BLOCKED_ENV
 - `SCENE_JSON_INVALID` / `SCENE_ID_MISSING` / `ABSOLUTE_OR_PARENT_PATH` / `RUNTIME_PROPRIETARY_STATE` → FAIL
-- scene.json 符合 schema、路径合规、无运行时专有状态 → Step 5 PASS
+- scene.json 字段完整、路径合规、无运行时专有状态 → Step 5 PASS
 
 ## Step 6: manifest.json 验证
 
@@ -950,16 +944,17 @@ esac
 判定分类：
 - `EVIDENCE_ARCHIVE_ERROR` → BLOCKED_ENV
 - 全部检查通过、资产完整交接、证据归档 → PASS
-- 有 FAIL 项（资产缺失、技术规格不符、schema 违规、职责混写、哈希不匹配）→ FAIL
-- 有 BLOCKED_ENV 项（输入缺失、工具缺失、编译契约不明确、运行时能力不确认）→ BLOCKED_ENV
+- 有 FAIL 项（资产缺失、技术规格不符、契约钉扎不一致、资产包描述违规、职责混写、哈希不匹配）→ FAIL
+- 有 BLOCKED_ENV 项（输入缺失、工具缺失、契约钉扎缺失、运行时能力不确认）→ BLOCKED_ENV
 
 ## 决策点
 
 - 资产未通过审美验收（CA-PB-003）或约束未就绪（CA-PB-001）→ 不得交接，返回修改
-- 编译契约不明确（schema 缺失）→ BLOCKED_ENV，需确认 design-compiler 版本
+- 契约钉扎缺失（`contract/dc-contract.pin.json` 或编译器的契约锁不可读）→ BLOCKED_ENV，需确认 design-compiler 版本
+- AestheticConstraintSheet 钉扎与编译器的契约锁不一致 → FAIL
 - 必需资产缺失或命名违规 → FAIL
 - 技术规格不符（分辨率/格式/位深）→ FAIL
-- scene.json schema 违规或路径不合规 → FAIL
+- scene.json 缺必需字段、含运行时专有状态或路径不合规 → FAIL
 - manifest.json fileCount/SHA-256/byteSize 不一致 → FAIL
 - 运行时层级不明确 → BLOCKED_ENV
 - 职责边界混写（编译逻辑在审美仓库 / 美学规范在编译器）→ FAIL

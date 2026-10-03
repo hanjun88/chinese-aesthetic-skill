@@ -1,0 +1,5 @@
+{
+  "family": "CAS-LT",
+  "description": "Lighting decisions (angle, contrast, colour-temperature limits) read by lib/light-engine.js.",
+  "rules": []
+}

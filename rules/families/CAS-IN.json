@@ -1,0 +1,5 @@
+{
+  "family": "CAS-IN",
+  "description": "Interaction decisions (timing, easing and event-rhythm limits) read by lib/interaction-engine.js.",
+  "rules": []
+}

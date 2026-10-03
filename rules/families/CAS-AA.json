@@ -1,0 +1,5 @@
+{
+  "family": "CAS-AA",
+  "description": "Anti-AI-artifact decisions (generation-parameter risk limits and risk grading) read by lib/anti-ai-artifacts.js.",
+  "rules": []
+}

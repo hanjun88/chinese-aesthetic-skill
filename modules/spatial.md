@@ -2,146 +2,31 @@
 
 对应规则：guidelines/spatial-order.md | 优先级：P0
 
-## 核心算法
+> Implementation: `lib/spatial-engine.js`（中轴 / 开间 / 层级 / 尺度 / 进深）· `lib/chineseness.js`（空间秩序评分）· thresholds: 中轴偏移、层级数等判据尚未登记（以 `guidelines/spatial-order.md` 与引擎内判据为准）；朝代构图先验见 rules registry family `CAS-PB`（轴对称、焦点偏移、景深层数），各朝代景深目标见 `CAS-OP-LAYER-DEPTH` · rationale: `guidelines/spatial-order.md`
+>
+> 本模块不内嵌算法、代码与参数表：实现在引擎里，阈值在登记簿或 guidelines，规则原文在 guidelines。以下只保留原则要点与素材库实证（观察值，不是阈值）。
 
-### 中轴对称计算
+## 原则要点
 
-```javascript
-/**
- * 计算主元素与屏幕中心的偏移度
- * @param {Object} element - 主元素 {x, y, width, height}
- * @param {number} screenWidth - 屏幕宽度
- * @returns {Object} { offsetRatio, isCentered, isGoldenPoint }
- */
-function calculateAxisOffset(element, screenWidth) {
-  const centerX = element.x + element.width / 2;
-  const screenCenter = screenWidth / 2;
-  const offsetRatio = Math.abs(centerX - screenCenter) / screenWidth;
-
-  // 黄金分割点检测（38.2% 和 61.8%）
-  const goldenLeft = screenWidth * 0.382;
-  const goldenRight = screenWidth * 0.618;
-  const isGoldenPoint = Math.abs(centerX - goldenLeft) / screenWidth < 0.05 ||
-                        Math.abs(centerX - goldenRight) / screenWidth < 0.05;
-
-  return {
-    offsetRatio,
-    isCentered: offsetRatio <= 0.10,
-    isGoldenPoint,
-    pass: offsetRatio <= 0.10 || isGoldenPoint
-  };
-}
-```
-
-### 层级递进检测
-
-```javascript
-/**
- * 检测场景的深度层级
- * @param {Array} elements - 元素列表，每个含 depth 属性
- * @returns {Object} { layerCount, hasProgression, layers }
- */
-function detectSpatialLayers(elements) {
-  const depths = elements.map(e => e.depth || 0).sort((a, b) => a - b);
-  const uniqueDepths = [...new Set(depths)];
-
-  // 检测递进：相邻层深度差 ≥ 总深度的15%
-  const maxDepth = Math.max(...depths);
-  const hasProgression = uniqueDepths.every((d, i) =>
-    i === 0 || (d - uniqueDepths[i-1]) >= maxDepth * 0.15
-  );
-
-  return {
-    layerCount: uniqueDepths.length,
-    hasProgression,
-    layers: uniqueDepths,
-    pass: uniqueDepths.length >= 2 && hasProgression
-  };
-}
-```
-
-## 参数表
-
-| 参数 | 值 | 说明 |
-|---|---|---|
-| 中轴偏移容差 | ≤10% | 主元素中心与屏幕中心的偏移比 |
-| 黄金分割点容差 | ≤5% | 主体位于38.2%或61.8%位置的容差 |
-| 最小层级数 | ≥2 | 前庭/中殿/后堂至少2层 |
-| 层级深度差 | ≥15% | 相邻层深度差占总深度比例 |
-| 推荐层级数 | 3 | 前庭(留白)→中殿(主体)→后堂(纵深) |
-
-## Three.js 布局实现
-
-```javascript
-// 中轴对称布局
-function createSymmetricLayout(scene, mainElement, sideElements) {
-  const group = new THREE.Group();
-
-  // 主元素居中
-  mainElement.position.set(0, 0, 0);
-  group.add(mainElement);
-
-  // 侧元素对称分布
-  const spacing = 3;
-  sideElements.forEach((el, i) => {
-    const side = i % 2 === 0 ? -1 : 1;
-    const row = Math.floor(i / 2);
-    el.position.set(side * spacing * (row + 1), 0, 0);
-    group.add(el);
-  });
-
-  return group;
-}
-
-// 三层递进布局
-function createProgressiveLayout(scene) {
-  const layers = [
-    { name: '前庭', z: -5, elements: ['steps', 'ground'] },
-    { name: '中殿', z: 0, elements: ['mainDoor', 'columns'] },
-    { name: '后堂', z: 5, elements: ['innerHall', 'depth'] }
-  ];
-  // 每层有明确的空间功能和深度
-}
-```
-
-## 校验函数（供 validate.js 调用）
-
-```javascript
-function checkSpatialOrder(design) {
-  const violations = [];
-  const { elements, width } = design;
-  if (!elements || elements.length === 0) {
-    violations.push({ severity: 'P0', message: '无元素可检测空间秩序' });
-    return violations;
-  }
-  const main = elements.find(e => e.isMain) || elements[0];
-  const axis = calculateAxisOffset(main, width);
-  if (!axis.pass) {
-    violations.push({ severity: 'P0', message: `主元素偏移 ${(axis.offsetRatio*100).toFixed(1)}% > 10%，且不在黄金分割点` });
-  }
-  const layers = detectSpatialLayers(elements);
-  if (layers.layerCount < 2) {
-    violations.push({ severity: 'P1', message: '场景层级不足2层' });
-  }
-  return violations;
-}
-```
-
----
+- **中轴为骨**：以主元素中心与画面中心线的偏移比判定中轴。严格中轴用于庄重的仪式空间，"似正非正"（主体微偏）带来东方的高级感；山水/写意取黄金分割点（0.382 / 0.618）作为非对称构图的合法落点。偏移容差见 `guidelines/spatial-order.md`。
+- **层级递进**：前庭（留白）→ 中殿（主体）→ 后堂（纵深）。前→中→后要有明确的深度递增，相邻层的深度差要拉得开；宫殿类的层次更多（外朝/中朝/内朝）。层数与深度差的判据见 `guidelines/spatial-order.md`。
+- **对称布局**：主元素居中，侧元素左右对称向外分布。
+- **递进布局**：每层有明确的空间功能——前庭（台阶、地面）、中殿（主门、柱列）、后堂（内殿、纵深）。
 
 ## 素材库实证（Distillation Evidence）
 
-> 数据来源：`../distillation/` 4批素材，关联索引见 `evidence-index.md`
+> 数据来源：`../distillation/` 4批素材，关联索引见 `evidence-index.md`。
+> 以下是**观察值**（来源与样本量见各行），不是阈值。
 
-### 实证参数表（已验证推荐值）
+### 实证观察表
 
-| 参数 | 原推荐值 | 实证修正值 | 实证来源 | 样本量 |
-|---|---|---|---|---|
-| 中轴使用率 | – | 93%（14/15） | ai-linggan | 15视频 |
-| 景深层数 | ≥2 | 均值4.7层（范围4-5） | ai-linggan | 15视频 |
-| 留白比例 | – | 均值26%（范围14%-38%） | ai-linggan | 15视频 |
-| 对称度 | – | 均值0.58（范围0.45-0.72） | ai-linggan | 15视频 |
-| 焦点位置 | 中心 | [0.50, 0.49]，高度居中 | ai-linggan | 15视频 |
+| 参数 | 观察值 | 实证来源 | 样本量 |
+|---|---|---|---|
+| 中轴使用率 | 93%（14/15） | ai-linggan | 15视频 |
+| 景深层数 | 均值4.7层（范围4-5） | ai-linggan | 15视频 |
+| 留白比例 | 均值26%（范围14%-38%） | ai-linggan | 15视频 |
+| 对称度 | 均值0.58（范围0.45-0.72） | ai-linggan | 15视频 |
+| 焦点位置 | [0.50, 0.49]，高度居中 | ai-linggan | 15视频 |
 
 ### 构图模式实证分布（ai-linggan 15视频）
 
@@ -162,7 +47,7 @@ function checkSpatialOrder(design) {
 | low 低角度 | 3 | 巨构/崇高感 |
 | high 高角度 | 2 | 俯瞰/纵深 |
 
-> 核心发现：Ai灵感主义偏"满构图"（留白仅26%），与传统中式"留白意境"不同。其空间感主要靠**4.7层景深**和**93%中轴线**营造，而非大面积留白。这是电影感场景与传统国画的关键区别。
+> 核心发现：Ai灵感主义偏"满构图"（留白均值仅26%），与传统中式"留白意境"不同。其空间感主要靠**4.7层景深**和**93%中轴线**营造，而非大面积留白。这是电影感场景与传统国画的关键区别。
 
 ### ivanchiu 云海天宫空间特征（11张图文）
 
@@ -171,29 +56,7 @@ function checkSpatialOrder(design) {
 - 100%不可能建筑（impossible architecture）
 - 视角分布：低角度4/11、中景2/11、高角度2/11、长焦侧视1/11、虫眼1/11、纵深走廊1/11
 
-### 可复用空间配置
+### 观察画像（可复用的配置思路）
 
-**配置A：电影感中轴纵深（ai-linggan）**
-```json
-{
-  "central_axis": true,
-  "axis_offset_tolerance": 0.10,
-  "depth_layers": 4.7,
-  "negative_space_ratio": 0.26,
-  "symmetry": 0.58,
-  "focal_point": [0.50, 0.49],
-  "dominant_camera": "drone_forward",
-  "viewpoint_height": "eye-level"
-}
-```
-
-**配置B：悬浮长焦压缩（ivanchiu）**
-```json
-{
-  "telephoto_compression": true,
-  "floating_architecture": true,
-  "impossible_architecture": true,
-  "layered_atmosphere": true,
-  "recommended_lens": "85mm-200mm"
-}
-```
+- **电影感中轴纵深（ai-linggan）**：中轴构图为主、对称度中等（非严格对称但有秩序感）、焦点居中、主导镜头为 drone_forward、平视机位；数值观察见上表。
+- **悬浮长焦压缩（ivanchiu）**：长焦压缩、悬浮建筑、不可能建筑、层叠的大气透视；用长焦镜头把多层建筑与云层压缩到同一画面（常用焦段约 85mm-200mm，经验值，素材库报告只记录"长焦压缩 11/11"）。

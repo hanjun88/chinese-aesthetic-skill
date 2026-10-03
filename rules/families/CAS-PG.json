@@ -1,0 +1,139 @@
+{
+  "family": "CAS-PG",
+  "description": "Period / design grammar: which principles are in force per period and which operators principles and relations can activate.",
+  "rules": [
+    {
+      "rule_id": "CAS-PG-PERIOD-PRINCIPLES",
+      "title": "Period mother grammar: the aesthetic principles in force per period",
+      "kind": "OPERATION_POLICY",
+      "role": "governance",
+      "confidence": 0.65,
+      "sources": [
+        "SRC-DC-PERIOD-GRAMMAR"
+      ],
+      "payload": {
+        "subject": "PERIOD_PRINCIPLES",
+        "params": {},
+        "lists": {
+          "principles": {
+            "$by_period": {
+              "TANG": [
+                "GUEST_HOST_COMITY",
+                "SCALE_PROPORTION",
+                "POSITION_MANAGEMENT",
+                "MATERIAL_PATINA"
+              ],
+              "SONG": [
+                "VOID_SOLID_INTERPLAY",
+                "COUNT_WHITE_AS_BLACK",
+                "LIGHT_TEMPORALITY",
+                "QI_YUN_CONTINUITY"
+              ],
+              "MING": [
+                "POSITION_MANAGEMENT",
+                "GUEST_HOST_COMITY",
+                "MATERIAL_PATINA",
+                "SCALE_PROPORTION"
+              ]
+            }
+          }
+        },
+        "rationale": "TANG 宾主揖让/尺度气势/经营位置/材质时间 (雄浑巨构、中轴对称、金石包浆); SONG 虚实相生/计白当黑/光照天时/气韵贯通 (山水意境、留白、烟雨清润); MING 经营位置/宾主揖让/材质时间/尺度气势 (简雅秩序、文房主次、木器包浆)."
+      }
+    },
+    {
+      "rule_id": "CAS-PG-PRINCIPLE-OPERATIONS",
+      "title": "Design grammar: which operators a principle can drive",
+      "kind": "OPERATION_POLICY",
+      "role": "governance",
+      "confidence": 0.65,
+      "sources": [
+        "SRC-DC-OPERATION-SELECTOR"
+      ],
+      "payload": {
+        "subject": "PRINCIPLE_OPERATIONS",
+        "params": {},
+        "lists": {
+          "count_white_as_black": [
+            "OP_ENCLOSE_BREATHING_FIELD",
+            "OP_INJECT_ATMOSPHERIC_VOID"
+          ],
+          "void_solid_interplay": [
+            "OP_ENCLOSE_BREATHING_FIELD",
+            "OP_PARTITION_POISSON_CLUSTER"
+          ],
+          "guest_host_comity": [
+            "OP_ALIGN_GUEST_HOST_TENSION",
+            "OP_CALIBRATE_AXIAL_ORDER"
+          ],
+          "position_management": [
+            "OP_CALIBRATE_AXIAL_ORDER",
+            "OP_SHIFT_HORIZON_PROPORTION"
+          ],
+          "scale_proportion": [
+            "OP_PARTITION_POISSON_CLUSTER",
+            "OP_LAYER_DEPTH_RECESSION"
+          ],
+          "material_patina": [
+            "OP_APPLY_TIME_PATINA",
+            "OP_WEATHER_SURFACE_ENTROPY"
+          ],
+          "light_temporality": [
+            "OP_HARMONIZE_SKY_LUMINANCE",
+            "OP_COOL_SHADOW_CHROMATICITY",
+            "OP_FILTER_MIST_SCATTER"
+          ],
+          "qi_yun_continuity": [
+            "OP_LAYER_DEPTH_RECESSION",
+            "OP_FILTER_MIST_SCATTER",
+            "OP_FRAME_SECONDARY_OCCLUSION"
+          ]
+        },
+        "rationale": "Explicit principle -> operator table (zero implicit rules): an operator is selected only when an active principle AND an active relation both map to it."
+      }
+    },
+    {
+      "rule_id": "CAS-PG-RELATION-OPERATIONS",
+      "title": "Design grammar: which operators a relation edge can trigger",
+      "kind": "OPERATION_POLICY",
+      "role": "governance",
+      "confidence": 0.65,
+      "sources": [
+        "SRC-DC-OPERATION-SELECTOR"
+      ],
+      "payload": {
+        "subject": "RELATION_OPERATIONS",
+        "params": {},
+        "lists": {
+          "solid_void": [
+            "OP_ENCLOSE_BREATHING_FIELD",
+            "OP_INJECT_ATMOSPHERIC_VOID"
+          ],
+          "host_guest": [
+            "OP_ALIGN_GUEST_HOST_TENSION"
+          ],
+          "center_edge": [
+            "OP_CALIBRATE_AXIAL_ORDER"
+          ],
+          "dense_sparse": [
+            "OP_PARTITION_POISSON_CLUSTER"
+          ],
+          "near_far": [
+            "OP_LAYER_DEPTH_RECESSION"
+          ],
+          "high_low": [
+            "OP_HARMONIZE_SKY_LUMINANCE",
+            "OP_RESTRICT_ACCENT_LUMINANCE"
+          ],
+          "heavy_light": [
+            "OP_ORCHESTRATE_MATERIAL_CONTRAST"
+          ],
+          "move_still": [
+            "OP_FILTER_MIST_SCATTER"
+          ]
+        },
+        "rationale": "Explicit relation type -> operator table, the second half of the dual activation rule."
+      }
+    }
+  ]
+}

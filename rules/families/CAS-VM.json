@@ -1,0 +1,5 @@
+{
+  "family": "CAS-VM",
+  "description": "Video-motion decisions (shot rhythm, BPM, warm-ratio, motion magnitude, grading lines) read by lib/video-motion-engine.js.",
+  "rules": []
+}

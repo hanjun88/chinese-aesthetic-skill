@@ -1,0 +1,302 @@
+{
+  "family": "CAS-EV",
+  "description": "Evaluator assertion thresholds and semantic-dimension thresholds (design-compiler machine / semantic evaluators and human-audit ledger). Void-ratio plausibility is NOT decided here: evaluators read the effective band of scene.composition.negativeSpaceRatio (CAS-VS, ADR-0001).",
+  "rules": [
+    {
+      "rule_id": "CAS-EV-MACHINE-FOCAL",
+      "title": "Machine assertion focal-hierarchy (宾主揖让): focal offset, dominance separation, dominant-area range",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.65,
+      "sources": [
+        "SRC-DC-EVAL-MACHINE",
+        "SRC-DC-EVAL-DEFAULT-PROFILE"
+      ],
+      "payload": {
+        "subject": "EVAL_MACHINE_FOCAL_HIERARCHY",
+        "params": {
+          "max_focal_center_offset": 0.3,
+          "min_dominance_separation": 0.02,
+          "min_dominant_area_ratio": 0.15,
+          "max_dominant_area_ratio": 0.9,
+          "min_luminance_peaks_for_tiers": 3
+        },
+        "rationale": "宾主关系可断言条件：焦点有明确位置 + 主辅面积有分离. A clear focal point = focal centre offset (0 = frame centre) below max_focal_center_offset. Legacy path: dominant-minus-secondary area above min_dominance_separation. Evidence path: dominant colour share strictly between min/max_dominant_area_ratio; secondary/accent areas are inferred only from at least min_luminance_peaks_for_tiers luminance peaks."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-MACHINE-QIYUN",
+      "title": "Machine assertion qiyun-continuity (气韵连贯): motion continuity and optical-flow coherence",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.65,
+      "sources": [
+        "SRC-DC-EVAL-MACHINE",
+        "SRC-DC-EVAL-DEFAULT-PROFILE"
+      ],
+      "payload": {
+        "subject": "EVAL_MACHINE_QIYUN_CONTINUITY",
+        "params": {
+          "min_motion_continuity": 0.4,
+          "min_optical_flow_coherence": 0.3
+        },
+        "rationale": "气韵可断言条件：运动有连贯性且光流相干. PASS needs motion continuity above min_motion_continuity and optical-flow direction coherence above min_optical_flow_coherence; one of the two is INCONCLUSIVE; single-frame evidence is INCONCLUSIVE, never FAIL."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-MACHINE-DEPTH",
+      "title": "Machine assertion spatial-depth-layers (层次与远近): measured depth layer count",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-EVAL-MACHINE",
+        "SRC-DC-EVAL-DEFAULT-PROFILE"
+      ],
+      "payload": {
+        "subject": "EVAL_MACHINE_SPATIAL_DEPTH",
+        "params": {
+          "min_depth_layer_count": 3,
+          "min_depth_layer_count_inconclusive": 2
+        },
+        "rationale": "At least min_depth_layer_count measured depth layers is PASS, at least min_depth_layer_count_inconclusive is INCONCLUSIVE, fewer is FAIL; no depth buffer is INCONCLUSIVE (UNMEASURED is not FAIL). The DC code states no rationale beyond the thresholds."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-MACHINE-COLOR",
+      "title": "Machine assertion color-relationship (色彩关系): palette distinctness and contrast",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.65,
+      "sources": [
+        "SRC-DC-EVAL-MACHINE",
+        "SRC-DC-EVAL-DEFAULT-PROFILE"
+      ],
+      "payload": {
+        "subject": "EVAL_MACHINE_COLOR_RELATIONSHIP",
+        "params": {
+          "min_contrast_ratio": 2.0
+        },
+        "flags": {
+          "require_distinct_palette": true
+        },
+        "rationale": "色彩关系可断言条件：三色体系明确 + 对比度合理. PASS needs a distinct dominant / secondary / accent palette (require_distinct_palette) and a WCAG contrast ratio of at least min_contrast_ratio; one of the two is INCONCLUSIVE."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-MACHINE-DECLARED-MINIMA",
+      "title": "Minimums declared by the former DC default evaluation profile that no evaluator applies",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-EVAL-DEFAULT-PROFILE"
+      ],
+      "payload": {
+        "subject": "EVAL_MACHINE_DECLARED_MINIMA",
+        "params": {
+          "min_empty_region_continuity": 0.4,
+          "min_luminance_continuity": 0.4,
+          "min_layer_separation": 0.4
+        },
+        "rationale": "Declared by DC chinese-aesthetic/profiles/default.json (machine-assertion layer) but never read by any DC code path: the machine evaluator does not apply them and the semantic layer has its own decisions (EVAL_SEMANTIC_*). Kept so that no number of the deleted profile is lost; the compiler does not read them."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-SEM-BINZHU",
+      "title": "Semantic dimension 宾主揖让: focal clarity and dominance separation evidence strength",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-EVAL-SEMANTIC"
+      ],
+      "payload": {
+        "subject": "EVAL_SEMANTIC_BINZHU_YIRANG",
+        "params": {
+          "max_focal_center_offset": 0.25,
+          "min_dominance_separation": 0.03,
+          "focal_clear_weight": 0.5,
+          "separation_clear_weight": 0.5,
+          "pass_evidence_strength": 0.8,
+          "inconclusive_evidence_strength": 0.4
+        },
+        "rationale": "证据支持度：焦点明确 + 主辅分离. Evidence strength = focal_clear_weight when the focal centre offset is below max_focal_center_offset, plus separation_clear_weight when dominance separation is above min_dominance_separation; >= pass_evidence_strength is PASS, >= inconclusive_evidence_strength INCONCLUSIVE, otherwise FAIL. Stricter than the machine focal assertion."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-SEM-JIBAI",
+      "title": "Semantic dimension 计白当黑: void ratio inside the period band, continuous empty region",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-EVAL-SEMANTIC",
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "subject": "EVAL_SEMANTIC_JIBAI_DANGHEI",
+        "params": {
+          "min_empty_region_continuity": 0.5
+        },
+        "rationale": "留白非空，乃气之所在. The void ratio must lie inside the effective band of scene.composition.negativeSpaceRatio (ADR-0001: the evaluator carries no private ideal range) and the empty region must be continuous (continuity >= min_empty_region_continuity); both = PASS, one = INCONCLUSIVE, neither = FAIL."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-SEM-XUSHI",
+      "title": "Semantic dimension 虚实相生: void presence, depth layers, atmospheric depth",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-EVAL-SEMANTIC",
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "subject": "EVAL_SEMANTIC_XUSHI_XIANGSHENG",
+        "params": {
+          "min_void_presence": 0.1,
+          "min_depth_layer_count": {
+            "$ref": "CAS-EV-MACHINE-DEPTH/payload/params/min_depth_layer_count"
+          },
+          "min_atmospheric_depth": 0.4
+        },
+        "rationale": "虚境与实景的互生. PASS needs a present void (void ratio above min_void_presence: a presence test, not a plausibility band, hence its own decision per ADR-0001), at least min_depth_layer_count depth layers and atmospheric depth >= min_atmospheric_depth; void or depth alone is INCONCLUSIVE."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-SEM-QIYUN",
+      "title": "Semantic dimension 气韵连贯: motion, optical flow and luminance continuity evidence count",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-EVAL-SEMANTIC"
+      ],
+      "payload": {
+        "subject": "EVAL_SEMANTIC_QIYUN_LIANGGUAN",
+        "params": {
+          "min_motion_continuity": {
+            "$ref": "CAS-EV-MACHINE-QIYUN/payload/params/min_motion_continuity"
+          },
+          "min_optical_flow_coherence": {
+            "$ref": "CAS-EV-MACHINE-QIYUN/payload/params/min_optical_flow_coherence"
+          },
+          "min_luminance_continuity": 0.5,
+          "pass_evidence_count": 2,
+          "inconclusive_evidence_count": 1
+        },
+        "rationale": "气者，心之运；韵者，气之节. Counts how many of motion continuity (>= min_motion_continuity), optical-flow coherence (>= min_optical_flow_coherence) and luminance continuity (>= min_luminance_continuity) hold; pass_evidence_count or more is PASS, inconclusive_evidence_count or more INCONCLUSIVE. The motion thresholds are the machine assertion's decision."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-SEM-HANXU",
+      "title": "Semantic dimension 含蓄与留白: void presence, accent isolation, moderate contrast",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-EVAL-SEMANTIC",
+        "SRC-ADR-0001"
+      ],
+      "payload": {
+        "subject": "EVAL_SEMANTIC_HANXU_YULIUBAI",
+        "params": {
+          "min_void_presence": {
+            "$ref": "CAS-EV-SEM-XUSHI/payload/params/min_void_presence"
+          },
+          "max_accent_isolation": 0.25,
+          "min_contrast_ratio": 3.0,
+          "max_contrast_ratio": 10.0
+        },
+        "rationale": "含蓄者，意不尽言；留白者，境不画满. PASS needs a present void (min_void_presence), accent isolation below max_accent_isolation (含蓄而不张扬) and a contrast ratio inside [min_contrast_ratio, max_contrast_ratio] (适度而不刺眼); void or accent isolation alone is INCONCLUSIVE."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-SEM-CENGCI",
+      "title": "Semantic dimension 层次与远近: depth layers, layer separation, atmospheric depth",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-EVAL-SEMANTIC"
+      ],
+      "payload": {
+        "subject": "EVAL_SEMANTIC_CENGCI_YUANJIN",
+        "params": {
+          "min_depth_layer_count": {
+            "$ref": "CAS-EV-MACHINE-DEPTH/payload/params/min_depth_layer_count"
+          },
+          "min_layer_separation": 0.5,
+          "min_atmospheric_depth": {
+            "$ref": "CAS-EV-SEM-XUSHI/payload/params/min_atmospheric_depth"
+          }
+        },
+        "rationale": "远者淡，近者浓；高者虚，低者实. PASS needs at least min_depth_layer_count layers, layer separation >= min_layer_separation and atmospheric depth >= min_atmospheric_depth; layers or separation alone is INCONCLUSIVE."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-SEM-XINGSHEN",
+      "title": "Semantic dimension 形神关系: focal clarity and material micro-detail",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-EVAL-SEMANTIC"
+      ],
+      "payload": {
+        "subject": "EVAL_SEMANTIC_XINGSHEN_GUANXI",
+        "params": {
+          "max_focal_center_offset": {
+            "$ref": "CAS-EV-MACHINE-FOCAL/payload/params/max_focal_center_offset"
+          },
+          "min_micro_detail_distribution": 0.4
+        },
+        "rationale": "形者，物之态；神者，物之魂. PASS needs a clear focal point (the machine focal assertion's offset decision) and micro-detail distribution >= min_micro_detail_distribution; one of the two is INCONCLUSIVE."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-SEM-SHIJIAN",
+      "title": "Semantic dimension 时间感/动势: motion, camera smoothness, optical flow",
+      "kind": "EVALUATION_ASSERTION",
+      "role": "evaluation",
+      "confidence": 0.6,
+      "sources": [
+        "SRC-DC-EVAL-SEMANTIC"
+      ],
+      "payload": {
+        "subject": "EVAL_SEMANTIC_SHIJIAN_DONGSHI",
+        "params": {
+          "min_motion_continuity": 0.3,
+          "min_camera_motion_smoothness": 0.3,
+          "min_optical_flow_coherence": 0.2
+        },
+        "rationale": "动势者，气之行；时间者，动之积. PASS needs motion continuity >= min_motion_continuity and (camera smoothness >= min_camera_motion_smoothness or optical-flow coherence >= min_optical_flow_coherence); motion or camera smoothness alone is INCONCLUSIVE. Looser than the machine qiyun assertion."
+      }
+    },
+    {
+      "rule_id": "CAS-EV-PB-SONG-HORIZONPOSITION",
+      "title": "SONG horizon_position period band",
+      "kind": "PARAMETER_BAND",
+      "role": "composition",
+      "confidence": 0.6,
+      "applies_to": {
+        "period": [
+          "SONG"
+        ]
+      },
+      "sources": [
+        "SRC-DC-HUMAN-AUDIT-LEDGER"
+      ],
+      "payload": {
+        "parameter": "scene.camera.horizonPosition",
+        "metric": "horizon_position",
+        "semantics": "PERIOD_BAND",
+        "min": 0.4,
+        "max": 0.65,
+        "unit": "ratio",
+        "rationale": "宋式美学理想参数: horizon position (share of the frame height) ideal range declared by the DC human-audit ledger. The ledger never consumed it (dead constant); registered so the quantity has a band. No TANG / MING range is documented."
+      }
+    }
+  ]
+}

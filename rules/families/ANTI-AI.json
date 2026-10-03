@@ -1,0 +1,123 @@
+{
+  "family": "ANTI-AI",
+  "description": "Anti-AI-artefact rules of the Core IR (plastic sheen, sourceless light, colour temperature gamut). The former ANTI-AI-02 (negative space 40-60%) was merged into CA-RULE-01-XUSHI by ADR-0001.",
+  "rules": [
+    {
+      "rule_id": "ANTI-AI-01",
+      "title": "反AI走样-微表面扰动: lift roughness out of the plastic-sheen range",
+      "kind": "GRAMMAR_RULE",
+      "role": "material",
+      "confidence": 0.7,
+      "sources": [
+        "SRC-DC-GRAMMAR-RULES-V1"
+      ],
+      "payload": {
+        "principle": "反AI走样-微表面扰动",
+        "category": "materials",
+        "description": "Micro-surface roughness perturbation and natural wear injection to break synthetic plastic sheen. The authored repair target 0.28 is clamped into the period roughness band of the context.",
+        "target_path": "/materials/0/roughness/value",
+        "condition": {
+          "operator": "<",
+          "value": 0.18
+        },
+        "mutation": {
+          "op": "replace",
+          "value": {
+            "$clamp": {
+              "value": 0.28,
+              "parameter": "scene.material.roughness"
+            }
+          }
+        },
+        "patches": [
+          {
+            "op": "replace",
+            "path": "/materials/0/roughness/value",
+            "value": {
+              "$clamp": {
+                "value": 0.28,
+                "parameter": "scene.material.roughness"
+              }
+            }
+          }
+        ],
+        "severity": "P1_WARNING",
+        "reason": "打破合成塑料光泽，将过低粗糙度拉回物理合理区间；微划痕扰动预留至运行时 PBR 扩展层"
+      }
+    },
+    {
+      "rule_id": "ANTI-AI-03",
+      "title": "反AI走样-光源物理性: suppress sourceless rim light and unphysical ambient fill",
+      "kind": "GRAMMAR_RULE",
+      "role": "lighting",
+      "confidence": 0.7,
+      "sources": [
+        "SRC-DC-GRAMMAR-RULES-V1"
+      ],
+      "payload": {
+        "principle": "反AI走样-光源物理性",
+        "category": "lighting",
+        "description": "Suppress sourceless rim lighting and unphysical ambient fill intensity. Both patches map to ABI 1.0.0 native lighting nodes.",
+        "target_path": "/lighting/ambientRatio/value",
+        "condition": {
+          "operator": ">",
+          "value": 0.65
+        },
+        "mutation": {
+          "op": "replace",
+          "value": 0.35
+        },
+        "patches": [
+          {
+            "op": "replace",
+            "path": "/lighting/ambientRatio/value",
+            "value": 0.35
+          },
+          {
+            "op": "replace",
+            "path": "/lighting/rimLightPresent/value",
+            "value": false
+          }
+        ],
+        "severity": "P1_WARNING",
+        "reason": "抑制无源轮廓光与过强环境填充，将环境光比压回物理合理区间 0.35，关闭无来源轮廓光"
+      }
+    },
+    {
+      "rule_id": "ANTI-AI-04",
+      "title": "反AI走样-色温色域钳制: clamp key light colour temperature into the Planckian gamut",
+      "kind": "GRAMMAR_RULE",
+      "role": "lighting",
+      "confidence": 0.7,
+      "sources": [
+        "SRC-DC-GRAMMAR-RULES-V1"
+      ],
+      "payload": {
+        "principle": "反AI走样-色温色域钳制",
+        "category": "lighting",
+        "description": "Clamp artificial oversaturated highlights to the physically plausible Planckian colour temperature gamut [2700K, 6500K].",
+        "target_path": "/lighting/keyLight/colorTemp/value",
+        "condition": {
+          "operator": "not_between",
+          "value": [
+            2700,
+            6500
+          ]
+        },
+        "mutation": {
+          "op": "replace",
+          "value": 5200
+        },
+        "patches": [
+          {
+            "op": "replace",
+            "path": "/lighting/keyLight/colorTemp/value",
+            "value": 5200
+          }
+        ],
+        "severity": "P1_WARNING",
+        "reason": "将偏离普朗克轨迹的人工色温钳制回 5200K 自然日光；色域钳制标识预留至运行时色彩管理扩展层"
+      }
+    }
+  ]
+}

@@ -1,100 +1,27 @@
 # 模块：光影布局（light_shadow）
 
-对应规则：guidelines/light_shadow.md | 优先级：P1
+对应规则：guidelines/light-shadow.md | 优先级：P1
 
-## 核心算法
+> Implementation: `lib/light-engine.js`（`generateLighting`：光源类型/角度/强度、阴影、体积光与 `threeJsConfig`；时间预设 `listTimePresets`）· thresholds: 光影判据（明暗比、阴影软硬度、体积光数量等）尚未登记（以 `guidelines/light-shadow.md` 与引擎内判据为准；rules registry family `CAS-LT`（光照默认值）为其预留，目前为空；朝代光照先验——天光亮度、雾密度、阴影色温、强调色亮度——见 family `CAS-PB` 的 `*-SKYLUMINANCE` / `*-MISTDENSITY` / `*-SHADOWTEMPERATURE` / `*-ACCENTLUMINANCE` 规则）· rationale: `guidelines/light-shadow.md`
+>
+> 本模块不内嵌算法、代码与参数配置：光照方案与 Three.js 配置由引擎生成，判据在 guidelines（待登记）。以下只保留原则要点与素材库实证（观察值，不是阈值）。
 
-### 体积光配置生成
+## 原则要点
 
-```javascript
-/**
- * 根据场景类型生成东方风格体积光配置
- * @param {string} sceneType - 'celestial' | 'palace' | 'mountain' | 'urban'
- * @returns {Object} Three.js 光源+后处理配置
- */
-function generateVolumetricLightConfig(sceneType) {
-  const configs = {
-    celestial: {
-      lightType: 'directional',
-      elevationDeg: 30,
-      azimuthDeg: 180,
-      color: 0xfff4e0,
-      intensity: 2.0,
-      fog: { type: 'exp2', density: 0.015, color: 0xe9eef7 },
-      godRays: { enabled: true, density: 0.4, decay: 0.95, weight: 0.3 },
-      bloom: { enabled: true, strength: 0.8, radius: 0.4, threshold: 0.85 }
-    },
-    palace: {
-      lightType: 'directional',
-      elevationDeg: 20,
-      color: 0xffe8b0,
-      intensity: 1.8,
-      fog: { type: 'exp2', density: 0.02, color: 0xf5e6d3 },
-      godRays: { enabled: true, density: 0.5, decay: 0.93, weight: 0.4 },
-      bloom: { enabled: true, strength: 1.0, radius: 0.5, threshold: 0.8 }
-    },
-    mountain: {
-      lightType: 'directional',
-      elevationDeg: 15,
-      color: 0xe9eef7,
-      intensity: 1.5,
-      fog: { type: 'exp2', density: 0.025, color: 0xd4dde8 },
-      godRays: { enabled: true, density: 0.35, decay: 0.96, weight: 0.25 },
-      bloom: { enabled: true, strength: 0.6, radius: 0.3, threshold: 0.9 }
-    },
-    urban: {
-      lightType: 'directional',
-      elevationDeg: 45,
-      color: 0xffffff,
-      intensity: 1.2,
-      fog: { type: 'exp2', density: 0.01, color: 0x1b2a44 },
-      godRays: { enabled: false },
-      bloom: { enabled: true, strength: 0.5, radius: 0.3, threshold: 0.85 }
-    }
-  };
-  return configs[sceneType] || configs.celestial;
-}
-```
+- **体积光按场景类型配置**：仙境——低角度冷白日光加指数平方雾；宫殿——偏暖的低角度光（金色调）加雾加体积光；山——更低角度的冷光加浓雾；城市——中性白光，不用 god rays。仙境与宫殿场景应有体积光（低角度光源加雾介质）。
+- **丁达尔效应的构成**：低角度光源、散射介质（雾/粒子）、足够多的粒子、光源在相机视野内或边缘；综合这几项判定是否具备丁达尔效应。
+- **柔光阴影**：东方风格偏好柔光，用 PCFSoftShadowMap，硬阴影要提示。
+- **Bloom**：只让高亮区域泛光；阈值过低会让全画面泛白，强度过高会过曝。
+- **东方仙境光照的搭建思路**：主光为低角度冷白日光，开启投影并使用 PCFSoftShadowMap；雾用 FogExp2 模拟大气散射；环境光保持低强度以保留暗部细节；后处理用 EffectComposer（RenderPass + UnrealBloomPass）加体积光。
 
-### 丁达尔效应检测
+## 素材库实证（Distillation Evidence）
 
-```javascript
-/**
- * 检测场景是否具备丁达尔效应特征
- * @param {Object} scene - { light, fog, particles, camera }
- * @returns {Object} { hasTyndall, score, factors }
- */
-function detectTyndallEffect(scene) {
-  const factors = [];
-  let score = 0;
+> 数据来源：`../distillation/` ai-linggan（15视频）+ ivanchiu（11张），关联索引见 `evidence-index.md`。
+> 以下是**观察值**（来源与样本量见各行），不是阈值；光影判据见 guidelines 与引擎。
 
-  // 低角度光源（<45度）
-  if (scene.light.elevationDeg < 45) { score += 30; factors.push('low_angle_light'); }
+### 体积光观察（ai-linggan 15视频）
 
-  // 有雾/散射介质
-  if (scene.fog && scene.fog.density > 0.01) { score += 25; factors.push('scattering_medium'); }
-
-  // 有粒子系统
-  if (scene.particles && scene.particles.count > 1000) { score += 20; factors.push('particle_scattering'); }
-
-  // 光源在相机视野内或边缘
-  if (scene.light.inViewFrustum) { score += 25; factors.push('light_in_frame'); }
-
-  return {
-    hasTyndall: score >= 50,
-    score,
-    factors
-  };
-}
-```
-
-## 实证参数表（已验证推荐值）
-
-> 数据来源：`../distillation/` ai-linggan（15视频）+ ivanchiu（11张），关联索引见 `evidence-index.md`
-
-### 体积光参数（ai-linggan 15视频）
-
-| 参数 | 推荐值 | 实证依据 |
+| 参数 | 观察值 | 实证依据 |
 |---|---|---|
 | 体积光启用率 | 100% | 15/15全员启用 |
 | 丁达尔效应 | 67% | 10/15有丁达尔 |
@@ -105,9 +32,9 @@ function detectTyndallEffect(scene) {
 | 雾密度 | 0.015-0.025 | 场景相关 |
 | 大气透视 | 0.6 | 远景偏蓝偏灰 |
 
-### Bloom参数（ai-linggan + xiaoai黑洞视频）
+### Bloom 观察（ai-linggan + xiaoai黑洞视频）
 
-| 参数 | 推荐值 | 适用场景 |
+| 参数 | 观察值 | 适用场景 |
 |---|---|---|
 | bloom_strength | 0.6-1.0 | 通用仙境场景 |
 | bloom_radius | 0.3-0.5 | – |
@@ -124,77 +51,3 @@ function detectTyndallEffect(scene) {
 | 半透明玉质发光 | 18% | 2/11有translucent jade glow |
 | 镜面地板无限反射 | 9% | 1/11有mirror floor infinity |
 | 彩虹光折射 | 9% | 1/11有iridescent light refraction |
-
-## Three.js 代码示例
-
-```javascript
-// 东方仙境体积光配置（基于ai-linggan实证）
-function createCelestialLighting(scene) {
-  // 主光源：低角度冷白日光
-  const sun = new THREE.DirectionalLight(0xe9eef7, 2.0);
-  sun.position.set(0, Math.tan(30 * Math.PI / 180) * 50, -50);
-  sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
-  sun.shadow.type = THREE.PCFSoftShadowMap;
-  scene.add(sun);
-
-  // 指数平方雾（大气散射）
-  scene.fog = new THREE.FogExp2(0xe9eef7, 0.015);
-
-  // 环境光（低强度，保持暗部细节）
-  const ambient = new THREE.AmbientLight(0x2c4a5e, 0.3);
-  scene.add(ambient);
-
-  return { sun, ambient };
-}
-
-// 后处理：Bloom + 体积光
-function createPostProcessing(renderer, scene, camera) {
-  const composer = new EffectComposer(renderer);
-  composer.addPass(new RenderPass(scene, camera));
-
-  // Bloom（基于ai-linggan实证）
-  const bloomPass = new UnrealBloomPass(
-    new THREE.Vector2(window.innerWidth, window.innerHeight),
-    0.8,  // strength
-    0.4,  // radius
-    0.85  // threshold
-  );
-  composer.addPass(bloomPass);
-
-  return composer;
-}
-```
-
-## 校验函数（供 validate.js 调用）
-
-```javascript
-function checkLightShadow(design) {
-  const violations = [];
-  const { lights, fog, postprocessing } = design;
-
-  // 体积光检测（东方仙境场景必须有）
-  if (design.sceneType === 'celestial' || design.sceneType === 'palace') {
-    const hasFog = fog && (fog.type === 'exp2' || fog.type === 'linear') && fog.density > 0.01;
-    const hasLowAngleLight = lights.some(l => l.elevationDeg && l.elevationDeg < 45);
-    if (!hasFog || !hasLowAngleLight) {
-      violations.push({ severity: 'P1', message: '仙境/宫殿场景建议配置体积光（低角度光源+雾介质）' });
-    }
-  }
-
-  // 硬阴影检测（东方风格偏好柔光）
-  const hardShadows = lights.filter(l => l.shadowType === 'basic' || l.shadowType === 'PCF');
-  if (hardShadows.length > 0) {
-    violations.push({ severity: 'P2', message: `检测到${hardShadows.length}个硬阴影光源，建议使用PCFSoftShadowMap` });
-  }
-
-  // Bloom参数范围
-  if (postprocessing && postprocessing.bloom) {
-    const b = postprocessing.bloom;
-    if (b.strength > 2.0) violations.push({ severity: 'P2', message: `Bloom强度 ${b.strength} 过高，建议≤2.0` });
-    if (b.threshold < 0.5) violations.push({ severity: 'P2', message: `Bloom阈值 ${b.threshold} 过低，会导致全画面泛白` });
-  }
-
-  return violations;
-}
-```
