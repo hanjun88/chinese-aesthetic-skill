@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0 --port 3000",
     "lint": "tsc --noEmit",
-    "test": "node tests/engines.test.js && npm run test:rules && npm run test:docs && npm run lint:rules && npm run lint:docs",
+    "test": "node tests/engines.test.js && npm run test:rules && npm run test:docs && npm run lint:rules && npm run lint:docs && npm run lint:conflicts",
     "test:engines": "node tests/engines.test.js",
     "test:gates": "node scripts/validate.cjs",
     "gate1": "node scripts/validate.cjs --gate 1",
@@ -23,7 +23,8 @@
     "docs:render": "node scripts/render-rules-docs.mjs --write",
     "docs:check": "node scripts/render-rules-docs.mjs --check && node scripts/evidence.mjs --check",
     "evidence": "node scripts/evidence.mjs",
-    "emit:sheet": "node scripts/emit-sheet.mjs"
+    "emit:sheet": "node scripts/emit-sheet.mjs",
+    "lint:conflicts": "node scripts/lint-conflicts.mjs"
   },
   "keywords": [
     "chinese-aesthetic",
