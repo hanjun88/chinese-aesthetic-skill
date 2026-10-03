@@ -11,21 +11,22 @@
 | `ivanchiu` | IVAN CHIU | Midjourney图文 | 11张 | 悬浮玉岛/不可能建筑/长焦压缩 | `distillation/ivanchiu-cloud-palace/` |
 | `ai-linggan` | Ai灵感主义 | 抖音视频 | 15视频/30关键帧 | 电影感场景/东方仙境/未来城市 | `distillation/ai-linggan-cinematic-scenes/` |
 | `xiaoai` | 小艾不迟到(AIGC) | 抖音视频 | 11视频/22关键帧 | 前端动效/交互设计/Vibe Coding | `distillation/xiaoai-frontend-motion/` |
+| `yanjian` | 岩見(抖音 @岩見) | AIGC神话梦境视频 | 8视频/48帧分析(仓库留存16关键帧) | 山海经灵兽/桃花源/敦煌飞天/青绿墨底/镜面水面 | `distillation/yanjian-mythic-dreamscape/` |
 
 ## 模块 ↔ 素材关联矩阵
 
-| 模块 | fengling | ivanchiu | ai-linggan | xiaoai | 实证强度 |
-|---|---|---|---|---|---|
-| `color.md` 色彩体系 | ○ | ◎ | ◎ | ◎ | 强（3批量化数据） |
-| `spatial.md` 空间秩序 | ○ | ◎ | ◎ | ○ | 强（2批量化数据） |
-| `void_solid.md` 虚实关系 | ○ | ○ | ◎ | ◎ | 中（留白数据） |
-| `proportion.md` 比例 | ○ | ○ | ◎ | ○ | 中（景深/构图比例） |
-| `material.md` 材料质感 | ○ | ◎ | ◎ | ○ | 中（材质分布） |
-| `light_shadow.md` 光影 | ○ | ◎ | ◎ | ○ | 强（体积光100%数据） |
-| `motion.md` 运动动势 | ○ | ○ | ◎ | ◎ | 强（2批量化数据） |
-| `interaction.md` 交互语义 | – | – | – | ◎ | 中（1批前端交互数据） |
-| `time.md` 时间感 | ○ | ○ | ◎ | ○ | 弱（镜头时长间接） |
-| `taboo.md` 禁忌 | – | – | ◎ | ◎ | 中（反模式检测） |
+| 模块 | fengling | ivanchiu | ai-linggan | xiaoai | yanjian | 实证强度 |
+|---|---|---|---|---|---|---|
+| `color.md` 色彩体系 | ○ | ◎ | ◎ | ◎ | ◎ | 强（3批量化数据） |
+| `spatial.md` 空间秩序 | ○ | ◎ | ◎ | ○ | ◎ | 强（2批量化数据） |
+| `void_solid.md` 虚实关系 | ○ | ○ | ◎ | ◎ | ◎ | 中（留白数据） |
+| `proportion.md` 比例 | ○ | ○ | ◎ | ○ | ○ | 中（景深/构图比例） |
+| `material.md` 材料质感 | ○ | ◎ | ◎ | ○ | ◎ | 中（材质分布） |
+| `light_shadow.md` 光影 | ○ | ◎ | ◎ | ○ | ◎ | 强（体积光100%数据） |
+| `motion.md` 运动动势 | ○ | ○ | ◎ | ◎ | ○ | 强（2批量化数据） |
+| `interaction.md` 交互语义 | – | – | – | ◎ | – | 中（1批前端交互数据） |
+| `time.md` 时间感 | ○ | ○ | ◎ | ○ | ○ | 弱（镜头时长间接） |
+| `taboo.md` 禁忌 | – | – | ◎ | ◎ | ○ | 中（反模式检测） |
 
 > ◎ = 有量化实证数据；○ = 有定性参考；– = 无直接关联
 
