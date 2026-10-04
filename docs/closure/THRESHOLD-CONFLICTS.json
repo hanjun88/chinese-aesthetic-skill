@@ -1,0 +1,85 @@
+{
+  "ledger_version": "1.0.0",
+  "description": "Every place where two aesthetic thresholds, repair targets or bounds disagreed — or one concept was defined twice — and how the registry resolves it. Each assertion is evaluated by scripts/lint-conflicts.mjs against the resolved decisions of EVERY valid design context; an entry cannot go stale silently and cannot be vacuous.",
+  "entries": [
+    {
+      "id": "TC-01",
+      "concept": "negative space (留白) — void_ratio bounds, repairs and operator clamps",
+      "positions": [
+        "README 30% (superseded v1 value)",
+        "SKILL.md 0.5 stated as a hard floor (it is a scoring signal)",
+        "hard floor 0.60 for bright-tone landscape only",
+        "period bands TANG 0.15-0.40 / SONG 0.35-0.80 / MING 0.25-0.50 against DC's SONG 0.35-0.65 and golden cell 0.68",
+        "CA-RULE-01 repair 0.45 and ANTI-AI-02 repair 0.48 below the 0.60 floor",
+        "operator clamp [0.05, 0.70] without evidence against documented 0.70-0.80 Song/Huizhou voids",
+        "evaluator treating void >= 0.70 as unbalanced while the skill treats it as the highest tier"
+      ],
+      "resolution": "One metric (void_ratio). Period bands are the union of the evidence; the 0.60 floor applies to bright landscape only; 0.50 is a scoring signal; repairs and operator bounds are band edges or clamp(authored, effective band); ANTI-AI-02 is merged into CA-RULE-01; numeric caps without evidence are deleted.",
+      "adr": "docs/decisions/ADR-0001-negative-space.md",
+      "assertions": [
+        { "type": "within_band", "rule": "CA-RULE-01-XUSHI", "path": "mutation.value", "parameter": "scene.composition.negativeSpaceRatio" },
+        { "type": "band_edge", "rule": "CAS-OP-BREATHING-FIELD", "path": "params.negative_space_min", "parameter": "scene.composition.negativeSpaceRatio", "edge": "min" },
+        { "type": "band_edge", "rule": "CAS-OP-BREATHING-FIELD", "path": "params.negative_space_max", "parameter": "scene.composition.negativeSpaceRatio", "edge": "max" },
+        { "type": "band_edge", "rule": "CAS-OP-OCCLUSION-FRAME", "path": "params.negative_space_min", "parameter": "scene.composition.negativeSpaceRatio", "edge": "min" },
+        { "type": "band_edge", "rule": "CAS-OP-OCCLUSION-FRAME", "path": "params.negative_space_max", "parameter": "scene.composition.negativeSpaceRatio", "edge": "max" },
+        { "type": "band_edge", "rule": "CAS-OT-ENCLOSE-BREATHING-FIELD", "path": "params.negative_space_min", "parameter": "scene.composition.negativeSpaceRatio", "edge": "min" },
+        { "type": "band_edge", "rule": "CAS-OT-ENCLOSE-BREATHING-FIELD", "path": "params.negative_space_max", "parameter": "scene.composition.negativeSpaceRatio", "edge": "max" },
+        { "type": "absent_rule", "rule": "ANTI-AI-02" }
+      ]
+    },
+    {
+      "id": "TC-02",
+      "concept": "target depth layers of the layering operator",
+      "positions": [
+        "plan emission: 4 layers in every period (CAS-OT, migrated from the plan emitter)",
+        "operator: TANG 4 / SONG 5 / MING 3 (CAS-OP, migrated from the design operators)"
+      ],
+      "resolution": "The operator's per-period table is canonical; plan emission references it ($ref). The period-independent 4 is deleted.",
+      "adr": "docs/decisions/ADR-0002-operator-decisions-follow-the-period-bands.md",
+      "assertions": [
+        { "type": "equals", "a": { "rule": "CAS-OT-LAYER-DEPTH-RECESSION", "path": "params.target_depth_layers" }, "b": { "rule": "CAS-OP-LAYER-DEPTH", "path": "params.target_layers" } }
+      ]
+    },
+    {
+      "id": "TC-03",
+      "concept": "roughness targets of the material-contrast operator vs the period roughness bands",
+      "positions": [
+        "operator ladder TANG 0.25/0.65, SONG 0.35/0.60, MING 0.40/0.55",
+        "period roughness bands TANG 0.30-0.60, SONG 0.40-0.80, MING 0.40-0.70 (TANG low/high and SONG low lay outside)"
+      ],
+      "resolution": "Each authored target is clamped into the context's effective roughness band (ADR-0001 rule 6 generalised).",
+      "adr": "docs/decisions/ADR-0002-operator-decisions-follow-the-period-bands.md",
+      "assertions": [
+        { "type": "within_band", "rule": "CAS-OP-MATERIAL-CONTRAST", "path": "params.roughness_low_target", "parameter": "scene.material.roughness" },
+        { "type": "within_band", "rule": "CAS-OP-MATERIAL-CONTRAST", "path": "params.roughness_high_target", "parameter": "scene.material.roughness" }
+      ]
+    },
+    {
+      "id": "TC-04",
+      "concept": "axial-symmetry bounds of the cluster-partition operator",
+      "positions": [
+        "operator clamp [0.3, 0.95] (no evidence)",
+        "period axial-symmetry bands TANG 0.7-1.0, SONG 0.3-0.7, MING 0.5-0.8"
+      ],
+      "resolution": "The operator may not push symmetry outside the period band: its bounds are the band edges ($band). The fixed clamp is deleted.",
+      "adr": "docs/decisions/ADR-0002-operator-decisions-follow-the-period-bands.md",
+      "assertions": [
+        { "type": "band_edge", "rule": "CAS-OP-POISSON-CLUSTER", "path": "params.symmetry_min", "parameter": "scene.composition.axialSymmetry", "edge": "min" },
+        { "type": "band_edge", "rule": "CAS-OP-POISSON-CLUSTER", "path": "params.symmetry_max", "parameter": "scene.composition.axialSymmetry", "edge": "max" }
+      ]
+    },
+    {
+      "id": "TC-05",
+      "concept": "where soft light ends (key-light softness)",
+      "positions": [
+        "grammar rule CA-RULE-02-YUNRUN repairs softness below 0.5",
+        "mist-scatter operator treats softness below 0.5 as hard light"
+      ],
+      "resolution": "One definition: the operator's hard-light limit references the grammar rule's threshold ($ref).",
+      "adr": "docs/decisions/ADR-0002-operator-decisions-follow-the-period-bands.md",
+      "assertions": [
+        { "type": "equals", "a": { "rule": "CAS-OP-MIST-SCATTER", "path": "params.hard_light_softness_max" }, "b": { "rule": "CA-RULE-02-YUNRUN", "path": "condition.value" } }
+      ]
+    }
+  ]
+}

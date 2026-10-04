@@ -47,28 +47,36 @@ const report = fullAssessment({
 ## 判定纪律（重要）
 
 - **颜色不能用现代 HSL 直觉**。五正色（青赤黄白黑）为基色，衍生色需过 `validateColorScheme`；深色低明度可放行高饱和，明亮色收紧。禁霓虹高饱和、正红、亮金。
-- **虚实比 ≥ 0.5** 是空间秩序的硬结构指标，不是风格偏好。
-- **主色不超过 2 种**，其余为中性/材质色。
-- 规则冲突时以 `guidelines/*.md` 原文为准，引擎输出为可测判据而非最终裁决。
+- **留白不是一个数字，而是三种语义，各有规则 ID**（登记簿 `rules/`，决策与证据见 `docs/decisions/ADR-0001-negative-space.md`）：
+  - 硬规则（P0）：亮调山水留白 ≥ 0.60，规则 `CAS-VS-HF-001`。<!-- rule:CAS-VS-HF-001 -->
+  - 朝代区间：唐 / 宋 / 明各有留白先验区间（`CAS-VS-PB-TANG` / `-SONG` / `-MING`），取证据的并集而非平均值。
+  - 结构信号：虚实比 ≥ 0.50 只是引擎计分信号（`CAS-VS-SS-001`），不是硬结构指标，更不是合规线。<!-- rule:CAS-VS-SS-001 -->
+- **主色要少、主次分明**（君臣佐使），其余为中性/材质色；比例与容差见 `guidelines/color.md`，素材库观察见 `modules/color.md`。
+- 规则冲突时以 `guidelines/*.md` 原文为准，引擎输出为可测判据而非最终裁决；已登记的阈值以登记簿 `rules/` 为准，文档里不再抄数字。
 
 ## 资产导航
 
 | 路径 | 内容 |
 |---|---|
 | `guidelines/` | 10 条规则正文（空间/虚实/比例/材料/光影/色彩/动势/时间/禁忌/交互） |
+| `rules/` | 规则登记簿：阈值、出处、置信度的单一来源（`lib/rules/` 读取；README 的「规则登记簿」表由它渲染） |
+| `scripts/emit-sheet.mjs` | 生成某个设计上下文的 AestheticConstraintSheet 约束交接产物（`--list` 列出有效与被排除的上下文）；跨仓绑定 DEFERRED / UNBOUND，不钉扎任何编译器版本 |
 | `playbooks/` | 5 套执行手册（约束提取、资产交付、文物验收、心镜视觉一致性等） |
 | `terms/chinese-aesthetic.json` | 术语库（界/虚实/举折/出檐…） |
-| `modules/` | 蒸馏证据索引与分模块规则 |
+| `modules/` | 分模块实现索引：原则 + 引擎指针 + 素材库实证 |
 | `lib/` | 10 引擎实现，零外部依赖，ESM |
 | `scripts/validate.cjs` | Gate 1–3 结构与算法校验 CLI |
-| `scripts/pack-skill.cjs` | 打包/安装脚本 |
+| `scripts/pack-skill.cjs` | 打包/安装脚本（登记簿与约束生成器随包分发） |
 
 ## 验证
 
 ```bash
-node tests/engines.test.js     # 112 项，期望 112 passed / 0 failed
+npm test                       # 引擎 + 规则 + 文档测试、登记簿 lint、文档 lint
+node tests/engines.test.js     # 仅引擎集成测试，期望全部通过
 node scripts/validate.cjs --gate 1
 ```
+
+测试计数不在本文件手写：它们由 `npm run evidence` 从真实输出生成，见 README.md 的「测试与证据」。
 
 ## 管线位置
 

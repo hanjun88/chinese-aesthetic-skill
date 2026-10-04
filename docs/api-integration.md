@@ -2,6 +2,8 @@
 
 ## 1. 通用 API 接口
 
+> **约束交接产物与示意的区别**：本 Skill 的机器可读输出是 AestheticConstraintSheet 约束交接产物（`node scripts/emit-sheet.mjs`；跨仓绑定 DEFERRED / UNBOUND，本仓库不钉扎任何编译器 commit 或 schema 版本）。下面的 JSON 与 CLI 是各设计工具集成时的**示意**，不是契约，没有 schema；其中的数值只是示例，阈值以规则登记簿 `rules/` 为准。
+
 ### 输入格式（JSON）
 
 ```json
@@ -136,7 +138,7 @@ Impeccable 会自动读取 skill.yaml 中的规则定义，在设计过程中应
 |---|---|
 | 五方正色 | Color Styles → `color/chinese/qing`, `color/chinese/chi`, ... |
 | 比例 | Layout Grid → `grid/3-part`, `grid/√2` |
-| 留白 | Spacing → `spacing/void-lg` (60%), `spacing/void-md` (40%) |
+| 留白 | Spacing → `spacing/void-lg`、`spacing/void-md`（数值取自登记簿的留白规则 `CAS-VS-HF-001` / `CAS-VS-SS-003`，不在 Figma 变量里另写一份） |
 | 材质 | Effects → `effect/wood-grain`, `effect/stone-rough` |
 
 ---
@@ -278,7 +280,7 @@ v2.0.0 — 破坏性更新（规则接口变更，需迁移）
 ```
 
 ### 回滚策略
-1. 版本更新前运行完整测试（116项）
+1. 版本更新前运行完整测试（`npm test`）
 2. 若视觉不一致或测试失败，回滚到前一稳定版本
 3. Git tag 标记每个稳定版本
 4. `git checkout v1.0.0` 快速回滚
